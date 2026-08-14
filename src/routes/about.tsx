@@ -98,7 +98,7 @@ function About() {
             },
             {
               t: `STUDENT GOVERNMENT · ${SG_TOTAL} คน`,
-              d: "หนึ่งใน 4 องค์กรภายใต้สภา เป็นฝ่ายบริหาร ตั้งแต่นายกสภานักเรียนจนถึงกรรมการฝ่าย ดูแลโครงการอย่าง SG RADIO",
+              d: "หนึ่งใน 4 องค์กรภายใต้สภา เป็นฝ่ายบริหาร ตั้งแต่นายกสโมสรนักเรียนจนถึงกรรมการฝ่าย ดูแลโครงการอย่าง SG RADIO",
             },
             {
               t: "HOUSES · CLUBS · CLASS REPS",
@@ -118,7 +118,7 @@ function About() {
           <div>
             <h2 className="display-xl text-[clamp(1.9rem,5vw,3.4rem)]">CONGRESS MEMBERS</h2>
             <p className="mt-5 max-w-md text-primary-foreground/70">
-              สมาชิกสภาทั้งหมด {TOTAL_MEMBERS} คน มาจากสภานักเรียน บ้านสายกีฬา ชมรม และผู้แทนห้องเรียน
+              สมาชิกสภาทั้งหมด {TOTAL_MEMBERS} คน มาจากสโมสรนักเรียน บ้านสายกีฬา ชมรม และผู้แทนห้องเรียน
             </p>
             <Link
               to="/members"
@@ -142,7 +142,7 @@ function About() {
       <Section>
         <SectionHead eyebrow="ตัวเลข" title="ONE CONGRESS, MANY VOICES." />
         <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
-          <Stat value={String(MEMBERS.filter((m) => m.org === "SG").length)} label="สภานักเรียน" />
+          <Stat value={String(MEMBERS.filter((m) => m.org === "SG").length)} label="สโมสรนักเรียน" />
           <Stat value={String(MEMBERS.filter((m) => m.org === "HOUSE").length)} label="คณะกรรมการบ้าน" />
           <Stat value={String(MEMBERS.filter((m) => m.org === "CLUB").length)} label="ผู้แทนชมรม" />
           <Stat value={String(MEMBERS.filter((m) => m.org === "CLASS").length)} label="ผู้แทนห้องเรียน" />

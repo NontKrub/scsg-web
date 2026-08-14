@@ -6,10 +6,10 @@ import { PROJECTS, SG_MEMBERS, SG_TOTAL, TOTAL_MEMBERS } from "@/data/sgsc";
 export const Route = createFileRoute("/student-government")({
   head: () => ({
     meta: [
-      { title: "Student Government — สภานักเรียน | SGSC" },
+      { title: "Student Government — สโมสรนักเรียน | SGSC" },
       { name: "description", content: "ฝ่ายบริหารของ SGSC ดูแลโครงการและบริการเพื่อนักเรียนทั้งโรงเรียน พร้อมรายชื่อคณะทำงานและโครงการที่ดำเนินอยู่" },
       { property: "og:title", content: "STUDENT GOVERNMENT — SGSC" },
-      { property: "og:description", content: "โครงสร้าง คณะทำงาน และโครงการของสภานักเรียนคณะที่ 69" },
+      { property: "og:description", content: "โครงสร้าง คณะทำงาน และโครงการของสโมสรนักเรียนคณะที่ 69" },
     ],
   }),
   component: SG,
@@ -22,14 +22,14 @@ function SG() {
         <Tag>องค์กรที่ 1</Tag>
         <h1 className="display-xl mt-6 text-[clamp(2.6rem,9vw,6.5rem)]">STUDENT GOVERNMENT</h1>
         <p className="mt-6 max-w-2xl text-muted-foreground">
-          สภานักเรียน (Student Government) คือฝ่ายบริหารซึ่งเป็น 1 ใน 4 องค์กรภายใต้ Student Congress
-          มีสมาชิก {SG_TOTAL} คน ตั้งแต่นายกสภานักเรียน รองนายก เลขานุการ เหรัญญิก หัวหน้าฝ่าย จนถึงกรรมการฝ่าย
+          สโมสรนักเรียน (Student Government) คือฝ่ายบริหารซึ่งเป็น 1 ใน 4 องค์กรภายใต้ Student Congress
+          มีสมาชิก {SG_TOTAL} คน ตั้งแต่นายกสโมสรนักเรียน รองนายก เลขานุการ เหรัญญิก หัวหน้าฝ่าย จนถึงกรรมการฝ่าย
           และทั้ง {SG_TOTAL} คนนี้นับเป็นสมาชิกสภาใน {TOTAL_MEMBERS} คนของ Student Congress ด้วย
         </p>
         <div className="mt-8 grid max-w-md grid-cols-2 gap-6">
           <div>
             <div className="num text-5xl">{SG_TOTAL}</div>
-            <div className="eyebrow mt-1">สมาชิกสภานักเรียน</div>
+            <div className="eyebrow mt-1">สมาชิกสโมสรนักเรียน</div>
           </div>
           <div>
             <div className="num text-5xl">{TOTAL_MEMBERS}</div>
@@ -59,7 +59,7 @@ function SG() {
         <SectionHead
           eyebrow="โครงสร้าง 18 ที่นั่ง"
           title="THE 18 SEATS"
-          sub={`สภานักเรียนมีสมาชิก ${SG_TOTAL} คน แบ่งเป็นฝ่ายบริหาร หัวหน้าฝ่าย และกรรมการฝ่าย ทุกคนเป็นสมาชิกสภาใหญ่ ${TOTAL_MEMBERS} คนด้วย`}
+          sub={`สโมสรนักเรียนมีสมาชิก ${SG_TOTAL} คน แบ่งเป็นฝ่ายบริหาร หัวหน้าฝ่าย และกรรมการฝ่าย ทุกคนเป็นสมาชิกสภาใหญ่ ${TOTAL_MEMBERS} คนด้วย`}
         />
         <div className="grid gap-px bg-border md:grid-cols-3">
           {[
@@ -104,9 +104,9 @@ function SG() {
       </Section>
 
       <Section className="bg-secondary">
-        <SectionHead eyebrow="โครงการของสภานักเรียน" title="OUR PROJECTS" />
+        <SectionHead eyebrow="โครงการของสโมสรนักเรียน" title="OUR PROJECTS" />
         <div className="grid gap-px bg-border md:grid-cols-3">
-          {PROJECTS.filter((p) => p.org === "สภานักเรียน").map((p) => (
+          {PROJECTS.filter((p) => p.org === "สโมสรนักเรียน").map((p) => (
             <div key={p.slug} className="bg-background p-7">
               <Tag>{p.status}</Tag>
               <h3 className="display-xl mt-5 text-2xl">{p.name}</h3>
@@ -122,16 +122,16 @@ function SG() {
             to="/news"
             className="inline-flex border border-input px-6 py-4 text-xs font-semibold uppercase tracking-[0.18em]"
           >
-            ข่าวสภานักเรียน
+            ข่าวสโมสรนักเรียน
           </Link>
         </div>
       </Section>
 
       <Section>
         <SectionHead
-          eyebrow="โครงการเรือธงของสภานักเรียน"
+          eyebrow="โครงการเรือธงของสโมสรนักเรียน"
           title="SG RADIO"
-          sub="SG Radio เป็นโครงการของสภานักเรียนโดยเฉพาะ ดูแลโดยฝ่ายสื่อสาร เปิดให้นักเรียนจองคิวขอเพลงและส่งข้อความช่วงพักกลางวัน"
+          sub="SG Radio เป็นโครงการของสโมสรนักเรียนโดยเฉพาะ ดูแลโดยฝ่ายสื่อสาร เปิดให้นักเรียนจองคิวขอเพลงและส่งข้อความช่วงพักกลางวัน"
         />
         <div className="grid gap-px bg-border lg:grid-cols-[1.1fr_1fr]">
           <div className="bg-background p-7 md:p-10">
@@ -153,9 +153,9 @@ function SG() {
           </div>
           <div className="bg-background p-7 md:p-10">
             <p className="eyebrow">ผู้รับผิดชอบ</p>
-            <p className="mt-3 font-semibold">ฝ่ายสื่อสาร สภานักเรียน</p>
+            <p className="mt-3 font-semibold">ฝ่ายสื่อสาร สโมสรนักเรียน</p>
             <p className="mt-6 text-sm text-muted-foreground">
-              ออกอากาศทุกวันจันทร์–ศุกร์ ช่วงพักกลางวัน 12:00–12:40 น. บริหารจัดการคิวผ่านระบบจองออนไลน์ของสภานักเรียน
+              ออกอากาศทุกวันจันทร์–ศุกร์ ช่วงพักกลางวัน 12:00–12:40 น. บริหารจัดการคิวผ่านระบบจองออนไลน์ของสโมสรนักเรียน
             </p>
           </div>
         </div>

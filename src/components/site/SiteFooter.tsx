@@ -8,7 +8,7 @@ const COLS = [
     links: [
       { to: "/about", label: "เกี่ยวกับ SGSC" },
       { to: "/members", label: "สมาชิกสภา" },
-      { to: "/student-government", label: "สภานักเรียน" },
+      { to: "/student-government", label: "สโมสรนักเรียน" },
       { to: "/members", label: "ผู้แทนห้องเรียน" },
     ],
   },
@@ -24,7 +24,7 @@ const COLS = [
     head: "โครงการ",
     links: [
       { to: "/projects", label: "โครงการทั้งหมด" },
-      { to: "/student-government", label: "SG Radio (สภานักเรียน)" },
+      { to: "/student-government", label: "SG Radio (สโมสรนักเรียน)" },
       { to: "/news", label: "ข่าว SGSC" },
     ],
   },
