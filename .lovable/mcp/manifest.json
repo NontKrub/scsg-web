@@ -1,0 +1,214 @@
+{
+  "version": 1,
+  "sdk_version": "0.26.2",
+  "path": "/mcp",
+  "auth": {
+    "type": "none"
+  },
+  "mcp": {
+    "server": {
+      "name": "saint-gabriel-s-congress",
+      "version": "0.1.0",
+      "title": "Saint Gabriel's Congress"
+    },
+    "tools": [
+      {
+        "name": "get_organization",
+        "title": "Get congress structure",
+        "description": "Overview of the SGSC structure: the 4 organizations, the 5-person Congress Board, the Advisory Board, and member counts.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_members",
+        "title": "List congress members",
+        "description": "List the 68 members of the Student Congress (สภานักเรียน). Optionally filter by organization branch or search by name, role, or class.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "org": {
+              "description": "Branch: SG = สโมสรนักเรียน (18), HOUSE = ประธานบ้านสายกีฬา (9), CLUB = ผู้แทนชุมนุม (18), CLASS = ผู้แทนห้องเรียน (23)",
+              "type": "string",
+              "enum": [
+                "SG",
+                "HOUSE",
+                "CLUB",
+                "CLASS"
+              ]
+            },
+            "search": {
+              "description": "Free-text match on name, role, or classroom.",
+              "type": "string",
+              "minLength": 1
+            },
+            "limit": {
+              "description": "Maximum number of members to return.",
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 68
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_houses",
+        "title": "List sports houses",
+        "description": "List the 9 sports houses (บ้านสายกีฬา) with colour, personality, president, and intro.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_house_scores",
+        "title": "Get House Competition scores",
+        "description": "Monthly House Competition standings: ranking, score, and tier for each of the 9 sports houses, plus the honors of that month.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "month": {
+              "description": "Month code (JUN, JUL, AUG, SEP, OCT, NOV, DEC). Defaults to the current month (AUG).",
+              "type": "string",
+              "enum": [
+                "JUN",
+                "JUL",
+                "AUG",
+                "SEP",
+                "OCT",
+                "NOV",
+                "DEC"
+              ]
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_clubs",
+        "title": "List interest clubs",
+        "description": "List the 6 interest clubs (ชุมนุม) of SGSC with their tagline, member count, and activities.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_projects",
+        "title": "List SGSC projects",
+        "description": "List SGSC projects with owner organization, status, timeline, and latest updates.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "status": {
+              "description": "Filter by project status.",
+              "type": "string",
+              "enum": [
+                "ACTIVE",
+                "UPCOMING",
+                "COMPLETED"
+              ]
+            },
+            "org": {
+              "description": "Filter by owning organization, e.g. สโมสรนักเรียน.",
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_news",
+        "title": "List SGSC news",
+        "description": "List news and announcements published by SGSC, newest first, optionally filtered by category.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "category": {
+              "description": "Filter by news category.",
+              "type": "string",
+              "enum": [
+                "SGSC",
+                "STUDENT GOVERNMENT",
+                "HOUSE",
+                "CLUB",
+                "PROJECT"
+              ]
+            },
+            "limit": {
+              "description": "Maximum number of articles to return.",
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_radio_schedule",
+        "title": "Get SG Radio schedule",
+        "description": "Weekly SG Radio broadcast schedule (a Student Government / สโมสรนักเรียน project) with slot availability and booking rules.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}
