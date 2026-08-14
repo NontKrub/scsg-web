@@ -13,7 +13,7 @@ import {
   type Month,
 } from "@/data/sgsc";
 
-export const Route = createFileRoute("/championship")({
+export const Route = createFileRoute("/competition")({
   head: () => ({
     meta: [
       { title: "House Championship — คะแนนบ้านนักบุญ SGSC" },
