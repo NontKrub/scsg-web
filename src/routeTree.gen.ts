@@ -10,33 +10,169 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AboutRouteImport } from './routes/about'
+import { Route as ChampionshipRouteImport } from './routes/championship'
+import { Route as ClubsRouteImport } from './routes/clubs'
+import { Route as HousesRouteImport } from './routes/houses'
+import { Route as MembersRouteImport } from './routes/members'
+import { Route as NewsRouteImport } from './routes/news'
+import { Route as ClubsIndexRouteImport } from './routes/clubs.index'
+import { Route as ClubsSlugRouteImport } from './routes/clubs.$slug'
+import { Route as HousesIndexRouteImport } from './routes/houses.index'
+import { Route as HousesSlugRouteImport } from './routes/houses.$slug'
+import { Route as NewsIndexRouteImport } from './routes/news.index'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ChampionshipRoute = ChampionshipRouteImport.update({
+  id: '/championship',
+  path: '/championship',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ClubsRoute = ClubsRouteImport.update({
+  id: '/clubs',
+  path: '/clubs',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HousesRoute = HousesRouteImport.update({
+  id: '/houses',
+  path: '/houses',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MembersRoute = MembersRouteImport.update({
+  id: '/members',
+  path: '/members',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NewsRoute = NewsRouteImport.update({
+  id: '/news',
+  path: '/news',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ClubsIndexRoute = ClubsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ClubsRoute,
+} as any)
+const ClubsSlugRoute = ClubsSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => ClubsRoute,
+} as any)
+const HousesIndexRoute = HousesIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => HousesRoute,
+} as any)
+const HousesSlugRoute = HousesSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => HousesRoute,
+} as any)
+const NewsIndexRoute = NewsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => NewsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/championship': typeof ChampionshipRoute
+  '/clubs': typeof ClubsRouteWithChildren
+  '/houses': typeof HousesRouteWithChildren
+  '/members': typeof MembersRoute
+  '/news': typeof NewsRouteWithChildren
+  '/clubs/$slug': typeof ClubsSlugRoute
+  '/houses/$slug': typeof HousesSlugRoute
+  '/clubs/': typeof ClubsIndexRoute
+  '/houses/': typeof HousesIndexRoute
+  '/news/': typeof NewsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/championship': typeof ChampionshipRoute
+  '/members': typeof MembersRoute
+  '/clubs/$slug': typeof ClubsSlugRoute
+  '/houses/$slug': typeof HousesSlugRoute
+  '/clubs': typeof ClubsIndexRoute
+  '/houses': typeof HousesIndexRoute
+  '/news': typeof NewsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/championship': typeof ChampionshipRoute
+  '/clubs': typeof ClubsRouteWithChildren
+  '/houses': typeof HousesRouteWithChildren
+  '/members': typeof MembersRoute
+  '/news': typeof NewsRouteWithChildren
+  '/clubs/$slug': typeof ClubsSlugRoute
+  '/houses/$slug': typeof HousesSlugRoute
+  '/clubs/': typeof ClubsIndexRoute
+  '/houses/': typeof HousesIndexRoute
+  '/news/': typeof NewsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/championship'
+    | '/clubs'
+    | '/houses'
+    | '/members'
+    | '/news'
+    | '/clubs/$slug'
+    | '/houses/$slug'
+    | '/clubs/'
+    | '/houses/'
+    | '/news/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/about'
+    | '/championship'
+    | '/members'
+    | '/clubs/$slug'
+    | '/houses/$slug'
+    | '/clubs'
+    | '/houses'
+    | '/news'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/championship'
+    | '/clubs'
+    | '/houses'
+    | '/members'
+    | '/news'
+    | '/clubs/$slug'
+    | '/houses/$slug'
+    | '/clubs/'
+    | '/houses/'
+    | '/news/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
+  ChampionshipRoute: typeof ChampionshipRoute
+  ClubsRoute: typeof ClubsRouteWithChildren
+  HousesRoute: typeof HousesRouteWithChildren
+  MembersRoute: typeof MembersRoute
+  NewsRoute: typeof NewsRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +184,129 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/championship': {
+      id: '/championship'
+      path: '/championship'
+      fullPath: '/championship'
+      preLoaderRoute: typeof ChampionshipRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/clubs': {
+      id: '/clubs'
+      path: '/clubs'
+      fullPath: '/clubs'
+      preLoaderRoute: typeof ClubsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/houses': {
+      id: '/houses'
+      path: '/houses'
+      fullPath: '/houses'
+      preLoaderRoute: typeof HousesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/members': {
+      id: '/members'
+      path: '/members'
+      fullPath: '/members'
+      preLoaderRoute: typeof MembersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/news': {
+      id: '/news'
+      path: '/news'
+      fullPath: '/news'
+      preLoaderRoute: typeof NewsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/clubs/': {
+      id: '/clubs/'
+      path: '/'
+      fullPath: '/clubs/'
+      preLoaderRoute: typeof ClubsIndexRouteImport
+      parentRoute: typeof ClubsRoute
+    }
+    '/clubs/$slug': {
+      id: '/clubs/$slug'
+      path: '/$slug'
+      fullPath: '/clubs/$slug'
+      preLoaderRoute: typeof ClubsSlugRouteImport
+      parentRoute: typeof ClubsRoute
+    }
+    '/houses/': {
+      id: '/houses/'
+      path: '/'
+      fullPath: '/houses/'
+      preLoaderRoute: typeof HousesIndexRouteImport
+      parentRoute: typeof HousesRoute
+    }
+    '/houses/$slug': {
+      id: '/houses/$slug'
+      path: '/$slug'
+      fullPath: '/houses/$slug'
+      preLoaderRoute: typeof HousesSlugRouteImport
+      parentRoute: typeof HousesRoute
+    }
+    '/news/': {
+      id: '/news/'
+      path: '/'
+      fullPath: '/news/'
+      preLoaderRoute: typeof NewsIndexRouteImport
+      parentRoute: typeof NewsRoute
+    }
   }
 }
 
+interface ClubsRouteChildren {
+  ClubsSlugRoute: typeof ClubsSlugRoute
+  ClubsIndexRoute: typeof ClubsIndexRoute
+}
+
+const ClubsRouteChildren: ClubsRouteChildren = {
+  ClubsSlugRoute: ClubsSlugRoute,
+  ClubsIndexRoute: ClubsIndexRoute,
+}
+
+const ClubsRouteWithChildren = ClubsRoute._addFileChildren(ClubsRouteChildren)
+
+interface HousesRouteChildren {
+  HousesSlugRoute: typeof HousesSlugRoute
+  HousesIndexRoute: typeof HousesIndexRoute
+}
+
+const HousesRouteChildren: HousesRouteChildren = {
+  HousesSlugRoute: HousesSlugRoute,
+  HousesIndexRoute: HousesIndexRoute,
+}
+
+const HousesRouteWithChildren =
+  HousesRoute._addFileChildren(HousesRouteChildren)
+
+interface NewsRouteChildren {
+  NewsIndexRoute: typeof NewsIndexRoute
+}
+
+const NewsRouteChildren: NewsRouteChildren = {
+  NewsIndexRoute: NewsIndexRoute,
+}
+
+const NewsRouteWithChildren = NewsRoute._addFileChildren(NewsRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutRoute: AboutRoute,
+  ChampionshipRoute: ChampionshipRoute,
+  ClubsRoute: ClubsRouteWithChildren,
+  HousesRoute: HousesRouteWithChildren,
+  MembersRoute: MembersRoute,
+  NewsRoute: NewsRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
