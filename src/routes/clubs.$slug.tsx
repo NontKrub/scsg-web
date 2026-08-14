@@ -87,7 +87,7 @@ function ClubPage() {
       </Section>
 
       <Section>
-        <div className="mt-12">
+        <div>
           <Link
             to="/clubs"
             className="inline-flex border border-input px-6 py-4 text-xs font-semibold uppercase tracking-[0.18em]"
