@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { MemberGrid } from "@/components/site/MemberGrid";
 import { ImgBlock, Section, SectionHead, Tag } from "@/components/site/primitives";
-import { PROJECTS, SG_TOTAL, TOTAL_MEMBERS } from "@/data/sgsc";
+import { PROJECTS, SG_MEMBERS, SG_TOTAL, TOTAL_MEMBERS } from "@/data/sgsc";
 
 export const Route = createFileRoute("/student-government")({
   head: () => ({
@@ -50,6 +50,54 @@ function SG() {
               <p className="font-semibold">{x.t}</p>
               <p className="mt-3 text-sm text-muted-foreground">{x.d}</p>
               <ImgBlock className="mt-6 aspect-[4/3] w-full" />
+            </div>
+          ))}
+        </div>
+      </Section>
+
+      <Section>
+        <SectionHead
+          eyebrow="โครงสร้าง 18 ที่นั่ง"
+          title="THE 18 SEATS"
+          sub={`สภานักเรียนมีสมาชิก ${SG_TOTAL} คน แบ่งเป็นฝ่ายบริหาร หัวหน้าฝ่าย และกรรมการฝ่าย ทุกคนเป็นสมาชิกสภาใหญ่ ${TOTAL_MEMBERS} คนด้วย`}
+        />
+        <div className="grid gap-px bg-border md:grid-cols-3">
+          {[
+            { t: "ฝ่ายบริหาร", range: [0, 5] as const },
+            { t: "หัวหน้าฝ่าย", range: [5, 10] as const },
+            { t: "กรรมการฝ่าย", range: [10, 18] as const },
+          ].map((g) => (
+            <div key={g.t} className="bg-background p-7">
+              <p className="eyebrow">{g.t}</p>
+              <div className="mt-6 divide-y divide-border">
+                {SG_MEMBERS.slice(g.range[0], g.range[1]).map((m) => (
+                  <div key={m.id} className="flex items-baseline justify-between gap-4 py-3">
+                    <div>
+                      <p className="text-sm font-semibold">{m.name}</p>
+                      <p className="mt-1 text-xs text-muted-foreground">{m.role}</p>
+                    </div>
+                    <span className="num text-xs text-muted-foreground">{m.klass}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </Section>
+
+      <Section className="bg-navy-deep text-primary-foreground">
+        <p className="eyebrow text-primary-foreground/60">องค์กรใหญ่ใต้สภา</p>
+        <h2 className="display-xl mt-4 text-[clamp(1.9rem,5vw,3.4rem)]">BIG ORG. BIG PROJECTS.</h2>
+        <div className="mt-10 grid gap-px bg-primary-foreground/15 md:grid-cols-3">
+          {[
+            { n: "01", t: "SG RADIO", d: "สถานีวิทยุพักกลางวัน จองคิวขอเพลงและส่งข้อความ" },
+            { n: "02", t: "SAINT MARKET", d: "ตลาดนักเรียนประจำภาคเรียน เปิดพื้นที่ให้ทุกคนขายและแสดงผลงาน" },
+            { n: "03", t: "VOICE BOX", d: "รวบรวมเสียงนักเรียนจากผู้แทนห้องเรียนมาสู่การลงมือทำ" },
+          ].map((x) => (
+            <div key={x.t} className="bg-navy-deep p-7">
+              <span className="num text-3xl text-primary-foreground/40">{x.n}</span>
+              <h3 className="display-xl mt-8 text-2xl">{x.t}</h3>
+              <p className="mt-3 text-sm text-primary-foreground/70">{x.d}</p>
             </div>
           ))}
         </div>
