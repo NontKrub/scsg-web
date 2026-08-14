@@ -4,6 +4,8 @@ import { OrgMap } from "@/components/site/OrgMap";
 import { HouseGrid } from "@/components/site/HouseGrid";
 import { MemberGrid } from "@/components/site/MemberGrid";
 import { ScoreTable } from "@/components/site/ScoreBoard";
+import congressGroup from "@/assets/congress-group.jpg.asset.json";
+import scsgSeal from "@/assets/scsg-seal.png.asset.json";
 import { ImgBlock, Section, SectionHead, Stat, Tag } from "@/components/site/primitives";
 import {
   CLUBS,
@@ -70,7 +72,12 @@ function Home() {
               </Link>
             </div>
           </div>
-          <ImgBlock className="aspect-[4/5] w-full lg:aspect-[3/4]" />
+          <ImgBlock
+            className="aspect-[4/5] w-full lg:aspect-[3/4]"
+            src={congressGroup.url}
+            alt="สมาชิกสภานักเรียนโรงเรียนเซนต์คาเบรียลถ่ายภาพหมู่ที่สนามโรงเรียน"
+            label="congress"
+          />
         </div>
       </section>
 
