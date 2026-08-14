@@ -8,9 +8,10 @@ export const Route = createFileRoute("/student-government")({
   head: () => ({
     meta: [
       { title: "Student Government — สโมสรนักเรียน | SGSC" },
-      { name: "description", content: "ฝ่ายบริหารของ SGSC ดูแลโครงการและบริการเพื่อนักเรียนทั้งโรงเรียน พร้อมรายชื่อคณะทำงานและโครงการที่ดำเนินอยู่" },
+      { name: "description", content: "ฝ่ายบริหารของ SGSC ดูแลบริการเพื่อนักเรียนทั้งโรงเรียน พร้อมรายชื่อคณะทำงาน" },
       { property: "og:title", content: "STUDENT GOVERNMENT — SGSC" },
-      { property: "og:description", content: "โครงสร้าง คณะทำงาน และโครงการของสโมสรนักเรียนคณะที่ 69" },
+      { property: "og:description", content: "โครงสร้างและคณะทำงานของสโมสรนักเรียนคณะที่ 69" },
+
     ],
   }),
   component: SG,
@@ -86,21 +87,6 @@ function SG() {
         </div>
       </Section>
 
-      <Section className="bg-secondary">
-        <SectionHead eyebrow="โครงการของสโมสรนักเรียน" title="OUR PROJECTS" />
-        <div className="grid gap-px bg-border md:grid-cols-3">
-          {c.projects.filter((p) => p.org === "สโมสรนักเรียน").map((p) => (
-            <div key={p.slug} className="bg-background p-7">
-              <Tag>{p.status}</Tag>
-              <h3 className="display-xl mt-5 text-2xl">{p.name}</h3>
-              <p className="mt-3 text-sm text-muted-foreground">{p.desc}</p>
-              <p className="num mt-6 text-xs text-muted-foreground">
-                {p.start} — {p.end}
-              </p>
-            </div>
-          ))}
-        </div>
-      </Section>
 
       <Section>
         <SectionHead

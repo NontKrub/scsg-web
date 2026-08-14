@@ -41,8 +41,6 @@ export async function loadContent(): Promise<SiteContent> {
     board,
     advisors,
     clubs,
-    projects,
-    updates,
     news,
     slots,
     rules,
@@ -55,12 +53,11 @@ export async function loadContent(): Promise<SiteContent> {
     db.from("congress_board").select("*").order("sort"),
     db.from("advisory_board").select("*").order("sort"),
     db.from("clubs").select("*").order("sort"),
-    db.from("projects").select("*").order("sort"),
-    db.from("project_updates").select("*").order("created_at", { ascending: false }),
     db.from("news").select("*").eq("published", true).order("sort").order("created_at", { ascending: false }),
     db.from("radio_slots").select("*"),
     db.from("radio_rules").select("*").order("sort"),
   ]);
+
 
   const settingsMap: Record<string, string> = {};
   for (const s of settings.data ?? []) settingsMap[s.key] = s.value;
@@ -114,8 +111,8 @@ export async function loadContent(): Promise<SiteContent> {
       klass: m.klass,
       duties: m.duties,
       photoUrl: m.photo_url,
-      projects: m.projects ?? [],
     })),
+
     congressBoard: (board.data ?? []).map((b) => ({
       id: b.id,
       role: b.role,
@@ -142,25 +139,10 @@ export async function loadContent(): Promise<SiteContent> {
       members: c.member_count,
       activities: c.activities ?? [],
     })),
-    projects: (projects.data ?? []).map((p) => ({
-      slug: p.slug,
-      name: p.name,
-      org: p.org,
-      status: p.status as "ACTIVE" | "UPCOMING" | "COMPLETED",
-      owner: p.owner,
-      desc: p.description,
-      cta: p.cta,
-      to: p.link,
-      start: p.start_label,
-      end: p.end_label,
-      updates: (updates.data ?? [])
-        .filter((u) => u.project_slug === p.slug)
-        .map((u) => ({ date: u.date_label, text: u.text })),
-    })),
     news: (news.data ?? []).map((n) => ({
       slug: n.slug,
       title: n.title,
-      cat: n.cat as "SGSC" | "STUDENT GOVERNMENT" | "HOUSE" | "CLUB" | "PROJECT",
+      cat: n.cat as "SGSC" | "STUDENT GOVERNMENT" | "HOUSE" | "CLUB",
       date: n.date_label,
       intro: n.intro,
       body: n.body ?? [],
@@ -168,6 +150,7 @@ export async function loadContent(): Promise<SiteContent> {
       houseSlug: n.house_slug || undefined,
       coverUrl: n.cover_url || undefined,
     })),
+
     radioSchedule,
     radioRules: (rules.data ?? []).map((r) => r.text),
   };

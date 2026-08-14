@@ -251,7 +251,6 @@ export type Database = {
           org: string
           org_label: string
           photo_url: string
-          projects: string[]
           role: string
           sort: number
           updated_at: string
@@ -265,7 +264,6 @@ export type Database = {
           org?: string
           org_label?: string
           photo_url?: string
-          projects?: string[]
           role?: string
           sort?: number
           updated_at?: string
@@ -279,7 +277,6 @@ export type Database = {
           org?: string
           org_label?: string
           photo_url?: string
-          projects?: string[]
           role?: string
           sort?: number
           updated_at?: string
@@ -330,86 +327,6 @@ export type Database = {
           related?: string
           slug?: string
           title?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
-      project_updates: {
-        Row: {
-          created_at: string
-          date_label: string
-          id: string
-          project_slug: string
-          text: string
-        }
-        Insert: {
-          created_at?: string
-          date_label?: string
-          id?: string
-          project_slug: string
-          text?: string
-        }
-        Update: {
-          created_at?: string
-          date_label?: string
-          id?: string
-          project_slug?: string
-          text?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "project_updates_project_slug_fkey"
-            columns: ["project_slug"]
-            isOneToOne: false
-            referencedRelation: "projects"
-            referencedColumns: ["slug"]
-          },
-        ]
-      }
-      projects: {
-        Row: {
-          cta: string
-          description: string
-          end_label: string
-          id: string
-          link: string
-          name: string
-          org: string
-          owner: string
-          slug: string
-          sort: number
-          start_label: string
-          status: string
-          updated_at: string
-        }
-        Insert: {
-          cta?: string
-          description?: string
-          end_label?: string
-          id?: string
-          link?: string
-          name?: string
-          org?: string
-          owner?: string
-          slug: string
-          sort?: number
-          start_label?: string
-          status?: string
-          updated_at?: string
-        }
-        Update: {
-          cta?: string
-          description?: string
-          end_label?: string
-          id?: string
-          link?: string
-          name?: string
-          org?: string
-          owner?: string
-          slug?: string
-          sort?: number
-          start_label?: string
-          status?: string
           updated_at?: string
         }
         Relationships: []

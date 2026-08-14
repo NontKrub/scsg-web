@@ -129,37 +129,6 @@
         "outputSchema": null
       },
       {
-        "name": "list_projects",
-        "title": "List SGSC projects",
-        "description": "List SGSC projects with owner organization, status, timeline, and latest updates.",
-        "annotations": {
-          "readOnlyHint": true,
-          "idempotentHint": true,
-          "openWorldHint": false
-        },
-        "inputSchema": {
-          "$schema": "http://json-schema.org/draft-07/schema#",
-          "type": "object",
-          "properties": {
-            "status": {
-              "description": "Filter by project status.",
-              "type": "string",
-              "enum": [
-                "ACTIVE",
-                "UPCOMING",
-                "COMPLETED"
-              ]
-            },
-            "org": {
-              "description": "Filter by owning organization, e.g. สโมสรนักเรียน.",
-              "type": "string",
-              "minLength": 1
-            }
-          }
-        },
-        "outputSchema": null
-      },
-      {
         "name": "list_news",
         "title": "List SGSC news",
         "description": "List news and announcements published by SGSC, newest first, optionally filtered by category.",
@@ -179,8 +148,7 @@
                 "SGSC",
                 "STUDENT GOVERNMENT",
                 "HOUSE",
-                "CLUB",
-                "PROJECT"
+                "CLUB"
               ]
             },
             "limit": {
@@ -196,7 +164,7 @@
       {
         "name": "get_radio_schedule",
         "title": "Get SG Radio schedule",
-        "description": "Weekly SG Radio broadcast schedule (a Student Government / สโมสรนักเรียน project) with slot availability and booking rules.",
+        "description": "Weekly SG Radio broadcast schedule (managed by Student Government / สโมสรนักเรียน) with slot availability and booking rules.",
         "annotations": {
           "readOnlyHint": true,
           "idempotentHint": true,

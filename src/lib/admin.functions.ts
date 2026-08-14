@@ -9,9 +9,8 @@ const TABLES = {
   congress_board: { pk: "id", order: "sort" },
   advisory_board: { pk: "id", order: "sort" },
   clubs: { pk: "id", order: "sort" },
-  projects: { pk: "id", order: "sort" },
-  project_updates: { pk: "id", order: "created_at" },
   news: { pk: "id", order: "created_at" },
+
   radio_slots: { pk: "id", order: "day" },
   radio_bookings: { pk: "id", order: "created_at" },
   radio_rules: { pk: "id", order: "sort" },

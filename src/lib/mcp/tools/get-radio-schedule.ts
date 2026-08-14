@@ -6,7 +6,8 @@ export default defineTool({
   name: "get_radio_schedule",
   title: "Get SG Radio schedule",
   description:
-    "Weekly SG Radio broadcast schedule (a Student Government / สโมสรนักเรียน project) with slot availability and booking rules.",
+    "Weekly SG Radio broadcast schedule (managed by Student Government / สโมสรนักเรียน) with slot availability and booking rules.",
+
   inputSchema: {},
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
   handler: async () => {

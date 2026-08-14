@@ -114,27 +114,6 @@ function Home() {
         <ScoreTable month={c.currentMonth} limit={3} />
       </Section>
 
-      {/* c.projects */}
-      <Section>
-        <SectionHead eyebrow="โครงการปัจจุบัน" title="WHAT WE'RE WORKING ON." />
-        <div className="grid gap-px bg-border md:grid-cols-2 lg:grid-cols-3">
-          {c.projects.slice(0, 3).map((p) => (
-            <Link key={p.slug} to={p.to} className="group bg-background p-6 md:p-8">
-              <div className="mt-6 flex items-center justify-between">
-                <Tag>{p.status}</Tag>
-                <span className="text-[0.62rem] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-                  {p.org}
-                </span>
-              </div>
-              <h3 className="display-xl mt-4 text-2xl">{p.name}</h3>
-              <p className="mt-3 text-sm text-muted-foreground">{p.desc}</p>
-              <span className="mt-6 inline-flex items-center gap-2 border-b-2 border-primary pb-1 text-xs font-semibold uppercase tracking-[0.16em] transition-transform group-hover:translate-x-1">
-                {p.cta} <ArrowRight className="h-3.5 w-3.5" />
-              </span>
-            </Link>
-          ))}
-        </div>
-      </Section>
 
       {/* c.houses */}
       <Section className="bg-navy-deep text-primary-foreground">
