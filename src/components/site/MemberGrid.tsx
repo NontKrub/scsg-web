@@ -1,14 +1,16 @@
+import { useContent, ranking, rankOf, growth, honorsOf, membersOf, display } from "@/lib/content";
 import { useState } from "react";
-import { MEMBERS, ORG_FILTERS, type Member } from "@/data/sgsc";
+import { ORG_FILTERS, type Member } from "@/data/sgsc";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { FilterBar, ImgBlock } from "./primitives";
 
 type Key = (typeof ORG_FILTERS)[number]["key"];
 
 export function MemberGrid({ initial = "ALL" as Key, showClass = true }: { initial?: Key; showClass?: boolean }) {
+  const c = useContent();
   const [filter, setFilter] = useState<Key>(initial);
   const [open, setOpen] = useState<Member | null>(null);
-  const list = MEMBERS.filter((m) => filter === "ALL" || m.org === filter);
+  const list = c.members.filter((m) => filter === "ALL" || m.org === filter);
 
   return (
     <div>

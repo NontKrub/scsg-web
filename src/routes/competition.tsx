@@ -1,17 +1,9 @@
+import { useContent, ranking, rankOf, growth, honorsOf, membersOf, display } from "@/lib/content";
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { HouseCompare, MonthPicker, ScoreTable } from "@/components/site/ScoreBoard";
 import { Section, SectionHead, Tag } from "@/components/site/primitives";
-import {
-  CURRENT_MONTH,
-  HONORS,
-  HOUSES,
-  MONTHS,
-  MONTH_TH,
-  TIERS,
-  growth,
-  type Month,
-} from "@/data/sgsc";
+import { MONTHS, MONTH_TH, TIERS, type Month } from "@/data/sgsc";
 
 export const Route = createFileRoute("/competition")({
   head: () => ({
@@ -26,11 +18,12 @@ export const Route = createFileRoute("/competition")({
 });
 
 function Competition() {
-  const [month, setMonth] = useState<Month>(CURRENT_MONTH);
-  const honors = HONORS[month];
-  const hom = HOUSES.find((h) => h.slug === honors.houseOfMonth)!;
-  const cex = HOUSES.find((h) => h.slug === honors.character)!;
-  const improved = [...HOUSES].sort((a, b) => growth(b.slug, month) - growth(a.slug, month))[0]!;
+  const c = useContent();
+  const [month, setMonth] = useState<Month>(c.currentMonth);
+  const honors = honorsOf(c, month);
+  const hom = c.houses.find((h) => h.slug === honors.houseOfMonth)!;
+  const cex = c.houses.find((h) => h.slug === honors.character)!;
+  const improved = [...c.houses].sort((a, b) => growth(c, b.slug, month) - growth(c, a.slug, month))[0]!;
 
   return (
     <>
@@ -106,7 +99,7 @@ function Competition() {
               <p className="eyebrow">Most improved house</p>
               <p className="num mt-3 text-2xl">{improved.name}</p>
               <p className="num mt-1 text-3xl text-primary">
-                +{growth(improved.slug, month).toFixed(1)}%
+                +{growth(c, improved.slug, month).toFixed(1)}%
               </p>
             </div>
           }

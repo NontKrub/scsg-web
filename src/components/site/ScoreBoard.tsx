@@ -1,5 +1,6 @@
+import { useContent, ranking, rankOf, growth, honorsOf, membersOf, display } from "@/lib/content";
 import { Link } from "@tanstack/react-router";
-import { HOUSES, MONTHS, ranking, tierOf, growth, type Month } from "@/data/sgsc";
+import { MONTHS, tierOf, type Month } from "@/data/sgsc";
 import {
   CartesianGrid,
   Line,
@@ -13,12 +14,13 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 
 export function ScoreTable({ month, limit }: { month: Month; limit?: number }) {
-  const rows = ranking(month).slice(0, limit);
+  const c = useContent();
+  const rows = ranking(c, month).slice(0, limit);
   return (
     <div>
       {rows.map((r) => {
         const tier = tierOf(r.score);
-        const g = growth(r.house.slug, month);
+        const g = growth(c, r.house.slug, month);
         return (
           <Link
             key={r.house.slug}
@@ -90,10 +92,11 @@ const CHART_COLORS = [
 ];
 
 export function GrowthChart({ slugs, height = 340 }: { slugs: string[]; height?: number }) {
+  const c = useContent();
   const data = MONTHS.map((m) => {
     const row: Record<string, string | number> = { month: m };
     slugs.forEach((s) => {
-      const h = HOUSES.find((x) => x.slug === s);
+      const h = c.houses.find((x) => x.slug === s);
       if (h) row[h.name] = h.scores[m];
     });
     return row;
@@ -128,8 +131,8 @@ export function GrowthChart({ slugs, height = 340 }: { slugs: string[]; height?:
             }}
           />
           {slugs.map((s) => {
-            const h = HOUSES.find((x) => x.slug === s)!;
-            const idx = HOUSES.indexOf(h);
+            const h = c.houses.find((x) => x.slug === s)!;
+            const idx = c.houses.indexOf(h);
             return (
               <Line
                 key={s}
@@ -149,6 +152,7 @@ export function GrowthChart({ slugs, height = 340 }: { slugs: string[]; height?:
 }
 
 export function HouseCompare() {
+  const c = useContent();
   const [selected, setSelected] = useState<string[]>(["st-martin", "st-edmund", "st-francis"]);
   const toggle = (slug: string) =>
     setSelected((p) => (p.includes(slug) ? p.filter((s) => s !== slug) : [...p, slug]));
@@ -156,7 +160,7 @@ export function HouseCompare() {
   return (
     <div className="grid gap-8 lg:grid-cols-[260px_1fr]">
       <div className="flex flex-wrap gap-2 lg:flex-col">
-        {HOUSES.map((h, i) => (
+        {c.houses.map((h, i) => (
           <button
             key={h.slug}
             onClick={() => toggle(h.slug)}

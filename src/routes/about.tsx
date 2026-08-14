@@ -1,9 +1,10 @@
+import { useContent, ranking, rankOf, growth, honorsOf, membersOf, display } from "@/lib/content";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { OrgMap } from "@/components/site/OrgMap";
 import congressGroup from "@/assets/congress-group.jpg.asset.json";
 import scsgSeal from "@/assets/scsg-seal.png.asset.json";
 import { ImgBlock, Section, SectionHead, Stat, Tag } from "@/components/site/primitives";
-import { ADVISORY_BOARD, CONGRESS_BOARD, MEMBERS, ORGS, SG_TOTAL, TOTAL_MEMBERS } from "@/data/sgsc";
+import { ORGS } from "@/data/sgsc";
 
 export const Route = createFileRoute("/about")({
   head: () => ({
@@ -21,6 +22,7 @@ export const Route = createFileRoute("/about")({
 });
 
 function About() {
+  const c = useContent();
   return (
     <>
       <Section className="pb-10">
@@ -42,7 +44,7 @@ function About() {
           และเป็นศูนย์กลางประสานงานระหว่างองค์กรนักเรียนทั้งสี่
         </p>
         <div className="mt-12 grid grid-cols-2 gap-6 md:grid-cols-4">
-          <Stat value={String(TOTAL_MEMBERS)} label="สมาชิกสภา" />
+          <Stat value={String(c.members.length)} label="สมาชิกสภา" />
           <Stat value="04" label="องค์กรหลัก" />
           <Stat value="09" label="บ้านสายกีฬา" />
           <Stat value="06" label="ชุมนุม" />
@@ -67,16 +69,16 @@ function About() {
         <SectionHead
           eyebrow="คณะกรรมการบริหารสภา"
           title="CONGRESS BOARD — 5 ตำแหน่ง"
-          sub={`คณะกรรมการบริหารสภา 5 คน เลือกจากสมาชิกสภาทั้ง ${TOTAL_MEMBERS} คน ทำหน้าที่กำกับภาพรวมของทั้ง 4 องค์กร`}
+          sub={`คณะกรรมการบริหารสภา 5 คน เลือกจากสมาชิกสภาทั้ง ${c.members.length} คน ทำหน้าที่กำกับภาพรวมของทั้ง 4 องค์กร`}
         />
         <div className="grid grid-cols-2 gap-px bg-border md:grid-cols-3 lg:grid-cols-5">
-          {CONGRESS_BOARD.map((b) => (
+          {c.congressBoard.map((b) => (
             <div key={b.role} className="bg-background p-4">
               <ImgBlock className="aspect-[3/4] w-full" />
-              <p className="mt-4 text-sm font-semibold">{b.member.name}</p>
+              <p className="mt-4 text-sm font-semibold">{b.name}</p>
               <p className="mt-1 text-xs text-muted-foreground">{b.role}</p>
-              <p className="mt-1 text-[0.68rem] text-muted-foreground">มาจาก{b.from}</p>
-              <p className="num mt-2 text-xs text-muted-foreground">{b.member.klass}</p>
+              <p className="mt-1 text-[0.68rem] text-muted-foreground">มาจาก{b.fromOrg}</p>
+              <p className="num mt-2 text-xs text-muted-foreground">{b.klass}</p>
             </div>
           ))}
         </div>
@@ -89,7 +91,7 @@ function About() {
           sub="คณะที่ปรึกษาให้คำแนะนำและกำกับดูแลการทำงานของสภา ไม่นับรวมในสมาชิกสภา 68 คน"
         />
         <div className="grid gap-px bg-border sm:grid-cols-2 lg:grid-cols-3">
-          {ADVISORY_BOARD.map((a) => (
+          {c.advisoryBoard.map((a) => (
             <div key={a.name} className="bg-background p-7">
               <ImgBlock className="mb-6 aspect-[4/3] w-full" />
               <p className="eyebrow">{a.role}</p>
@@ -105,11 +107,11 @@ function About() {
         <div className="grid gap-px bg-border md:grid-cols-3">
           {[
             {
-              t: `STUDENT CONGRESS · ${TOTAL_MEMBERS} คน`,
+              t: `STUDENT CONGRESS · ${c.members.length} คน`,
               d: "องค์กรใหญ่สุด รวมสมาชิกจาก 4 องก์กร นำโดยคณะกรรมการบริหารสภา 5 ตำแหน่ง และมีคณะที่ปรึกษากำกับดูแล",
             },
             {
-              t: `STUDENT GOVERNMENT · ${SG_TOTAL} คน`,
+              t: `STUDENT GOVERNMENT · ${membersOf(c, "SG").length} คน`,
               d: "หนึ่งใน 4 องค์กรภายใต้สภา เป็นฝ่ายบริหาร ตั้งแต่นายกสโมสรนักเรียนจนถึงกรรมการฝ่าย ดูแลโครงการอย่าง SG RADIO",
             },
             {
@@ -130,7 +132,7 @@ function About() {
           <div>
             <h2 className="display-xl text-[clamp(1.9rem,5vw,3.4rem)]">CONGRESS MEMBERS</h2>
             <p className="mt-5 max-w-md text-primary-foreground/70">
-              สมาชิกสภาทั้งหมด {TOTAL_MEMBERS} คน มาจากสโมสรนักเรียน บ้านสายกีฬา ชุมนุม และผู้แทนห้องเรียน
+              สมาชิกสภาทั้งหมด {c.members.length} คน มาจากสโมสรนักเรียน บ้านสายกีฬา ชุมนุม และผู้แทนห้องเรียน
             </p>
             <Link
               to="/members"
@@ -154,10 +156,10 @@ function About() {
       <Section>
         <SectionHead eyebrow="ตัวเลข" title="ONE CONGRESS, MANY VOICES." />
         <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
-          <Stat value={String(MEMBERS.filter((m) => m.org === "SG").length)} label="สโมสรนักเรียน" />
-          <Stat value={String(MEMBERS.filter((m) => m.org === "HOUSE").length)} label="คณะกรรมการบ้าน" />
-          <Stat value={String(MEMBERS.filter((m) => m.org === "CLUB").length)} label="ผู้แทนชุมนุม" />
-          <Stat value={String(MEMBERS.filter((m) => m.org === "CLASS").length)} label="ผู้แทนห้องเรียน" />
+          <Stat value={String(c.members.filter((m) => m.org === "SG").length)} label="สโมสรนักเรียน" />
+          <Stat value={String(c.members.filter((m) => m.org === "HOUSE").length)} label="คณะกรรมการบ้าน" />
+          <Stat value={String(c.members.filter((m) => m.org === "CLUB").length)} label="ผู้แทนชุมนุม" />
+          <Stat value={String(c.members.filter((m) => m.org === "CLASS").length)} label="ผู้แทนห้องเรียน" />
         </div>
       </Section>
     </>

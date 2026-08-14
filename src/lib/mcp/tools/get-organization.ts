@@ -1,5 +1,7 @@
 import { defineTool } from "@lovable.dev/mcp-js";
-import { ADVISORY_BOARD, CONGRESS_BOARD, ORGS, SG_TOTAL, TOTAL_MEMBERS } from "@/data/sgsc";
+import { loadContent } from "@/lib/content.server";
+import { ORGS } from "@/data/sgsc";
+import { membersOf } from "@/lib/derive";
 
 export default defineTool({
   name: "get_organization",
@@ -8,23 +10,25 @@ export default defineTool({
     "Overview of the SGSC structure: the 4 organizations, the 5-person Congress Board, the Advisory Board, and member counts.",
   inputSchema: {},
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
-  handler: () => {
+  handler: async () => {
+    const c = await loadContent();
+    const sg = membersOf(c, "SG").length;
     const summary = {
-      totalMembers: TOTAL_MEMBERS,
-      studentGovernmentMembers: SG_TOTAL,
+      totalMembers: c.members.length,
+      studentGovernmentMembers: sg,
       organizations: ORGS,
-      congressBoard: CONGRESS_BOARD,
-      advisoryBoard: ADVISORY_BOARD,
+      congressBoard: c.congressBoard,
+      advisoryBoard: c.advisoryBoard,
     };
     return {
       content: [
         {
           type: "text" as const,
           text:
-            `Student Congress (สภานักเรียน) — ${TOTAL_MEMBERS} members across ${ORGS.length} organizations.\n` +
-            `Student Government (สโมสรนักเรียน): ${SG_TOTAL} members.\n` +
-            `Congress Board: ${CONGRESS_BOARD.map((b) => `${b.role} — ${b.member.name}`).join("; ")}\n` +
-            `Advisory Board: ${ADVISORY_BOARD.map((a) => `${a.role} — ${a.name}`).join("; ")}`,
+            `Student Congress (สภานักเรียน) — ${c.members.length} members across ${ORGS.length} organizations.\n` +
+            `Student Government (สโมสรนักเรียน): ${sg} members.\n` +
+            `Congress Board: ${c.congressBoard.map((b) => `${b.role} — ${b.name || "(ยังไม่ระบุ)"}`).join("; ")}\n` +
+            `Advisory Board: ${c.advisoryBoard.map((a) => `${a.role} — ${a.name || "(ยังไม่ระบุ)"}`).join("; ")}`,
         },
       ],
       structuredContent: summary,

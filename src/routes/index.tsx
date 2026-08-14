@@ -1,3 +1,4 @@
+import { useContent, ranking, rankOf, growth, honorsOf, membersOf, display } from "@/lib/content";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
 import { OrgMap } from "@/components/site/OrgMap";
@@ -7,16 +8,7 @@ import { ScoreTable } from "@/components/site/ScoreBoard";
 import congressGroup from "@/assets/congress-group.jpg.asset.json";
 import scsgSeal from "@/assets/scsg-seal.png.asset.json";
 import { ImgBlock, Section, SectionHead, Stat, Tag } from "@/components/site/primitives";
-import {
-  CLUBS,
-  ADVISORY_BOARD,
-  CONGRESS_BOARD,
-  CURRENT_MONTH,
-  MONTH_TH,
-  NEWS,
-  PROJECTS,
-  TOTAL_MEMBERS,
-} from "@/data/sgsc";
+import { MONTH_TH } from "@/data/sgsc";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -35,6 +27,7 @@ export const Route = createFileRoute("/")({
 });
 
 function Home() {
+  const c = useContent();
   return (
     <>
       {/* HERO */}
@@ -60,7 +53,7 @@ function Home() {
               Student Congress of Saint Gabriel&apos;s College
             </p>
             <div className="mt-10 grid grid-cols-3 gap-6">
-              <Stat value={String(TOTAL_MEMBERS)} label="ผู้นำนักเรียน" />
+              <Stat value={String(c.members.length)} label="ผู้นำนักเรียน" />
               <Stat value="04" label="องค์กร" />
               <Stat value="09" label="บ้านสายกีฬา" />
             </div>
@@ -107,7 +100,7 @@ function Home() {
       {/* HOUSE SCORE HIGHLIGHT */}
       <Section className="bg-secondary">
         <SectionHead
-          eyebrow={`ประจำเดือน${MONTH_TH[CURRENT_MONTH]} 2026`}
+          eyebrow={`ประจำเดือน${MONTH_TH[c.currentMonth]} 2026`}
           title="HOUSE COMPETITION"
           right={
             <Link
@@ -118,14 +111,14 @@ function Home() {
             </Link>
           }
         />
-        <ScoreTable month={CURRENT_MONTH} limit={3} />
+        <ScoreTable month={c.currentMonth} limit={3} />
       </Section>
 
-      {/* PROJECTS */}
+      {/* c.projects */}
       <Section>
         <SectionHead eyebrow="โครงการปัจจุบัน" title="WHAT WE'RE WORKING ON." />
         <div className="grid gap-px bg-border md:grid-cols-2 lg:grid-cols-3">
-          {PROJECTS.slice(0, 3).map((p) => (
+          {c.projects.slice(0, 3).map((p) => (
             <Link key={p.slug} to={p.to} className="group bg-background p-6 md:p-8">
               <ImgBlock className="aspect-[16/10] w-full" />
               <div className="mt-6 flex items-center justify-between">
@@ -144,11 +137,11 @@ function Home() {
         </div>
       </Section>
 
-      {/* HOUSES */}
+      {/* c.houses */}
       <Section className="bg-navy-deep text-primary-foreground">
         <div className="mb-10 flex flex-col gap-6 border-t border-primary-foreground/20 pt-6 md:flex-row md:items-end md:justify-between">
           <h2 className="display-xl text-[clamp(1.9rem,5vw,3.6rem)]">
-            09 HOUSES.
+            09 c.houses.
             <br />
             ONE SAINT GABRIEL&apos;S.
           </h2>
@@ -160,7 +153,7 @@ function Home() {
           </Link>
         </div>
         <div className="bg-background">
-          <HouseGrid month={CURRENT_MONTH} />
+          <HouseGrid month={c.currentMonth} />
         </div>
       </Section>
 
@@ -172,13 +165,13 @@ function Home() {
           sub="5 ตำแหน่งบริหารของสภานักเรียนใหญ่ เลือกจากสมาชิกสภาทั้ง 68 คน จาก 4 องค์กร"
         />
         <div className="grid grid-cols-2 gap-px bg-border md:grid-cols-3 lg:grid-cols-5">
-          {CONGRESS_BOARD.map((b) => (
+          {c.congressBoard.map((b) => (
             <div key={b.role} className="bg-background p-4">
               <ImgBlock className="aspect-[3/4] w-full" />
-              <p className="mt-4 text-sm font-semibold">{b.member.name}</p>
+              <p className="mt-4 text-sm font-semibold">{b.name}</p>
               <p className="mt-1 text-xs text-muted-foreground">{b.role}</p>
-              <p className="mt-1 text-[0.68rem] text-muted-foreground">มาจาก{b.from}</p>
-              <p className="num mt-2 text-xs text-muted-foreground">{b.member.klass}</p>
+              <p className="mt-1 text-[0.68rem] text-muted-foreground">มาจาก{b.fromOrg}</p>
+              <p className="num mt-2 text-xs text-muted-foreground">{b.klass}</p>
             </div>
           ))}
         </div>
@@ -192,7 +185,7 @@ function Home() {
           sub="คณะที่ปรึกษาของสภา ให้คำแนะนำเชิงนโยบายและกำกับดูแลการทำงาน (ไม่นับรวมในสมาชิก 68 คน)"
         />
         <div className="grid gap-px bg-border sm:grid-cols-2 lg:grid-cols-3">
-          {ADVISORY_BOARD.map((a) => (
+          {c.advisoryBoard.map((a) => (
             <div key={a.name} className="bg-background p-7">
               <ImgBlock className="mb-6 aspect-[4/3] w-full" />
               <p className="eyebrow">{a.role}</p>
@@ -203,7 +196,7 @@ function Home() {
         </div>
       </Section>
 
-      {/* MEMBERS */}
+      {/* c.members */}
       <Section className="bg-secondary">
         <SectionHead
           eyebrow="สมาชิกสภา"
@@ -242,33 +235,33 @@ function Home() {
 
       </Section>
 
-      {/* CLUBS */}
+      {/* c.clubs */}
       <Section>
         <SectionHead eyebrow="ชุมนุมตามความสนใจ" title="CLUBS OF INTEREST" />
         <div className="grid gap-px bg-border sm:grid-cols-2 lg:grid-cols-3">
-          {CLUBS.map((c) => (
+          {c.clubs.map((club, ci) => (
             <Link
-              key={c.slug}
+              key={club.slug}
               to="/clubs/$slug"
-              params={{ slug: c.slug }}
-              className={`${c.cls} group bg-background p-6 transition-colors hover:bg-[var(--house)] md:p-8`}
+              params={{ slug: club.slug }}
+              className={`${club.cls} group bg-background p-6 transition-colors hover:bg-[var(--house)] md:p-8`}
             >
               <div className="flex items-baseline justify-between">
                 <span className="num text-4xl text-muted-foreground transition-colors group-hover:text-white/70">
-                  {String(CLUBS.indexOf(c) + 1).padStart(2, "0")}
+                  {String(ci + 1).padStart(2, "0")}
                 </span>
                 <span className="h-8 w-8 bg-[var(--house)] transition-colors group-hover:bg-white/80" />
               </div>
-              <h3 className="display-xl mt-10 text-2xl transition-colors group-hover:text-white">{c.name}</h3>
+              <h3 className="display-xl mt-10 text-2xl transition-colors group-hover:text-white">{club.name}</h3>
               <p className="mt-2 text-sm text-muted-foreground transition-colors group-hover:text-white/80">
-                {c.nameTh} · {c.tagline}
+                {club.nameTh} · {club.tagline}
               </p>
             </Link>
           ))}
         </div>
       </Section>
 
-      {/* NEWS */}
+      {/* c.news */}
       <Section className="bg-secondary">
         <SectionHead
           eyebrow="ข่าวและอัปเดต"
@@ -283,7 +276,7 @@ function Home() {
           }
         />
         <div className="grid gap-8 md:grid-cols-3">
-          {NEWS.slice(0, 3).map((n) => (
+          {c.news.slice(0, 3).map((n) => (
             <Link key={n.slug} to="/news/$slug" params={{ slug: n.slug }} className="group">
               <ImgBlock className="aspect-[4/3] w-full" />
               <div className="mt-5 flex items-center gap-3">

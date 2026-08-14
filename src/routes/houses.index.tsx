@@ -1,7 +1,8 @@
+import { useContent, ranking, rankOf, growth, honorsOf, membersOf, display } from "@/lib/content";
 import { createFileRoute } from "@tanstack/react-router";
 import { HouseGrid } from "@/components/site/HouseGrid";
 import { Section, Tag } from "@/components/site/primitives";
-import { CURRENT_MONTH, MONTH_TH, TIERS } from "@/data/sgsc";
+import { MONTH_TH, TIERS } from "@/data/sgsc";
 
 export const Route = createFileRoute("/houses/")({
   head: () => ({
@@ -16,18 +17,19 @@ export const Route = createFileRoute("/houses/")({
 });
 
 function HousesLanding() {
+  const c = useContent();
   return (
     <>
       <Section className="pb-10">
         <Tag>House of Saints</Tag>
         <h1 className="display-xl mt-6 text-[clamp(2.6rem,9vw,7rem)]">HOUSE OF SAINTS</h1>
         <p className="mt-6 text-lg text-muted-foreground">9 บ้าน หนึ่งเซนต์คาเบรียล</p>
-        <p className="eyebrow mt-10">คะแนนประจำเดือน{MONTH_TH[CURRENT_MONTH]} 2026</p>
+        <p className="eyebrow mt-10">คะแนนประจำเดือน{MONTH_TH[c.currentMonth]} 2026</p>
       </Section>
 
       <Section className="pt-0">
         <div className="border-t border-border">
-          <HouseGrid month={CURRENT_MONTH} big />
+          <HouseGrid month={c.currentMonth} big />
         </div>
       </Section>
 

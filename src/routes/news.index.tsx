@@ -1,7 +1,8 @@
+import { useContent, ranking, rankOf, growth, honorsOf, membersOf, display } from "@/lib/content";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { FilterBar, ImgBlock, Section, Tag } from "@/components/site/primitives";
-import { NEWS } from "@/data/sgsc";
+
 
 const CATS = [
   { key: "ALL", label: "ทั้งหมด" },
@@ -25,8 +26,9 @@ export const Route = createFileRoute("/news/")({
 });
 
 function NewsIndex() {
+  const c = useContent();
   const [cat, setCat] = useState<(typeof CATS)[number]["key"]>("ALL");
-  const list = cat === "ALL" ? NEWS : NEWS.filter((n) => n.cat === cat);
+  const list = cat === "ALL" ? c.news : c.news.filter((n) => n.cat === cat);
   const feature = list[0];
 
   return (

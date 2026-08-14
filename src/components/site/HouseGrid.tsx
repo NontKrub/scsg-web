@@ -1,11 +1,13 @@
+import { useContent, ranking, rankOf, growth, honorsOf, membersOf, display } from "@/lib/content";
 import { Link } from "@tanstack/react-router";
-import { HOUSES, rankOf, tierOf, type Month } from "@/data/sgsc";
+import { tierOf, type Month } from "@/data/sgsc";
 import { cn } from "@/lib/utils";
 
 export function HouseGrid({ month, big = false }: { month: Month; big?: boolean }) {
+  const c = useContent();
   return (
     <div className={cn("grid gap-px bg-border", big ? "sm:grid-cols-2 lg:grid-cols-3" : "sm:grid-cols-3 lg:grid-cols-3")}>
-      {HOUSES.map((h) => {
+      {c.houses.map((h) => {
         const score = h.scores[month];
         const tier = tierOf(score);
         return (
@@ -23,7 +25,7 @@ export function HouseGrid({ month, big = false }: { month: Month; big?: boolean 
                 {h.no} / 09
               </span>
               <span className="num text-sm text-muted-foreground transition-colors group-hover:text-white/70">
-                RANK {String(rankOf(h.slug, month)).padStart(2, "0")}
+                RANK {String(rankOf(c, h.slug, month)).padStart(2, "0")}
               </span>
             </div>
 

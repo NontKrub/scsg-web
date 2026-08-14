@@ -1,5 +1,5 @@
 import { defineTool } from "@lovable.dev/mcp-js";
-import { CLUBS } from "@/data/sgsc";
+import { loadContent } from "@/lib/content.server";
 
 export default defineTool({
   name: "list_clubs",
@@ -7,8 +7,9 @@ export default defineTool({
   description: "List the 6 interest clubs (ชุมนุม) of SGSC with their tagline, member count, and activities.",
   inputSchema: {},
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
-  handler: () => {
-    const clubs = CLUBS.map((c) => ({
+  handler: async () => {
+    const c = await loadContent();
+    const clubs = c.clubs.map((c) => ({
       slug: c.slug,
       name: c.name,
       nameTh: c.nameTh,

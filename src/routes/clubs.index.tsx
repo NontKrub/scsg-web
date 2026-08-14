@@ -1,6 +1,7 @@
+import { useContent, ranking, rankOf, growth, honorsOf, membersOf, display } from "@/lib/content";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ImgBlock, Section, SectionHead, Tag } from "@/components/site/primitives";
-import { CLUBS } from "@/data/sgsc";
+
 
 export const Route = createFileRoute("/clubs/")({
   head: () => ({
@@ -15,6 +16,7 @@ export const Route = createFileRoute("/clubs/")({
 });
 
 function ClubsIndex() {
+  const c = useContent();
   return (
     <>
       <Section className="pb-10">
@@ -28,20 +30,20 @@ function ClubsIndex() {
 
       <Section className="pt-0">
         <div className="grid gap-px bg-border md:grid-cols-2 lg:grid-cols-3">
-          {CLUBS.map((c) => (
+          {c.clubs.map((club) => (
             <Link
-              key={c.slug}
+              key={club.slug}
               to="/clubs/$slug"
-              params={{ slug: c.slug }}
-              className={`${c.cls} group bg-background p-7 transition-colors hover:bg-[var(--house)] hover:text-[var(--house-fg)]`}
+              params={{ slug: club.slug }}
+              className={`${club.cls} group bg-background p-7 transition-colors hover:bg-[var(--house)] hover:text-[var(--house-fg)]`}
             >
-              <p className="num text-xs opacity-60">{c.nameTh}</p>
-              <h2 className="display-xl mt-4 text-2xl md:text-3xl">{c.name}</h2>
-              <p className="mt-3 text-sm opacity-80">{c.tagline}</p>
+              <p className="num text-xs opacity-60">{club.nameTh}</p>
+              <h2 className="display-xl mt-4 text-2xl md:text-3xl">{club.name}</h2>
+              <p className="mt-3 text-sm opacity-80">{club.tagline}</p>
               <ImgBlock className="mt-6 aspect-[4/3] w-full" />
               <div className="mt-6 flex items-center justify-between border-t border-current/20 pt-4 text-xs">
-                <span>หัวหน้าชุมนุม {c.head}</span>
-                <span className="num">{c.members} คน</span>
+                <span>หัวหน้าชุมนุม {display(club.head)}</span>
+                <span className="num">{club.members} คน</span>
               </div>
             </Link>
           ))}

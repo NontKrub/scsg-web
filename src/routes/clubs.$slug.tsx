@@ -1,33 +1,26 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { useContent, ranking, rankOf, growth, honorsOf, membersOf, display } from "@/lib/content";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { ImgBlock, Section, SectionHead, Tag } from "@/components/site/primitives";
-import { CLUBS, MEMBERS } from "@/data/sgsc";
+
 
 export const Route = createFileRoute("/clubs/$slug")({
-  loader: ({ params }) => {
-    const club = CLUBS.find((c) => c.slug === params.slug);
-    if (!club) throw notFound();
-    return { slug: club.slug, name: club.name, nameTh: club.nameTh, tagline: club.tagline };
-  },
-  head: ({ loaderData }) => {
-    if (!loaderData) {
-      return { meta: [{ title: "ไม่พบชุมนุมนี้ — SGSC" }, { name: "robots", content: "noindex" }] };
-    }
-    return {
-      meta: [
-        { title: `${loaderData.name} — ชุมนุม${loaderData.nameTh} | SGSC` },
-        { name: "description", content: `${loaderData.tagline} · กิจกรรม สมาชิก และผลงานของชุมนุม${loaderData.nameTh}` },
-        { property: "og:title", content: `${loaderData.name} — Clubs of Interest` },
-        { property: "og:description", content: loaderData.tagline },
-      ],
-    };
-  },
+  head: ({ params }) => ({
+    meta: [
+      { title: `${params.slug} — ชุมนุม | SGSC` },
+      { name: "description", content: "กิจกรรม สมาชิก และผลงานของชุมนุมตามความสนใจ สภานักเรียนโรงเรียนเซนต์คาเบรียล" },
+      { property: "og:title", content: "Clubs of Interest — SGSC" },
+      { property: "og:description", content: "กิจกรรมและผลงานของชุมนุม" },
+    ],
+  }),
   component: ClubPage,
 });
 
 function ClubPage() {
-  const { slug } = Route.useLoaderData();
-  const club = CLUBS.find((c) => c.slug === slug)!;
-  const staff = MEMBERS.filter((m) => m.org === "CLUB" && m.orgLabel === club.name);
+  const c = useContent();
+  const { slug } = Route.useParams();
+  const club = c.clubs.find((x) => x.slug === slug);
+  if (!club) return <NotFoundBlock label="ไม่พบชุมนุมนี้" />;
+  const staff = c.members.filter((m) => m.org === "CLUB" && m.orgLabel === club.name);
 
   return (
     <div className={club.cls}>
@@ -97,5 +90,14 @@ function ClubPage() {
         </div>
       </Section>
     </div>
+  );
+}
+
+function NotFoundBlock({ label }: { label: string }) {
+  return (
+    <Section>
+      <h1 className="display-xl text-3xl">{label}</h1>
+      <p className="mt-4 text-sm text-muted-foreground">ข้อมูลนี้อาจถูกลบหรือยังไม่ได้เผยแพร่</p>
+    </Section>
   );
 }

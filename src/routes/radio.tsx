@@ -1,7 +1,8 @@
+import { useContent, ranking, rankOf, growth, honorsOf, membersOf, display } from "@/lib/content";
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Section, SectionHead, Tag } from "@/components/site/primitives";
-import { RADIO_DAYS, RADIO_RULES, RADIO_SCHEDULE, RADIO_SLOTS } from "@/data/sgsc";
+import { RADIO_DAYS, RADIO_SLOTS } from "@/data/sgsc";
 
 export const Route = createFileRoute("/radio")({
   head: () => ({
@@ -23,10 +24,11 @@ const STATE_TH: Record<string, string> = {
 };
 
 function Radio() {
+  const c = useContent();
   const [day, setDay] = useState(RADIO_DAYS[0]!);
   const [slot, setSlot] = useState<string | null>(null);
   const [sent, setSent] = useState(false);
-  const states = RADIO_SCHEDULE[day]!;
+  const states = c.radioSchedule[day]!;
 
   return (
     <>
@@ -56,7 +58,7 @@ function Radio() {
               {RADIO_DAYS.map((d) => (
                 <tr key={d}>
                   <td className="border-b border-border p-3 font-semibold">{d}</td>
-                  {RADIO_SCHEDULE[d]!.map((st, i) => (
+                  {c.radioSchedule[d]!.map((st, i) => (
                     <td key={i} className="border-b border-border p-3">
                       <span
                         className={
@@ -174,7 +176,7 @@ function Radio() {
       <Section>
         <SectionHead eyebrow="กติกาการใช้บริการ" title="RADIO RULES" />
         <ol className="max-w-3xl">
-          {RADIO_RULES.map((r, i) => (
+          {c.radioRules.map((r, i) => (
             <li key={r} className="flex gap-5 border-t border-border py-5 last:border-b">
               <span className="num text-sm text-muted-foreground">{String(i + 1).padStart(2, "0")}</span>
               <span className="text-sm">{r}</span>

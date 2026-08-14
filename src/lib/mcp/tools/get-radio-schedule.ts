@@ -1,5 +1,6 @@
 import { defineTool } from "@lovable.dev/mcp-js";
-import { RADIO_DAYS, RADIO_RULES, RADIO_SCHEDULE, RADIO_SLOTS } from "@/data/sgsc";
+import { loadContent } from "@/lib/content.server";
+import { RADIO_DAYS, RADIO_SLOTS } from "@/data/sgsc";
 
 export default defineTool({
   name: "get_radio_schedule",
@@ -8,10 +9,11 @@ export default defineTool({
     "Weekly SG Radio broadcast schedule (a Student Government / สโมสรนักเรียน project) with slot availability and booking rules.",
   inputSchema: {},
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
-  handler: () => {
+  handler: async () => {
+    const c = await loadContent();
     const schedule = RADIO_DAYS.map((day) => ({
       day,
-      slots: RADIO_SLOTS.map((time, i) => ({ time, state: RADIO_SCHEDULE[day]?.[i] ?? "CLOSED" })),
+      slots: RADIO_SLOTS.map((time, i) => ({ time, state: c.radioSchedule[day]?.[i] ?? "CLOSED" })),
     }));
     return {
       content: [
@@ -21,10 +23,10 @@ export default defineTool({
             schedule
               .map((d) => `${d.day}: ${d.slots.map((s) => `${s.time} ${s.state}`).join(" · ")}`)
               .join("\n") +
-            `\n\nกติกา:\n${RADIO_RULES.map((r) => `- ${r}`).join("\n")}`,
+            `\n\nกติกา:\n${c.radioRules.map((r) => `- ${r}`).join("\n")}`,
         },
       ],
-      structuredContent: { schedule, rules: RADIO_RULES },
+      structuredContent: { schedule, rules: c.radioRules },
     };
   },
 });
