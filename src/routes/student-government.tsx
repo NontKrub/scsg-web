@@ -135,6 +135,96 @@ function SG() {
         </div>
       </Section>
 
+      {/* SAMO SHOP */}
+      <Section className="bg-secondary">
+        <SectionHead
+          eyebrow="ร้านค้าออนไลน์ของสโมสรนักเรียน"
+          title="SAMO SHOP"
+          sub="ร้านค้าออนไลน์อย่างเป็นทางการของสโมสรนักเรียน โรงเรียนเซนต์คาเบรียล เพื่อให้ครู นักเรียน ผู้ปกครอง และศิษย์เก่า เข้าถึงสินค้าของโรงเรียนได้สะดวกยิ่งขึ้น รายได้นำไปใช้จัดกิจกรรมของสโมสรนักเรียน และสมทบทุนเพื่อการกุศล"
+          right={
+            <a
+              href="https://www.samoshopth.com/"
+              target="_blank"
+              rel="noreferrer noopener"
+              className="inline-flex items-center gap-2 bg-primary px-6 py-4 text-xs font-semibold uppercase tracking-[0.18em] text-primary-foreground"
+            >
+              เข้าสู่ SAMO SHOP
+            </a>
+          }
+        />
+        <div className="grid gap-px bg-border sm:grid-cols-2 lg:grid-cols-5">
+          {[
+            { t: "เครื่องแบบนักเรียน", d: "ชุดนักเรียน ชุดพละ ชุดว่ายน้ำ และรองเท้า" },
+            { t: "อุปกรณ์การเรียน", d: "สมุด ดินสอ ปากกา สีไม้ และอุปกรณ์วิทยาศาสตร์" },
+            { t: "ของที่ระลึก & พรีเมียม", d: "เสื้อยืด กระเป๋าผ้า แก้วน้ำ พวงกุญแจ ออกแบบเฉพาะของโรงเรียน" },
+            { t: "บัตรกิจกรรม / คูปอง", d: "คูปองและตั๋วงานเทศกาลต่าง ๆ ของโรงเรียน" },
+            { t: "สลากการกุศล", d: "ร่วมสนับสนุนกิจกรรมและงานการกุศลของสโมสร" },
+          ].map((x) => (
+            <div key={x.t} className="bg-background p-6">
+              <p className="font-semibold">{x.t}</p>
+              <p className="mt-3 text-sm text-muted-foreground">{x.d}</p>
+            </div>
+          ))}
+        </div>
+        <div className="mt-px grid gap-px bg-border md:grid-cols-3">
+          {[
+            { t: "สั่งซื้อได้ง่าย เข้าถึงได้ทุกคน", d: "นักเรียน ผู้ปกครอง หรือศิษย์เก่า สั่งซื้อออนไลน์ได้จากทุกที่ ทั้งมือถือและคอมพิวเตอร์" },
+            { t: "ของแท้ มาตรฐานโรงเรียน", d: "สินค้าทุกชิ้นคัดเลือกและดูแลโดยสโมสรนักเรียน" },
+            { t: "สนับสนุนนักเรียนและกิจกรรม", d: "รายได้ส่วนหนึ่งนำไปพัฒนากิจกรรมและสวัสดิการของนักเรียน" },
+          ].map((x) => (
+            <div key={x.t} className="bg-background p-7">
+              <p className="eyebrow">{x.t}</p>
+              <p className="mt-4 text-sm text-muted-foreground">{x.d}</p>
+            </div>
+          ))}
+        </div>
+        <div className="mt-px grid gap-px bg-border md:grid-cols-2">
+          <div className="bg-background p-7">
+            <p className="eyebrow">การชำระเงิน</p>
+            <p className="mt-4 text-sm text-muted-foreground">โอนเงินผ่านธนาคาร (Bank Transfer) และ PromptPay</p>
+          </div>
+          <div className="bg-background p-7">
+            <p className="eyebrow">การเปลี่ยน / คืนสินค้า</p>
+            <p className="mt-4 text-sm text-muted-foreground">
+              เปลี่ยนหรือคืนได้ภายใน 7 วันหลังได้รับสินค้า กรณีสินค้าชำรุดหรือไม่ตรงตามรายการสั่งซื้อ
+            </p>
+          </div>
+        </div>
+      </Section>
+
+      {/* CHANNELS */}
+      <Section>
+        <SectionHead eyebrow="ช่องทางติดตาม" title="OFFICIAL CHANNELS" />
+        <div className="grid gap-px bg-border md:grid-cols-2">
+          <a
+            href="https://www.facebook.com/sgsamostudentclub/?locale=th_TH"
+            target="_blank"
+            rel="noreferrer noopener"
+            className="bg-background p-7 transition-opacity hover:opacity-70 md:p-10"
+          >
+            <Tag>Facebook</Tag>
+            <h3 className="display-xl mt-5 text-2xl">SG SAMO STUDENT CLUB</h3>
+            <p className="mt-3 text-sm text-muted-foreground">
+              เพจทางการของสโมสรนักเรียน สำหรับข่าวสาร กิจกรรม และประกาศต่าง ๆ
+            </p>
+          </a>
+          <a
+            href="https://www.samoshopth.com/"
+            target="_blank"
+            rel="noreferrer noopener"
+            className="bg-background p-7 transition-opacity hover:opacity-70 md:p-10"
+          >
+            <Tag>Website</Tag>
+            <h3 className="display-xl mt-5 text-2xl">SAMOSHOPTH.COM</h3>
+            <p className="mt-3 text-sm text-muted-foreground">
+              ร้านค้าออนไลน์ของสโมสรนักเรียน สั่งซื้อ ติดตามสถานะ และดูสินค้าใหม่
+            </p>
+          </a>
+        </div>
+      </Section>
+
+
+
       <Section className="bg-secondary">
         <SectionHead eyebrow="คณะทำงาน" title={`SG MEMBERS · ${SG_TOTAL} คน`} />
         <MemberGrid initial="SG" />
