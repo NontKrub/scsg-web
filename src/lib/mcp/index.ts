@@ -1,4 +1,6 @@
-import { defineMcp, type AnyToolDefinition } from "@lovable.dev/mcp-js";
+import { defineMcp } from "@lovable.dev/mcp-js";
+
+type McpTools = Parameters<typeof defineMcp>[0]["tools"];
 import getOrganizationTool from "./tools/get-organization";
 import listMembersTool from "./tools/list-members";
 import listHousesTool from "./tools/list-houses";
@@ -23,5 +25,5 @@ export default defineMcp({
     listProjectsTool,
     listNewsTool,
     getRadioScheduleTool,
-  ],
+  ] as unknown as McpTools,
 });
