@@ -157,7 +157,8 @@ function HousePage() {
             { t: "HOUSE OF THE MONTH", s: "กรกฎาคม 2026" },
             { t: "CHARACTER EXCELLENCE", s: "มิถุนายน 2026" },
             { t: "SPORTS DAY CHAMPION", s: "กรกฎาคม 2026" },
-            { t: "BEST HOUSE PROJECT", s: "สิงหาคม 2026" },
+            { t: "BEST HOUSE EVENT", s: "สิงหาคม 2026" },
+
           ].map((a) => (
             <div key={a.t} className="bg-background p-6">
               <span className="block h-1 w-10 bg-[var(--house)]" />

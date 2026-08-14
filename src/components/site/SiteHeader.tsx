@@ -10,10 +10,10 @@ const NAV = [
   { to: "/houses", label: "บ้านสายกีฬา" },
   { to: "/clubs", label: "ชุมนุม" },
   { to: "/student-government", label: "สโมสรนักเรียน" },
-  { to: "/projects", label: "โครงการ" },
   { to: "/competition", label: "คะแนนบ้าน" },
   { to: "/news", label: "ข่าว" },
 ];
+
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);

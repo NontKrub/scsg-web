@@ -20,21 +20,14 @@ const COLS = [
       { to: "/clubs", label: "Clubs of Interest" },
     ],
   },
-  {
-    head: "โครงการ",
-    links: [
-      { to: "/projects", label: "โครงการทั้งหมด" },
-      { to: "/student-government", label: "SG Radio (สโมสรนักเรียน)" },
-      { to: "/news", label: "ข่าว SGSC" },
-    ],
-  },
 ];
 
 export function SiteFooter() {
   return (
     <footer className="bg-navy-deep text-primary-foreground">
       <div className="mx-auto w-full max-w-[1400px] px-5 py-16 md:px-10 md:py-20">
-        <div className="grid gap-12 md:grid-cols-[1.2fr_repeat(3,1fr)]">
+        <div className="grid gap-12 md:grid-cols-[1.2fr_repeat(2,1fr)]">
+
           <div>
             <img src={SGSC_LOGO} alt="ตราสัญลักษณ์ SGSC" className="h-14 w-14 object-contain" />
             <p className="num mt-5 text-2xl">S.C.S.G. / SGSC</p>

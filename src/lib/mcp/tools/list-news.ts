@@ -8,9 +8,10 @@ export default defineTool({
   description: "List news and announcements published by SGSC, newest first, optionally filtered by category.",
   inputSchema: {
     category: z
-      .enum(["SGSC", "STUDENT GOVERNMENT", "HOUSE", "CLUB", "PROJECT"])
+      .enum(["SGSC", "STUDENT GOVERNMENT", "HOUSE", "CLUB"])
       .optional()
       .describe("Filter by news category."),
+
     limit: z.number().int().min(1).max(50).optional().describe("Maximum number of articles to return."),
   },
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },

@@ -10,14 +10,15 @@ const CATS = [
   { key: "STUDENT GOVERNMENT", label: "สโมสรนักเรียน" },
   { key: "HOUSE", label: "คณะสี" },
   { key: "CLUB", label: "ชุมนุม" },
-  { key: "PROJECT", label: "โครงการ" },
 ] as const;
+
 
 export const Route = createFileRoute("/news/")({
   head: () => ({
     meta: [
       { title: "ข่าวและประกาศ — SGSC News" },
-      { name: "description", content: "ข่าวสาร ประกาศ และกิจกรรมล่าสุดจากสโมสรนักเรียน บ้านสายกีฬา ชุมนุม และโครงการของ SGSC" },
+      { name: "description", content: "ข่าวสาร ประกาศ และกิจกรรมล่าสุดจากสโมสรนักเรียน บ้านสายกีฬา และชุมนุมของ SGSC" },
+
       { property: "og:title", content: "SGSC NEWS — ข่าวและประกาศ" },
       { property: "og:description", content: "ติดตามข่าวสารและกิจกรรมล่าสุดของ Student Congress of Saint Gabriel's College" },
     ],

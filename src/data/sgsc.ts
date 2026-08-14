@@ -77,8 +77,8 @@ export type Member = {
   klass: string;
   duties: string;
   photoUrl: string;
-  projects: string[];
 };
+
 
 export type BoardSeat = {
   id: string;
@@ -109,24 +109,11 @@ export type Club = {
   activities: string[];
 };
 
-export type Project = {
-  slug: string;
-  name: string;
-  org: string;
-  status: "ACTIVE" | "UPCOMING" | "COMPLETED";
-  owner: string;
-  desc: string;
-  cta: string;
-  to: string;
-  start: string;
-  end: string;
-  updates: { date: string; text: string }[];
-};
 
 export type News = {
   slug: string;
   title: string;
-  cat: "SGSC" | "STUDENT GOVERNMENT" | "HOUSE" | "CLUB" | "PROJECT";
+  cat: "SGSC" | "STUDENT GOVERNMENT" | "HOUSE" | "CLUB";
   date: string;
   intro: string;
   body: string[];
@@ -134,6 +121,7 @@ export type News = {
   houseSlug?: string | undefined;
   coverUrl?: string | undefined;
 };
+
 
 export type SlotState = "AVAILABLE" | "BOOKED" | "PENDING" | "CLOSED";
 
@@ -146,11 +134,11 @@ export type SiteContent = {
   congressBoard: BoardSeat[];
   advisoryBoard: Advisor[];
   clubs: Club[];
-  projects: Project[];
   news: News[];
   radioSchedule: Record<string, SlotState[]>;
   radioRules: string[];
 };
+
 
 /* ---------------- Static structure ---------------- */
 
@@ -159,10 +147,11 @@ export const ORGS = [
     slug: "student-government",
     name: "STUDENT GOVERNMENT",
     nameTh: "สโมสรนักเรียน",
-    desc: "ฝ่ายบริหารของ SGSC 18 คน จากนายกสโมสรนักเรียนถึงกรรมการฝ่าย ดูแลโครงการรวมถึง SG RADIO",
+    desc: "ฝ่ายบริหารของ SGSC 18 คน จากนายกสโมสรนักเรียนถึงกรรมการฝ่าย ดูแลกิจกรรมและบริการรวมถึง SG RADIO",
     count: 18,
     to: "/student-government",
   },
+
   {
     slug: "houses",
     name: "HOUSE OF SAINTS",
