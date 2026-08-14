@@ -90,16 +90,16 @@ function SG() {
             <ImgBlock className="aspect-[16/9] w-full" />
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
-                to="/radio/booking"
+                to="/radio"
                 className="inline-flex bg-primary px-6 py-4 text-xs font-semibold uppercase tracking-[0.18em] text-primary-foreground"
               >
                 จองคิว SG Radio
               </Link>
               <Link
-                to="/radio/schedule"
+                to="/radio"
                 className="inline-flex border border-input px-6 py-4 text-xs font-semibold uppercase tracking-[0.18em]"
               >
-                ตารางออกอากาศ
+                ตารางออกอากาศและกติกา
               </Link>
             </div>
           </div>
