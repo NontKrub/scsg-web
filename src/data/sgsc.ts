@@ -7,9 +7,9 @@ import edmund from "@/assets/edmund.asset.json";
 import mary from "@/assets/mary.asset.json";
 import dominic from "@/assets/dominic.asset.json";
 import francis from "@/assets/francis.asset.json";
-import logo from "@/assets/logo.asset.json";
+import logo from "@/assets/sgsc-logo.png";
 
-export const SGSC_LOGO = logo.url;
+export const SGSC_LOGO = logo;
 
 export const MONTHS = ["JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"] as const;
 export type Month = (typeof MONTHS)[number];
@@ -216,26 +216,26 @@ export const ORGS = [
   {
     slug: "houses",
     name: "HOUSE OF SAINTS",
-    nameTh: "คณะสีนักบุญ",
-    desc: "9 บ้านนักบุญ แข่งขันและสร้างอัตลักษณ์ผ่าน House Championship",
-    count: 27,
+    nameTh: "บ้านสายกีฬา",
+    desc: "9 ประธานบ้านนักบุญ ผู้แทนบ้านสายกีฬาทั้ง 9 บ้านในสภา",
+    count: 9,
     to: "/houses",
   },
   {
     slug: "clubs",
     name: "CLUBS OF INTEREST",
     nameTh: "ชมรมตามความสนใจ",
-    desc: "6 ชมรมที่เปิดพื้นที่ให้นักเรียนได้ลงมือทำในสิ่งที่รัก",
-    count: 12,
+    desc: "6 ชมรม ชมรมละ 3 ผู้แทน รวม 18 คนในสภา",
+    count: 18,
     to: "/clubs",
   },
   {
     slug: "class-representatives",
     name: "CLASS REPRESENTATIVES",
     nameTh: "ผู้แทนห้องเรียน",
-    desc: "ทุกห้องเรียนมีผู้แทนที่ส่งเสียงของเพื่อนถึงสภานักเรียน",
-    count: 11,
-    to: "/class-representatives",
+    desc: "ผู้แทนห้องเรียน 23 คน ส่งเสียงของเพื่อนร่วมห้องถึงสภา",
+    count: 23,
+    to: "/members",
   },
 ] as const;
 
@@ -376,7 +376,7 @@ SG_ROLES.forEach((role, i) =>
 );
 
 HOUSES.forEach((h, hi) => {
-  ["หัวหน้าบ้าน", "รองหัวหน้าบ้าน", "กรรมการบ้าน"].forEach((role, ri) =>
+  ["ประธานบ้าน"].forEach((role, ri) =>
     push({
       name: ri === 0 ? h.captain : name(hi * 3 + ri + 5),
       role,
@@ -384,15 +384,15 @@ HOUSES.forEach((h, hi) => {
       orgLabel: h.name,
       klass: KLASS[(hi + ri) % KLASS.length]!,
       duties: `ดูแลกิจกรรมและคะแนนของบ้าน ${h.nameTh} ประสานงานกับคณะกรรมการ House of Saints`,
-      projects: ["HOUSE CHAMPIONSHIP"],
+      projects: ["HOUSE COMPETITION"],
     }),
   );
 });
 
 CLUBS.forEach((c, ci) =>
-  ["ประธานชมรม", "รองประธานชมรม"].forEach((role, ri) =>
+  ["ประธานชมรม", "รองประธานชมรม", "เลขานุการชมรม"].forEach((role, ri) =>
     push({
-      name: ri === 0 ? c.head : name(ci * 2 + ri + 12),
+      name: ri === 0 ? c.head : name(ci * 3 + ri + 12),
       role,
       org: "CLUB",
       orgLabel: c.name,
@@ -406,7 +406,7 @@ CLUBS.forEach((c, ci) =>
 export const CLASS_LEVELS = ["M1", "M2", "M3", "M4", "M5", "M6"] as const;
 export const CLASS_ROOMS: { level: string; room: string; rep: string }[] = [];
 CLASS_LEVELS.forEach((lv, li) => {
-  const rooms = li === CLASS_LEVELS.length - 1 ? 1 : 2;
+  const rooms = li === CLASS_LEVELS.length - 1 ? 3 : 4;
   for (let r = 1; r <= rooms; r++) {
     const rep = name(li * 3 + r + 20);
     CLASS_ROOMS.push({ level: lv, room: `${lv.replace("M", "ม.")}/${r}`, rep });
@@ -434,7 +434,7 @@ export const SG_TOTAL = SG_MEMBERS.length;
 /* --- คณะกรรมการบริหารสภา 5 ตำแหน่ง (เลือกจากสมาชิกสภา 68 คน) --- */
 export const CONGRESS_BOARD = [
   { role: "ประธานสภานักเรียน", from: "สภานักเรียน", member: members[0]! },
-  { role: "รองประธานสภา คนที่ 1", from: "คณะสีนักบุญ", member: members[18]! },
+  { role: "รองประธานสภา คนที่ 1", from: "บ้านสายกีฬา", member: members[18]! },
   { role: "รองประธานสภา คนที่ 2", from: "ชมรมตามความสนใจ", member: members[45]! },
   { role: "เลขาธิการสภา", from: "สภานักเรียน", member: members[4]! },
   { role: "เหรัญญิกสภา", from: "ผู้แทนห้องเรียน", member: members[57]! },
@@ -453,9 +453,9 @@ export const ADVISORY_BOARD = [
     desc: "กำกับดูแลการทำงานของสภานักเรียนและองค์กรทั้งสี่",
   },
   {
-    name: "ครูที่ปรึกษาคณะสีนักบุญ",
+    name: "ครูที่ปรึกษาบ้านสายกีฬา",
     role: "ที่ปรึกษา House of Saints",
-    desc: "ดูแลระบบคะแนน House Championship และกิจกรรมคณะสี",
+    desc: "ดูแลระบบคะแนน House Competition และกิจกรรมคณะสี",
   },
   {
     name: "ครูที่ปรึกษาชมรม",
@@ -472,7 +472,7 @@ export const ADVISORY_BOARD = [
 export const ORG_FILTERS = [
   { key: "ALL", label: "ทั้งหมด" },
   { key: "SG", label: "สภานักเรียน" },
-  { key: "HOUSE", label: "คณะสีนักบุญ" },
+  { key: "HOUSE", label: "บ้านสายกีฬา" },
   { key: "CLUB", label: "ชมรม" },
   { key: "CLASS", label: "ผู้แทนห้อง" },
 ] as const;
@@ -537,14 +537,14 @@ export const PROJECTS: Project[] = [
     updates: [{ date: "30 ก.ค. 2026", text: "สรุปข้อเสนอเดือนกรกฎาคม 42 เรื่อง" }],
   },
   {
-    slug: "house-championship",
-    name: "HOUSE CHAMPIONSHIP",
-    org: "คณะสีนักบุญ",
+    slug: "house-competition",
+    name: "HOUSE COMPETITION",
+    org: "บ้านสายกีฬา",
     status: "ACTIVE",
     owner: "คณะกรรมการ House of Saints",
     desc: "การแข่งขันสะสมคะแนนประจำเดือนของทั้ง 9 บ้าน วัดผลด้านวินัย กิจกรรม และจิตอาสา",
     cta: "ดูคะแนน",
-    to: "/championship",
+    to: "/competition",
     start: "01 มิ.ย. 2026",
     end: "31 ธ.ค. 2026",
     updates: [{ date: "12 ส.ค. 2026", text: "ประกาศผลคะแนนเดือนสิงหาคมแล้ว" }],
@@ -580,7 +580,7 @@ export type News = {
 export const NEWS: News[] = [
   {
     slug: "august-house-results",
-    title: "ประกาศผลคะแนน House Championship เดือนสิงหาคม",
+    title: "ประกาศผลคะแนน House Competition เดือนสิงหาคม",
     cat: "HOUSE",
     date: "12 ส.ค. 2026",
     intro: "ST. MARTIN ขึ้นนำด้วยคะแนน 96.2% และคว้าตำแหน่ง House of the Month",

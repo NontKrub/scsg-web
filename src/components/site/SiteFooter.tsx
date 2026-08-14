@@ -9,14 +9,14 @@ const COLS = [
       { to: "/about", label: "เกี่ยวกับ SGSC" },
       { to: "/members", label: "สมาชิกสภา" },
       { to: "/student-government", label: "สภานักเรียน" },
-      { to: "/class-representatives", label: "ผู้แทนห้องเรียน" },
+      { to: "/members", label: "ผู้แทนห้องเรียน" },
     ],
   },
   {
     head: "บ้านและชมรม",
     links: [
       { to: "/houses", label: "House of Saints" },
-      { to: "/championship", label: "House Championship" },
+      { to: "/competition", label: "House Competition" },
       { to: "/clubs", label: "Clubs of Interest" },
     ],
   },

@@ -28,7 +28,7 @@ export const Route = createFileRoute("/houses/$slug")({
         { title: `${loaderData.name} — บ้าน${loaderData.nameTh} | SGSC` },
         {
           name: "description",
-          content: `คะแนน อันดับ คณะกรรมการ และข่าวของบ้าน${loaderData.nameTh} ในการแข่งขัน House Championship`,
+          content: `คะแนน อันดับ คณะกรรมการ และข่าวของบ้าน${loaderData.nameTh} ในการแข่งขัน House Competition`,
         },
         { property: "og:title", content: `${loaderData.name} — House of Saints` },
         { property: "og:description", content: `คะแนน อันดับ และข่าวของบ้าน${loaderData.nameTh}` },
@@ -207,10 +207,10 @@ function HousePage() {
         </div>
         <div className="mt-12 flex flex-wrap gap-3">
           <Link
-            to="/championship"
+            to="/competition"
             className="inline-flex bg-primary px-6 py-4 text-xs font-semibold uppercase tracking-[0.18em] text-primary-foreground"
           >
-            ดู House Championship
+            ดู House Competition
           </Link>
           <Link
             to="/houses"

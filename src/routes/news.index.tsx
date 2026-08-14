@@ -16,7 +16,7 @@ export const Route = createFileRoute("/news/")({
   head: () => ({
     meta: [
       { title: "ข่าวและประกาศ — SGSC News" },
-      { name: "description", content: "ข่าวสาร ประกาศ และกิจกรรมล่าสุดจากสภานักเรียน คณะสีนักบุญ ชมรม และโครงการของ SGSC" },
+      { name: "description", content: "ข่าวสาร ประกาศ และกิจกรรมล่าสุดจากสภานักเรียน บ้านสายกีฬา ชมรม และโครงการของ SGSC" },
       { property: "og:title", content: "SGSC NEWS — ข่าวและประกาศ" },
       { property: "og:description", content: "ติดตามข่าวสารและกิจกรรมล่าสุดของ Student Congress of Saint Gabriel's College" },
     ],
