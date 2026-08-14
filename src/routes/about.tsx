@@ -1,5 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { OrgMap } from "@/components/site/OrgMap";
+import congressGroup from "@/assets/congress-group.jpg.asset.json";
+import scsgSeal from "@/assets/scsg-seal.png.asset.json";
 import { ImgBlock, Section, SectionHead, Stat, Tag } from "@/components/site/primitives";
 import { ADVISORY_BOARD, CONGRESS_BOARD, MEMBERS, ORGS, SG_TOTAL, TOTAL_MEMBERS } from "@/data/sgsc";
 
@@ -22,6 +24,11 @@ function About() {
   return (
     <>
       <Section className="pb-10">
+        <img
+          src={scsgSeal.url}
+          alt="ตราสัญลักษณ์สภานักเรียนโรงเรียนเซนต์คาเบรียล S.C.S.G."
+          className="mb-8 h-28 w-28 md:h-36 md:w-36"
+        />
         <Tag>About SGSC</Tag>
         <h1 className="display-xl mt-6 text-[clamp(2.4rem,8vw,6rem)]">
           68 STUDENTS.
@@ -43,7 +50,12 @@ function About() {
       </Section>
 
       <Section className="pt-4">
-        <ImgBlock className="aspect-[16/7] w-full" />
+        <ImgBlock
+          className="aspect-[16/7] w-full"
+          src={congressGroup.url}
+          alt="สมาชิกสภานักเรียนเซนต์คาเบรียลถ่ายภาพหมู่พร้อมป้ายสภานักเรียน"
+          label="congress"
+        />
       </Section>
 
       <Section className="bg-secondary">

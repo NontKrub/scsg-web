@@ -4,15 +4,28 @@ import type { ReactNode } from "react";
 export function ImgBlock({
   className,
   label,
+  src,
+  alt,
+  imgClassName,
   children,
 }: {
   className?: string;
   label?: string;
+  src?: string;
+  alt?: string;
+  imgClassName?: string;
   children?: ReactNode;
 }) {
   return (
-    <div className={cn("img-block flex items-center justify-center", className)} aria-hidden={!label}>
-      {children}
+    <div
+      className={cn("img-block flex items-center justify-center overflow-hidden", className)}
+      aria-hidden={!label && !src}
+    >
+      {src ? (
+        <img src={src} alt={alt ?? ""} loading="lazy" className={cn("h-full w-full object-cover", imgClassName)} />
+      ) : (
+        children
+      )}
     </div>
   );
 }
