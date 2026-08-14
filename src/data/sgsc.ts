@@ -434,7 +434,7 @@ export const SG_TOTAL = SG_MEMBERS.length;
 /* --- คณะกรรมการบริหารสภา 5 ตำแหน่ง (เลือกจากสมาชิกสภา 68 คน) --- */
 export const CONGRESS_BOARD = [
   { role: "ประธานสภานักเรียน", from: "สภานักเรียน", member: members[0]! },
-  { role: "รองประธานสภา คนที่ 1", from: "คณะสีนักบุญ", member: members[18]! },
+  { role: "รองประธานสภา คนที่ 1", from: "บ้านสายกีฬา", member: members[18]! },
   { role: "รองประธานสภา คนที่ 2", from: "ชมรมตามความสนใจ", member: members[45]! },
   { role: "เลขาธิการสภา", from: "สภานักเรียน", member: members[4]! },
   { role: "เหรัญญิกสภา", from: "ผู้แทนห้องเรียน", member: members[57]! },
@@ -453,7 +453,7 @@ export const ADVISORY_BOARD = [
     desc: "กำกับดูแลการทำงานของสภานักเรียนและองค์กรทั้งสี่",
   },
   {
-    name: "ครูที่ปรึกษาคณะสีนักบุญ",
+    name: "ครูที่ปรึกษาบ้านสายกีฬา",
     role: "ที่ปรึกษา House of Saints",
     desc: "ดูแลระบบคะแนน House Competition และกิจกรรมคณะสี",
   },
@@ -472,7 +472,7 @@ export const ADVISORY_BOARD = [
 export const ORG_FILTERS = [
   { key: "ALL", label: "ทั้งหมด" },
   { key: "SG", label: "สภานักเรียน" },
-  { key: "HOUSE", label: "คณะสีนักบุญ" },
+  { key: "HOUSE", label: "บ้านสายกีฬา" },
   { key: "CLUB", label: "ชมรม" },
   { key: "CLASS", label: "ผู้แทนห้อง" },
 ] as const;
@@ -539,7 +539,7 @@ export const PROJECTS: Project[] = [
   {
     slug: "house-competition",
     name: "HOUSE COMPETITION",
-    org: "คณะสีนักบุญ",
+    org: "บ้านสายกีฬา",
     status: "ACTIVE",
     owner: "คณะกรรมการ House of Saints",
     desc: "การแข่งขันสะสมคะแนนประจำเดือนของทั้ง 9 บ้าน วัดผลด้านวินัย กิจกรรม และจิตอาสา",

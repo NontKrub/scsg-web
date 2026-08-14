@@ -9,7 +9,7 @@ const COLS = [
       { to: "/about", label: "เกี่ยวกับ SGSC" },
       { to: "/members", label: "สมาชิกสภา" },
       { to: "/student-government", label: "สภานักเรียน" },
-      { to: "/class-representatives", label: "ผู้แทนห้องเรียน" },
+      { to: "/members", label: "ผู้แทนห้องเรียน" },
     ],
   },
   {

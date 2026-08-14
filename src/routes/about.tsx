@@ -79,6 +79,7 @@ function About() {
         <div className="grid gap-px bg-border sm:grid-cols-2 lg:grid-cols-3">
           {ADVISORY_BOARD.map((a) => (
             <div key={a.name} className="bg-background p-7">
+              <ImgBlock className="mb-6 aspect-[4/3] w-full" />
               <p className="eyebrow">{a.role}</p>
               <p className="mt-3 text-lg font-semibold">{a.name}</p>
               <p className="mt-3 text-sm text-muted-foreground">{a.desc}</p>
