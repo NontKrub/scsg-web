@@ -7,7 +7,6 @@ import {
   MEMBERS,
   MONTHS,
   MONTH_TH,
-  NEWS,
   growth,
   rankOf,
   tierOf,
@@ -46,7 +45,6 @@ function HousePage() {
   const rank = rankOf(slug, CURRENT_MONTH);
   const g = growth(slug, CURRENT_MONTH);
   const committee = MEMBERS.filter((m) => m.org === "HOUSE" && m.orgLabel === house.name);
-  const news = NEWS.filter((n) => n.houseSlug === slug);
 
   return (
     <div className={house.cls}>
@@ -166,25 +164,6 @@ function HousePage() {
             <p className="eyebrow mb-4">HOUSE GROWTH</p>
             <GrowthChart slugs={[slug]} height={420} />
           </div>
-        </div>
-      </Section>
-
-      {/* NEWS */}
-      <Section className="bg-secondary">
-        <SectionHead eyebrow="ข่าวของบ้าน" title="HOUSE NEWS" />
-        <div className="grid gap-8 md:grid-cols-3">
-          {(news.length ? news : NEWS.filter((n) => n.cat === "HOUSE")).slice(0, 3).map((n) => (
-            <Link key={n.slug} to="/news/$slug" params={{ slug: n.slug }} className="group">
-              <ImgBlock className="aspect-[4/3] w-full" />
-              <div className="mt-4 flex items-center gap-3">
-                <Tag>{n.cat}</Tag>
-                <span className="text-xs text-muted-foreground">{n.date}</span>
-              </div>
-              <h3 className="mt-3 text-lg font-semibold leading-snug transition-opacity group-hover:opacity-60">
-                {n.title}
-              </h3>
-            </Link>
-          ))}
         </div>
       </Section>
 

@@ -85,24 +85,6 @@ function SG() {
         </div>
       </Section>
 
-      <Section className="bg-navy-deep text-primary-foreground">
-        <p className="eyebrow text-primary-foreground/60">องค์กรใหญ่ใต้สภา</p>
-        <h2 className="display-xl mt-4 text-[clamp(1.9rem,5vw,3.4rem)]">BIG ORG. BIG PROJECTS.</h2>
-        <div className="mt-10 grid gap-px bg-primary-foreground/15 md:grid-cols-3">
-          {[
-            { n: "01", t: "SG RADIO", d: "สถานีวิทยุพักกลางวัน จองคิวขอเพลงและส่งข้อความ" },
-            { n: "02", t: "SAINT MARKET", d: "ตลาดนักเรียนประจำภาคเรียน เปิดพื้นที่ให้ทุกคนขายและแสดงผลงาน" },
-            { n: "03", t: "VOICE BOX", d: "รวบรวมเสียงนักเรียนจากผู้แทนห้องเรียนมาสู่การลงมือทำ" },
-          ].map((x) => (
-            <div key={x.t} className="bg-navy-deep p-7">
-              <span className="num text-3xl text-primary-foreground/40">{x.n}</span>
-              <h3 className="display-xl mt-8 text-2xl">{x.t}</h3>
-              <p className="mt-3 text-sm text-primary-foreground/70">{x.d}</p>
-            </div>
-          ))}
-        </div>
-      </Section>
-
       <Section className="bg-secondary">
         <SectionHead eyebrow="โครงการของสโมสรนักเรียน" title="OUR PROJECTS" />
         <div className="grid gap-px bg-border md:grid-cols-3">
@@ -116,14 +98,6 @@ function SG() {
               </p>
             </div>
           ))}
-        </div>
-        <div className="mt-10 flex flex-wrap gap-3">
-          <Link
-            to="/news"
-            className="inline-flex border border-input px-6 py-4 text-xs font-semibold uppercase tracking-[0.18em]"
-          >
-            ข่าวสโมสรนักเรียน
-          </Link>
         </div>
       </Section>
 

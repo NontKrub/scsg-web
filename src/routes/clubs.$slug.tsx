@@ -1,6 +1,6 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ImgBlock, Section, SectionHead, Tag } from "@/components/site/primitives";
-import { CLUBS, MEMBERS, NEWS } from "@/data/sgsc";
+import { CLUBS, MEMBERS } from "@/data/sgsc";
 
 export const Route = createFileRoute("/clubs/$slug")({
   loader: ({ params }) => {
@@ -28,7 +28,6 @@ function ClubPage() {
   const { slug } = Route.useLoaderData();
   const club = CLUBS.find((c) => c.slug === slug)!;
   const staff = MEMBERS.filter((m) => m.org === "CLUB" && m.orgLabel === club.name);
-  const news = NEWS.filter((n) => n.cat === "CLUB");
 
   return (
     <div className={club.cls}>
@@ -88,16 +87,6 @@ function ClubPage() {
       </Section>
 
       <Section>
-        <SectionHead eyebrow="ผลงานและข่าว" title="CLUB NEWS" />
-        <div className="grid gap-8 md:grid-cols-3">
-          {news.map((n) => (
-            <Link key={n.slug} to="/news/$slug" params={{ slug: n.slug }} className="group">
-              <ImgBlock className="aspect-[4/3] w-full" />
-              <p className="mt-4 text-xs text-muted-foreground">{n.date}</p>
-              <h3 className="mt-2 text-lg font-semibold leading-snug group-hover:opacity-60">{n.title}</h3>
-            </Link>
-          ))}
-        </div>
         <div className="mt-12">
           <Link
             to="/clubs"
