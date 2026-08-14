@@ -41,7 +41,14 @@ function Home() {
       <section className="relative border-b border-border">
         <div className="mx-auto grid w-full max-w-[1400px] gap-10 px-5 pt-14 pb-16 md:px-10 md:pt-20 lg:grid-cols-[1.05fr_1fr] lg:items-end lg:pb-24">
           <div className="rise">
-            <Tag>Student Congress · S.C.S.G.</Tag>
+            <div className="flex items-center gap-4">
+              <img
+                src={scsgSeal.url}
+                alt="ตราสัญลักษณ์สภานักเรียนโรงเรียนเซนต์คาเบรียล S.C.S.G."
+                className="h-16 w-16 md:h-20 md:w-20"
+              />
+              <Tag>Student Congress · S.C.S.G.</Tag>
+            </div>
             <h1 className="display-xl mt-6 text-[clamp(3.2rem,11vw,8.5rem)]">
               FOR SAINTS.
               <br />
