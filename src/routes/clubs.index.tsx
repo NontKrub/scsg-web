@@ -5,10 +5,10 @@ import { CLUBS } from "@/data/sgsc";
 export const Route = createFileRoute("/clubs/")({
   head: () => ({
     meta: [
-      { title: "Clubs of Interest — ชมรมตามความสนใจ | SGSC" },
-      { name: "description", content: "6 ชมรมของ Student Congress of Saint Gabriel's College: ASA Saint, Interact, Innovation, MC, Board Game และ Public Relation" },
+      { title: "Clubs of Interest — ชุมนุมตามความสนใจ | SGSC" },
+      { name: "description", content: "6 ชุมนุมของ Student Congress of Saint Gabriel's College: ASA Saint, Interact, Innovation, MC, Board Game และ Public Relation" },
       { property: "og:title", content: "CLUBS OF INTEREST — SGSC" },
-      { property: "og:description", content: "6 ชมรมที่เปิดพื้นที่ให้นักเรียนได้ลงมือทำในสิ่งที่รัก" },
+      { property: "og:description", content: "6 ชุมนุมที่เปิดพื้นที่ให้นักเรียนได้ลงมือทำในสิ่งที่รัก" },
     ],
   }),
   component: ClubsIndex,
@@ -21,8 +21,8 @@ function ClubsIndex() {
         <Tag>องค์กรที่ 3</Tag>
         <h1 className="display-xl mt-6 text-[clamp(2.6rem,9vw,6.5rem)]">CLUBS OF INTEREST</h1>
         <p className="mt-6 max-w-2xl text-muted-foreground">
-          ชมรมตามความสนใจคือพื้นที่ให้นักเรียนได้ทดลอง ลงมือทำ และเติบโตในสิ่งที่รัก
-          ทุกชมรมมีผู้แทนอยู่ในสภานักเรียนคณะที่ 69
+          ชุมนุมตามความสนใจคือพื้นที่ให้นักเรียนได้ทดลอง ลงมือทำ และเติบโตในสิ่งที่รัก
+          ทุกชุมนุมมีผู้แทนอยู่ในสภานักเรียนคณะที่ 69
         </p>
       </Section>
 
@@ -40,7 +40,7 @@ function ClubsIndex() {
               <p className="mt-3 text-sm opacity-80">{c.tagline}</p>
               <ImgBlock className="mt-6 aspect-[4/3] w-full" />
               <div className="mt-6 flex items-center justify-between border-t border-current/20 pt-4 text-xs">
-                <span>หัวหน้าชมรม {c.head}</span>
+                <span>หัวหน้าชุมนุม {c.head}</span>
                 <span className="num">{c.members} คน</span>
               </div>
             </Link>
@@ -49,12 +49,12 @@ function ClubsIndex() {
       </Section>
 
       <Section className="bg-secondary">
-        <SectionHead eyebrow="เข้าร่วมชมรม" title="HOW TO JOIN" />
+        <SectionHead eyebrow="เข้าร่วมชุมนุม" title="HOW TO JOIN" />
         <div className="grid gap-px bg-border sm:grid-cols-3">
           {[
-            { n: "01", t: "เลือกชมรม", d: "ดูรายละเอียดกิจกรรมของแต่ละชมรมและเลือกที่ตรงกับความสนใจ" },
-            { n: "02", t: "ติดต่อหัวหน้าชมรม", d: "แจ้งความประสงค์กับหัวหน้าชมรมหรือครูที่ปรึกษา" },
-            { n: "03", t: "เริ่มกิจกรรม", d: "เข้าร่วมกิจกรรมประจำสัปดาห์ตามตารางของชมรม" },
+            { n: "01", t: "เลือกชุมนุม", d: "ดูรายละเอียดกิจกรรมของแต่ละชุมนุมและเลือกที่ตรงกับความสนใจ" },
+            { n: "02", t: "ติดต่อหัวหน้าชุมนุม", d: "แจ้งความประสงค์กับหัวหน้าชุมนุมหรือครูที่ปรึกษา" },
+            { n: "03", t: "เริ่มกิจกรรม", d: "เข้าร่วมกิจกรรมประจำสัปดาห์ตามตารางของชุมนุม" },
           ].map((s) => (
             <div key={s.n} className="bg-background p-7">
               <p className="num text-3xl text-muted-foreground">{s.n}</p>

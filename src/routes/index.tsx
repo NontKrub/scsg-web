@@ -23,10 +23,10 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "FOR SAINTS. BY SAINTS. เว็บไซต์ทางการของสภานักเรียนโรงเรียนเซนต์คาเบรียล 68 ผู้นำนักเรียน 4 องค์กร 9 บ้านนักบุญ",
+          "FOR SAINTS. BY SAINTS. เว็บไซต์ทางการของสภานักเรียนโรงเรียนเซนต์คาเบรียล 68 ผู้นำนักเรียน 4 องค์กร 9 บ้านสายกีฬา",
       },
       { property: "og:title", content: "FOR SAINTS. BY SAINTS. — SGSC" },
-      { property: "og:description", content: "68 ผู้นำนักเรียน · 4 องค์กร · 9 บ้านนักบุญ" },
+      { property: "og:description", content: "68 ผู้นำนักเรียน · 4 องค์กร · 9 บ้านสายกีฬา" },
     ],
   }),
   component: Home,
@@ -53,7 +53,7 @@ function Home() {
             <div className="mt-10 grid grid-cols-3 gap-6">
               <Stat value={String(TOTAL_MEMBERS)} label="ผู้นำนักเรียน" />
               <Stat value="04" label="องค์กร" />
-              <Stat value="09" label="บ้านนักบุญ" />
+              <Stat value="09" label="บ้านสายกีฬา" />
             </div>
             <div className="mt-10 flex flex-wrap gap-3">
               <Link
@@ -208,13 +208,13 @@ function Home() {
               หน้าสมาชิกทั้งหมด
             </Link>
           }
-          sub="สมาชิกสภา 68 คน ประกอบด้วยสโมสรนักเรียน 18 คน ประธานบ้านนักบุญ 9 คน ผู้แทนชมรม 6 ชมรม × 3 = 18 คน และผู้แทนห้องเรียน 23 คน โดยคณะกรรมการบริหารสภา 5 คน นับรวมอยู่ใน 68 คนนี้"
+          sub="สมาชิกสภา 68 คน ประกอบด้วยสโมสรนักเรียน 18 คน ประธานบ้านสายกีฬา 9 คน ผู้แทนชุมนุม 6 ชุมนุม × 3 = 18 คน และผู้แทนห้องเรียน 23 คน โดยคณะกรรมการบริหารสภา 5 คน นับรวมอยู่ใน 68 คนนี้"
         />
         <div className="mb-12 grid grid-cols-2 gap-px bg-border md:grid-cols-4">
           {[
             { n: "18", t: "STUDENT GOVERNMENT", th: "สโมสรนักเรียน (นายก → กรรมการ)" },
             { n: "09", t: "HOUSE PRESIDENTS", th: "ประธานบ้านสายกีฬา 9 บ้าน" },
-            { n: "18", t: "CLUB REPRESENTATIVES", th: "6 ชมรม × 3 ผู้แทน" },
+            { n: "18", t: "CLUB REPRESENTATIVES", th: "6 ชุมนุม × 3 ผู้แทน" },
             { n: "23", t: "CLASS REPRESENTATIVES", th: "ผู้แทนห้องเรียน" },
           ].map((x) => (
             <div key={x.t} className="bg-background p-6">
@@ -230,7 +230,7 @@ function Home() {
 
       {/* CLUBS */}
       <Section>
-        <SectionHead eyebrow="ชมรมตามความสนใจ" title="CLUBS OF INTEREST" />
+        <SectionHead eyebrow="ชุมนุมตามความสนใจ" title="CLUBS OF INTEREST" />
         <div className="grid gap-px bg-border sm:grid-cols-2 lg:grid-cols-3">
           {CLUBS.map((c) => (
             <Link

@@ -6,8 +6,8 @@ import { CURRENT_MONTH, MONTH_TH, TIERS } from "@/data/sgsc";
 export const Route = createFileRoute("/houses/")({
   head: () => ({
     meta: [
-      { title: "House of Saints — 9 บ้านนักบุญ SGSC" },
-      { name: "description", content: "9 บ้านนักบุญของโรงเรียนเซนต์คาเบรียล คะแนน อันดับ และระดับของแต่ละบ้าน" },
+      { title: "House of Saints — 9 บ้านสายกีฬา SGSC" },
+      { name: "description", content: "9 บ้านสายกีฬาของโรงเรียนเซนต์คาเบรียล คะแนน อันดับ และระดับของแต่ละบ้าน" },
       { property: "og:title", content: "House of Saints — 9 Houses. One Saint Gabriel's." },
       { property: "og:description", content: "ตราบ้าน คะแนน อันดับ และระดับของทั้ง 9 บ้าน" },
     ],

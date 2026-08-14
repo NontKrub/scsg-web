@@ -13,7 +13,7 @@ const COLS = [
     ],
   },
   {
-    head: "บ้านและชมรม",
+    head: "บ้านและชุมนุม",
     links: [
       { to: "/houses", label: "House of Saints" },
       { to: "/competition", label: "House Competition" },
