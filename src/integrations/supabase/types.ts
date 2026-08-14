@@ -1,0 +1,676 @@
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[]
+
+export type Database = {
+  // Allows to automatically instantiate createClient with right options
+  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
+  __InternalSupabase: {
+    PostgrestVersion: "14.15"
+  }
+  public: {
+    Tables: {
+      advisory_board: {
+        Row: {
+          description: string
+          id: string
+          person_name: string
+          photo_url: string
+          role: string
+          sort: number
+        }
+        Insert: {
+          description?: string
+          id?: string
+          person_name?: string
+          photo_url?: string
+          role?: string
+          sort?: number
+        }
+        Update: {
+          description?: string
+          id?: string
+          person_name?: string
+          photo_url?: string
+          role?: string
+          sort?: number
+        }
+        Relationships: []
+      }
+      audit_log: {
+        Row: {
+          action: string
+          actor: string
+          created_at: string
+          id: string
+        }
+        Insert: {
+          action?: string
+          actor?: string
+          created_at?: string
+          id?: string
+        }
+        Update: {
+          action?: string
+          actor?: string
+          created_at?: string
+          id?: string
+        }
+        Relationships: []
+      }
+      clubs: {
+        Row: {
+          about: string
+          activities: string[]
+          cls: string
+          head: string
+          id: string
+          member_count: number
+          name: string
+          name_th: string
+          slug: string
+          sort: number
+          tagline: string
+          updated_at: string
+        }
+        Insert: {
+          about?: string
+          activities?: string[]
+          cls?: string
+          head?: string
+          id?: string
+          member_count?: number
+          name?: string
+          name_th?: string
+          slug: string
+          sort?: number
+          tagline?: string
+          updated_at?: string
+        }
+        Update: {
+          about?: string
+          activities?: string[]
+          cls?: string
+          head?: string
+          id?: string
+          member_count?: number
+          name?: string
+          name_th?: string
+          slug?: string
+          sort?: number
+          tagline?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      congress_board: {
+        Row: {
+          from_org: string
+          id: string
+          klass: string
+          person_name: string
+          photo_url: string
+          role: string
+          sort: number
+        }
+        Insert: {
+          from_org?: string
+          id?: string
+          klass?: string
+          person_name?: string
+          photo_url?: string
+          role?: string
+          sort?: number
+        }
+        Update: {
+          from_org?: string
+          id?: string
+          klass?: string
+          person_name?: string
+          photo_url?: string
+          role?: string
+          sort?: number
+        }
+        Relationships: []
+      }
+      honors: {
+        Row: {
+          character_house: string
+          house_of_month: string
+          id: string
+          month: string
+        }
+        Insert: {
+          character_house?: string
+          house_of_month?: string
+          id?: string
+          month: string
+        }
+        Update: {
+          character_house?: string
+          house_of_month?: string
+          id?: string
+          month?: string
+        }
+        Relationships: []
+      }
+      house_scores: {
+        Row: {
+          house_slug: string
+          id: string
+          month: string
+          score: number
+          updated_at: string
+        }
+        Insert: {
+          house_slug: string
+          id?: string
+          month: string
+          score?: number
+          updated_at?: string
+        }
+        Update: {
+          house_slug?: string
+          id?: string
+          month?: string
+          score?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "house_scores_house_slug_fkey"
+            columns: ["house_slug"]
+            isOneToOne: false
+            referencedRelation: "houses"
+            referencedColumns: ["slug"]
+          },
+        ]
+      }
+      houses: {
+        Row: {
+          captain: string
+          captain_role: string
+          cls: string
+          color_label: string
+          created_at: string
+          id: string
+          intro: string
+          name: string
+          name_th: string
+          no: string
+          personality: string
+          slug: string
+          sort: number
+          updated_at: string
+        }
+        Insert: {
+          captain?: string
+          captain_role?: string
+          cls?: string
+          color_label?: string
+          created_at?: string
+          id?: string
+          intro?: string
+          name?: string
+          name_th?: string
+          no?: string
+          personality?: string
+          slug: string
+          sort?: number
+          updated_at?: string
+        }
+        Update: {
+          captain?: string
+          captain_role?: string
+          cls?: string
+          color_label?: string
+          created_at?: string
+          id?: string
+          intro?: string
+          name?: string
+          name_th?: string
+          no?: string
+          personality?: string
+          slug?: string
+          sort?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      members: {
+        Row: {
+          created_at: string
+          duties: string
+          id: string
+          klass: string
+          name: string
+          org: string
+          org_label: string
+          photo_url: string
+          projects: string[]
+          role: string
+          sort: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          duties?: string
+          id?: string
+          klass?: string
+          name?: string
+          org?: string
+          org_label?: string
+          photo_url?: string
+          projects?: string[]
+          role?: string
+          sort?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          duties?: string
+          id?: string
+          klass?: string
+          name?: string
+          org?: string
+          org_label?: string
+          photo_url?: string
+          projects?: string[]
+          role?: string
+          sort?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      news: {
+        Row: {
+          body: string[]
+          cat: string
+          cover_url: string
+          created_at: string
+          date_label: string
+          house_slug: string
+          id: string
+          intro: string
+          published: boolean
+          related: string
+          slug: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          body?: string[]
+          cat?: string
+          cover_url?: string
+          created_at?: string
+          date_label?: string
+          house_slug?: string
+          id?: string
+          intro?: string
+          published?: boolean
+          related?: string
+          slug: string
+          title?: string
+          updated_at?: string
+        }
+        Update: {
+          body?: string[]
+          cat?: string
+          cover_url?: string
+          created_at?: string
+          date_label?: string
+          house_slug?: string
+          id?: string
+          intro?: string
+          published?: boolean
+          related?: string
+          slug?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      project_updates: {
+        Row: {
+          created_at: string
+          date_label: string
+          id: string
+          project_slug: string
+          text: string
+        }
+        Insert: {
+          created_at?: string
+          date_label?: string
+          id?: string
+          project_slug: string
+          text?: string
+        }
+        Update: {
+          created_at?: string
+          date_label?: string
+          id?: string
+          project_slug?: string
+          text?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "project_updates_project_slug_fkey"
+            columns: ["project_slug"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["slug"]
+          },
+        ]
+      }
+      projects: {
+        Row: {
+          cta: string
+          description: string
+          end_label: string
+          id: string
+          link: string
+          name: string
+          org: string
+          owner: string
+          slug: string
+          sort: number
+          start_label: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          cta?: string
+          description?: string
+          end_label?: string
+          id?: string
+          link?: string
+          name?: string
+          org?: string
+          owner?: string
+          slug: string
+          sort?: number
+          start_label?: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          cta?: string
+          description?: string
+          end_label?: string
+          id?: string
+          link?: string
+          name?: string
+          org?: string
+          owner?: string
+          slug?: string
+          sort?: number
+          start_label?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      radio_bookings: {
+        Row: {
+          created_at: string
+          day: string
+          id: string
+          klass: string
+          message: string
+          requester: string
+          slot: string
+          song: string
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          day?: string
+          id?: string
+          klass?: string
+          message?: string
+          requester?: string
+          slot?: string
+          song?: string
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          day?: string
+          id?: string
+          klass?: string
+          message?: string
+          requester?: string
+          slot?: string
+          song?: string
+          status?: string
+        }
+        Relationships: []
+      }
+      radio_rules: {
+        Row: {
+          id: string
+          sort: number
+          text: string
+        }
+        Insert: {
+          id?: string
+          sort?: number
+          text?: string
+        }
+        Update: {
+          id?: string
+          sort?: number
+          text?: string
+        }
+        Relationships: []
+      }
+      radio_slots: {
+        Row: {
+          day: string
+          id: string
+          note: string
+          slot: string
+          state: string
+        }
+        Insert: {
+          day: string
+          id?: string
+          note?: string
+          slot: string
+          state?: string
+        }
+        Update: {
+          day?: string
+          id?: string
+          note?: string
+          slot?: string
+          state?: string
+        }
+        Relationships: []
+      }
+      site_settings: {
+        Row: {
+          key: string
+          value: string
+        }
+        Insert: {
+          key: string
+          value?: string
+        }
+        Update: {
+          key?: string
+          value?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
+    }
+    Enums: {
+      app_role: "admin"
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
+  }
+}
+
+type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
+
+type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
+
+export type Tables<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+      Row: infer R
+    }
+    ? R
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])
+    ? (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
+        Row: infer R
+      }
+      ? R
+      : never
+    : never
+
+export type TablesInsert<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Insert: infer I
+    }
+    ? I
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Insert: infer I
+      }
+      ? I
+      : never
+    : never
+
+export type TablesUpdate<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Update: infer U
+    }
+    ? U
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Update: infer U
+      }
+      ? U
+      : never
+    : never
+
+export type Enums<
+  DefaultSchemaEnumNameOrOptions extends
+    | keyof DefaultSchema["Enums"]
+    | { schema: keyof DatabaseWithoutInternals },
+  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+    : never = never,
+> = DefaultSchemaEnumNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
+  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
+    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
+    : never
+
+export type CompositeTypes<
+  PublicCompositeTypeNameOrOptions extends
+    | keyof DefaultSchema["CompositeTypes"]
+    | { schema: keyof DatabaseWithoutInternals },
+  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    : never = never,
+> = PublicCompositeTypeNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
+    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+    : never
+
+export const Constants = {
+  public: {
+    Enums: {
+      app_role: ["admin"],
+    },
+  },
+} as const

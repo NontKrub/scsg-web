@@ -1,199 +1,776 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
-import {
-  ADMIN_ROLES,
-  AUDIT_LOG,
-  CLUBS,
-  CURRENT_MONTH,
-  HOUSES,
-  NEWS,
-  PROJECTS,
-  RADIO_DAYS,
-  RADIO_SCHEDULE,
-  RADIO_SLOTS,
-  TOTAL_MEMBERS,
-} from "@/data/sgsc";
+import { createFileRoute } from "@tanstack/react-router";
+import { useEffect, useMemo, useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
+import { toast } from "sonner";
+import { LogOut, Plus, RefreshCw, Save, Trash2, X } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { adminDelete, adminList, adminSave, adminSaveScores, checkAdmin } from "@/lib/admin.functions";
+import { MONTHS, MONTH_TH, RADIO_DAYS, RADIO_SLOTS, type Month } from "@/data/sgsc";
+import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/admin")({
+  ssr: false,
   head: () => ({
     meta: [
-      { title: "Admin Console — ระบบจัดการเว็บไซต์ SGSC" },
-      { name: "description", content: "ระบบหลังบ้านสำหรับจัดการสมาชิก คะแนนบ้าน ชุมนุม โครงการ SG Radio และข่าวของ SGSC" },
-      { name: "robots", content: "noindex" },
-      { property: "og:title", content: "SGSC Admin Console" },
-      { property: "og:description", content: "ระบบจัดการเนื้อหาและคะแนนของ SGSC" },
+      { title: "ระบบจัดการเว็บไซต์ — SGSC Admin" },
+      { name: "description", content: "ระบบหลังบ้านสำหรับจัดการข้อมูลเว็บไซต์สภานักเรียนโรงเรียนเซนต์คาเบรียล" },
+      { name: "robots", content: "noindex, nofollow" },
+      { property: "og:title", content: "SGSC Admin" },
+      { property: "og:description", content: "ระบบหลังบ้านของสภานักเรียนโรงเรียนเซนต์คาเบรียล" },
     ],
   }),
-  component: Admin,
+  component: AdminPage,
 });
 
-const TABS = ["DASHBOARD", "MEMBERS", "SCORES", "CLUBS", "PROJECTS", "RADIO", "NEWS", "ROLES"] as const;
+/* ----------------------------- field schema ----------------------------- */
 
-function Admin() {
-  const [tab, setTab] = useState<(typeof TABS)[number]>("DASHBOARD");
+type FieldKind = "text" | "long" | "number" | "bool" | "list" | "select";
+type Field = { key: string; label: string; kind: FieldKind; options?: string[] };
+
+type SectionDef = {
+  key: string;
+  table: string;
+  label: string;
+  subtitle: string;
+  fields: Field[];
+  primary: string;
+  canCreate?: boolean;
+  canDelete?: boolean;
+};
+
+const t = (key: string, label: string): Field => ({ key, label, kind: "text" });
+const n = (key: string, label: string): Field => ({ key, label, kind: "number" });
+
+const SECTIONS: SectionDef[] = [
+  {
+    key: "members",
+    table: "members",
+    label: "สมาชิกสภา 68 คน",
+    subtitle: "ชื่อ ตำแหน่ง ชั้นเรียน หน้าที่ และรูปของสมาชิกทั้ง 68 ที่นั่ง",
+    primary: "role",
+    fields: [
+      t("name", "ชื่อ-นามสกุล"),
+      t("role", "ตำแหน่ง"),
+      { key: "org", label: "สังกัด", kind: "select", options: ["SG", "HOUSE", "CLUB", "CLASS"] },
+      t("org_label", "ชื่อสังกัด"),
+      t("klass", "ชั้น/ห้อง"),
+      { key: "duties", label: "หน้าที่รับผิดชอบ", kind: "long" },
+      t("photo_url", "ลิงก์รูปภาพ"),
+      { key: "projects", label: "โครงการที่เกี่ยวข้อง", kind: "list" },
+      n("sort", "ลำดับ"),
+    ],
+  },
+  {
+    key: "congress_board",
+    table: "congress_board",
+    label: "กรรมการบริหารสภา",
+    subtitle: "5 ที่นั่งบริหารของสภานักเรียน",
+    primary: "role",
+    fields: [
+      t("role", "ตำแหน่ง"),
+      t("person_name", "ชื่อ-นามสกุล"),
+      t("from_org", "มาจากองค์กร"),
+      t("klass", "ชั้น/ห้อง"),
+      t("photo_url", "ลิงก์รูปภาพ"),
+      n("sort", "ลำดับ"),
+    ],
+  },
+  {
+    key: "advisory_board",
+    table: "advisory_board",
+    label: "คณะที่ปรึกษา",
+    subtitle: "ครูและผู้บริหารที่ปรึกษาสภานักเรียน",
+    primary: "role",
+    canCreate: true,
+    canDelete: true,
+    fields: [
+      t("role", "ตำแหน่ง"),
+      t("person_name", "ชื่อ-นามสกุล"),
+      { key: "description", label: "คำอธิบาย", kind: "long" },
+      t("photo_url", "ลิงก์รูปภาพ"),
+      n("sort", "ลำดับ"),
+    ],
+  },
+  {
+    key: "houses",
+    table: "houses",
+    label: "บ้านสายกีฬา",
+    subtitle: "ข้อมูล 9 บ้าน ชื่อ สี บุคลิก และประธานบ้าน",
+    primary: "name",
+    fields: [
+      t("no", "ลำดับบ้าน"),
+      t("name", "ชื่ออังกฤษ"),
+      t("name_th", "ชื่อไทย"),
+      t("color_label", "สีประจำบ้าน"),
+      t("personality", "บุคลิกประจำบ้าน"),
+      { key: "intro", label: "เกี่ยวกับบ้าน", kind: "long" },
+      t("captain", "ประธานบ้าน"),
+      t("captain_role", "ตำแหน่งประธาน"),
+      n("sort", "ลำดับ"),
+    ],
+  },
+  {
+    key: "honors",
+    table: "honors",
+    label: "รางวัลประจำเดือน",
+    subtitle: "บ้านประจำเดือน และบ้านคุณธรรมเยี่ยม",
+    primary: "month",
+    canCreate: true,
+    fields: [
+      { key: "month", label: "เดือน", kind: "select", options: [...MONTHS] },
+      t("house_of_month", "บ้านประจำเดือน (slug)"),
+      t("character_house", "บ้านคุณธรรมเยี่ยม (slug)"),
+    ],
+  },
+  {
+    key: "clubs",
+    table: "clubs",
+    label: "ชุมนุม",
+    subtitle: "ชุมนุมตามความสนใจ กิจกรรม และหัวหน้าชุมนุม",
+    primary: "name",
+    canCreate: true,
+    canDelete: true,
+    fields: [
+      t("slug", "slug"),
+      t("name", "ชื่ออังกฤษ"),
+      t("name_th", "ชื่อไทย"),
+      t("tagline", "คำโปรย"),
+      { key: "about", label: "เกี่ยวกับชุมนุม", kind: "long" },
+      t("head", "หัวหน้าชุมนุม"),
+      n("member_count", "จำนวนสมาชิก"),
+      { key: "activities", label: "กิจกรรมหลัก", kind: "list" },
+      t("cls", "คลาสสี (เช่น house-st-mary)"),
+      n("sort", "ลำดับ"),
+    ],
+  },
+  {
+    key: "projects",
+    table: "projects",
+    label: "โครงการ / กิจกรรม",
+    subtitle: "โครงการของสภา สโมสรนักเรียน บ้าน และชุมนุม",
+    primary: "name",
+    canCreate: true,
+    canDelete: true,
+    fields: [
+      t("slug", "slug"),
+      t("name", "ชื่อโครงการ"),
+      t("org", "องค์กรเจ้าของ"),
+      { key: "status", label: "สถานะ", kind: "select", options: ["ACTIVE", "UPCOMING", "COMPLETED"] },
+      t("owner", "ผู้รับผิดชอบ"),
+      { key: "description", label: "รายละเอียด", kind: "long" },
+      t("cta", "ข้อความปุ่ม"),
+      t("link", "ลิงก์"),
+      t("start_label", "เริ่ม"),
+      t("end_label", "สิ้นสุด"),
+      n("sort", "ลำดับ"),
+    ],
+  },
+  {
+    key: "project_updates",
+    table: "project_updates",
+    label: "ความคืบหน้าโครงการ",
+    subtitle: "บันทึกอัปเดตของแต่ละโครงการ",
+    primary: "text",
+    canCreate: true,
+    canDelete: true,
+    fields: [
+      t("project_slug", "slug โครงการ"),
+      t("date_label", "วันที่"),
+      { key: "text", label: "รายละเอียดอัปเดต", kind: "long" },
+    ],
+  },
+  {
+    key: "news",
+    table: "news",
+    label: "ข่าวและประกาศ",
+    subtitle: "เขียน แก้ไข และเผยแพร่ข่าว",
+    primary: "title",
+    canCreate: true,
+    canDelete: true,
+    fields: [
+      t("slug", "slug"),
+      t("title", "หัวข้อ"),
+      { key: "cat", label: "หมวด", kind: "select", options: ["SGSC", "STUDENT GOVERNMENT", "HOUSE", "CLUB", "PROJECT"] },
+      t("date_label", "วันที่"),
+      { key: "intro", label: "เกริ่นนำ", kind: "long" },
+      { key: "body", label: "เนื้อหา (บรรทัดละย่อหน้า)", kind: "list" },
+      t("related", "เกี่ยวข้องกับ"),
+      t("house_slug", "slug บ้าน (ถ้ามี)"),
+      t("cover_url", "ลิงก์รูปปก"),
+      { key: "published", label: "เผยแพร่", kind: "bool" },
+    ],
+  },
+  {
+    key: "radio_slots",
+    table: "radio_slots",
+    label: "ผังเวลา SG Radio",
+    subtitle: "เปิด/ปิดช่วงเวลาออกอากาศในแต่ละวัน",
+    primary: "day",
+    canCreate: true,
+    canDelete: true,
+    fields: [
+      { key: "day", label: "วัน", kind: "select", options: RADIO_DAYS },
+      { key: "slot", label: "ช่วงเวลา", kind: "select", options: RADIO_SLOTS },
+      { key: "state", label: "สถานะ", kind: "select", options: ["AVAILABLE", "BOOKED", "PENDING", "CLOSED"] },
+      t("note", "หมายเหตุ"),
+    ],
+  },
+  {
+    key: "radio_bookings",
+    table: "radio_bookings",
+    label: "คำขอจอง SG Radio",
+    subtitle: "อนุมัติหรือปฏิเสธคำขอเปิดเพลง/ประกาศ",
+    primary: "song",
+    canDelete: true,
+    fields: [
+      t("day", "วัน"),
+      t("slot", "ช่วงเวลา"),
+      t("requester", "ผู้ขอ"),
+      t("klass", "ชั้น/ห้อง"),
+      t("song", "เพลง/หัวข้อ"),
+      { key: "message", label: "ข้อความ", kind: "long" },
+      { key: "status", label: "สถานะ", kind: "select", options: ["PENDING", "APPROVED", "REJECTED"] },
+    ],
+  },
+  {
+    key: "radio_rules",
+    table: "radio_rules",
+    label: "กติกา SG Radio",
+    subtitle: "ข้อกำหนดการจองที่แสดงบนหน้าเว็บ",
+    primary: "text",
+    canCreate: true,
+    canDelete: true,
+    fields: [{ key: "text", label: "กติกา", kind: "long" }, n("sort", "ลำดับ")],
+  },
+  {
+    key: "site_settings",
+    table: "site_settings",
+    label: "ตั้งค่าเว็บไซต์",
+    subtitle: "ค่าทั่วไป เช่น เดือนปัจจุบันของ House Competition",
+    primary: "key",
+    canCreate: true,
+    fields: [t("key", "คีย์"), t("value", "ค่า")],
+  },
+];
+
+/* -------------------------------- page --------------------------------- */
+
+function AdminPage() {
+  const [session, setSession] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => setSession(!!data.session));
+    const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => setSession(!!s));
+    return () => sub.subscription.unsubscribe();
+  }, []);
+
+  if (session === null) return <Centered>กำลังตรวจสอบสิทธิ์…</Centered>;
+  if (!session) return <SignIn />;
+  return <Console />;
+}
+
+function Centered({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="grid min-h-screen place-items-center bg-secondary px-5 text-sm text-muted-foreground">
+      {children}
+    </div>
+  );
+}
+
+function SignIn() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [mode, setMode] = useState<"in" | "up">("in");
+  const [busy, setBusy] = useState(false);
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setBusy(true);
+    const fn = mode === "in" ? supabase.auth.signInWithPassword : supabase.auth.signUp;
+    const { error } = await fn.call(supabase.auth, { email, password });
+    setBusy(false);
+    if (error) toast.error(error.message);
+    else if (mode === "up") toast.success("สร้างบัญชีแล้ว — ผู้ใช้คนแรกจะได้สิทธิ์ผู้ดูแลระบบ");
+  };
+
+  return (
+    <div className="grid min-h-screen place-items-center bg-secondary px-5">
+      <form onSubmit={submit} className="w-full max-w-sm border border-border bg-background p-8">
+        <p className="eyebrow">SGSC ADMIN</p>
+        <h1 className="display-xl mt-3 text-2xl">ระบบจัดการเว็บไซต์</h1>
+        <label className="mt-8 block text-xs font-semibold uppercase tracking-[0.16em]">อีเมล</label>
+        <input
+          type="email"
+          required
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="mt-2 w-full border border-input bg-background px-3 py-3 text-sm"
+        />
+        <label className="mt-5 block text-xs font-semibold uppercase tracking-[0.16em]">รหัสผ่าน</label>
+        <input
+          type="password"
+          required
+          minLength={6}
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          className="mt-2 w-full border border-input bg-background px-3 py-3 text-sm"
+        />
+        <button
+          disabled={busy}
+          className="mt-8 w-full bg-primary px-5 py-4 text-xs font-semibold uppercase tracking-[0.18em] text-primary-foreground disabled:opacity-60"
+        >
+          {mode === "in" ? "เข้าสู่ระบบ" : "สร้างบัญชีผู้ดูแล"}
+        </button>
+        <button
+          type="button"
+          onClick={() => setMode(mode === "in" ? "up" : "in")}
+          className="mt-4 w-full text-xs text-muted-foreground underline"
+        >
+          {mode === "in" ? "ยังไม่มีบัญชี? สร้างบัญชีผู้ดูแลคนแรก" : "มีบัญชีแล้ว เข้าสู่ระบบ"}
+        </button>
+      </form>
+    </div>
+  );
+}
+
+function Console() {
+  const check = useServerFn(checkAdmin);
+  const me = useQuery({ queryKey: ["admin", "me"], queryFn: () => check() });
+  const [section, setSection] = useState<string>("scores");
+
+  const signOut = async () => {
+    await supabase.auth.signOut();
+  };
+
+  if (me.isLoading) return <Centered>กำลังโหลด…</Centered>;
+  if (!me.data?.isAdmin)
+    return (
+      <Centered>
+        <div className="max-w-sm text-center">
+          <p className="text-base font-semibold text-foreground">บัญชีนี้ไม่มีสิทธิ์ผู้ดูแลระบบ</p>
+          <p className="mt-2">ติดต่อผู้ดูแลระบบเพื่อขอสิทธิ์ แล้วเข้าสู่ระบบอีกครั้ง</p>
+          <button onClick={signOut} className="mt-6 border border-input px-5 py-3 text-xs uppercase tracking-[0.16em]">
+            ออกจากระบบ
+          </button>
+        </div>
+      </Centered>
+    );
+
+  const active = SECTIONS.find((s) => s.key === section);
 
   return (
     <div className="min-h-screen bg-secondary">
       <header className="flex flex-wrap items-center justify-between gap-4 border-b border-border bg-background px-5 py-4 md:px-8">
         <div>
-          <p className="eyebrow">SGSC ADMIN CONSOLE</p>
-          <p className="mt-1 text-sm text-muted-foreground">เข้าสู่ระบบเป็น Super Admin (ตัวอย่าง)</p>
+          <p className="eyebrow">SGSC ADMIN</p>
+          <h1 className="display-xl mt-1 text-xl">ระบบจัดการเว็บไซต์</h1>
         </div>
-        <Link to="/" className="num text-xs uppercase tracking-[0.18em] underline">
-          ← กลับหน้าเว็บไซต์
-        </Link>
+        <div className="flex items-center gap-4">
+          <span className="text-xs text-muted-foreground">{me.data.email}</span>
+          <a href="/" className="border border-input px-4 py-2 text-xs uppercase tracking-[0.16em]">
+            ดูเว็บไซต์
+          </a>
+          <button
+            onClick={signOut}
+            className="inline-flex items-center gap-2 border border-input px-4 py-2 text-xs uppercase tracking-[0.16em]"
+          >
+            <LogOut className="h-3.5 w-3.5" /> ออก
+          </button>
+        </div>
       </header>
 
-      <div className="grid lg:grid-cols-[220px_1fr]">
-        <nav className="border-b border-border bg-background lg:border-b-0 lg:border-r">
-          {TABS.map((t) => (
-            <button
-              key={t}
-              onClick={() => setTab(t)}
-              className={`num block w-full px-5 py-4 text-left text-xs uppercase tracking-[0.16em] ${
-                tab === t ? "bg-primary text-primary-foreground" : "hover:bg-secondary"
-              }`}
-            >
-              {t}
-            </button>
-          ))}
+      <div className="grid lg:grid-cols-[240px_1fr]">
+        <nav className="border-b border-border bg-background p-3 lg:border-b-0 lg:border-r">
+          <div className="flex flex-wrap gap-1 lg:flex-col">
+            <NavBtn active={section === "scores"} onClick={() => setSection("scores")}>
+              คะแนน House Competition
+            </NavBtn>
+            {SECTIONS.map((s) => (
+              <NavBtn key={s.key} active={section === s.key} onClick={() => setSection(s.key)}>
+                {s.label}
+              </NavBtn>
+            ))}
+            <NavBtn active={section === "audit"} onClick={() => setSection("audit")}>
+              ประวัติการแก้ไข
+            </NavBtn>
+          </div>
         </nav>
 
         <main className="p-5 md:p-8">
-          {tab === "DASHBOARD" && (
-            <>
-              <div className="grid gap-px bg-border sm:grid-cols-2 lg:grid-cols-4">
-                {[
-                  { v: String(TOTAL_MEMBERS), l: "สมาชิกทั้งหมด" },
-                  { v: "09", l: "บ้านสายกีฬา" },
-                  { v: String(PROJECTS.length), l: "โครงการ" },
-                  { v: String(NEWS.length), l: "ข่าวเผยแพร่" },
-                ].map((s) => (
-                  <div key={s.l} className="bg-background p-6">
-                    <p className="num text-3xl">{s.v}</p>
-                    <p className="eyebrow mt-3">{s.l}</p>
-                  </div>
-                ))}
-              </div>
-              <div className="mt-8 border border-border bg-background p-6">
-                <p className="eyebrow">AUDIT LOG</p>
-                {AUDIT_LOG.map((a) => (
-                  <div key={a.time} className="flex flex-wrap justify-between gap-2 border-t border-border py-3">
-                    <span className="text-sm">{a.action}</span>
-                    <span className="num text-xs text-muted-foreground">
-                      {a.time} · {a.by}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </>
-          )}
-
-          {tab === "MEMBERS" && (
-            <Panel title="จัดการสมาชิก" desc="เพิ่ม แก้ไข ลบ และย้ายสังกัดสมาชิกสโมสรนักเรียน">
-              <Rows
-                rows={["เพิ่มสมาชิกใหม่", "นำเข้ารายชื่อจากไฟล์", "จัดกลุ่มตามองค์กร", "อัปโหลดรูปสมาชิก"]}
-              />
-            </Panel>
-          )}
-
-          {tab === "SCORES" && (
-            <Panel title={`คะแนนบ้าน — ${CURRENT_MONTH} 2026`} desc="แก้ไขคะแนนรายเดือนและเผยแพร่ผล">
-              <div className="grid gap-px bg-border sm:grid-cols-3">
-                {HOUSES.map((h) => (
-                  <div key={h.slug} className="bg-background p-5">
-                    <p className="num text-xs text-muted-foreground">{h.no}</p>
-                    <p className="mt-2 text-sm font-semibold">{h.name}</p>
-                    <input
-                      defaultValue={h.scores[CURRENT_MONTH]}
-                      className="num mt-3 w-full border border-input bg-background px-3 py-2 text-sm"
-                    />
-                  </div>
-                ))}
-              </div>
-              <button className="mt-6 bg-primary px-6 py-4 text-xs font-semibold uppercase tracking-[0.18em] text-primary-foreground">
-                บันทึกและเผยแพร่
-              </button>
-            </Panel>
-          )}
-
-          {tab === "CLUBS" && (
-            <Panel title="จัดการชุมนุม" desc="แก้ไขข้อมูล กิจกรรม และคณะกรรมการของแต่ละชุมนุม">
-              <Rows rows={CLUBS.map((c) => `${c.name} · ${c.members} สมาชิก · หัวหน้า ${c.head}`)} />
-            </Panel>
-          )}
-
-          {tab === "PROJECTS" && (
-            <Panel title="จัดการโครงการ" desc="อัปเดตสถานะและความคืบหน้าของโครงการ">
-              <Rows rows={PROJECTS.map((p) => `${p.name} · ${p.status} · ${p.owner}`)} />
-            </Panel>
-          )}
-
-          {tab === "RADIO" && (
-            <Panel title="SG Radio" desc="อนุมัติคำขอจอง เปิด/ปิดช่วงเวลา และดูคิวรายวัน">
-              <div className="overflow-x-auto">
-                <table className="w-full min-w-[600px] text-sm">
-                  <tbody>
-                    {RADIO_DAYS.map((d) => (
-                      <tr key={d}>
-                        <td className="border-b border-border p-3 font-semibold">{d}</td>
-                        {RADIO_SCHEDULE[d]!.map((s, i) => (
-                          <td key={i} className="num border-b border-border p-3 text-xs text-muted-foreground">
-                            {RADIO_SLOTS[i]} · {s}
-                          </td>
-                        ))}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </Panel>
-          )}
-
-          {tab === "NEWS" && (
-            <Panel title="จัดการข่าว" desc="สร้าง แก้ไข และเผยแพร่ข่าวประกาศ">
-              <Rows rows={NEWS.map((n) => `${n.date} · ${n.cat} · ${n.title}`)} />
-            </Panel>
-          )}
-
-          {tab === "ROLES" && (
-            <Panel title="สิทธิ์ผู้ใช้งาน" desc="ระดับสิทธิ์และขอบเขตการเข้าถึงของแต่ละบทบาท">
-              <div className="grid gap-px bg-border sm:grid-cols-2">
-                {ADMIN_ROLES.map((r) => (
-                  <div key={r.role} className="bg-background p-5">
-                    <p className="num text-sm">{r.role}</p>
-                    <p className="mt-2 text-xs text-muted-foreground">{r.desc}</p>
-                    <p className="num mt-3 text-xs">{r.people} คน</p>
-                  </div>
-                ))}
-              </div>
-            </Panel>
-          )}
+          {section === "scores" && <ScoreEditor />}
+          {section === "audit" && <AuditView />}
+          {active && <TableEditor key={active.key} def={active} />}
         </main>
       </div>
     </div>
   );
 }
 
-function Panel({ title, desc, children }: { title: string; desc: string; children: React.ReactNode }) {
+function NavBtn({
+  active,
+  onClick,
+  children,
+}: {
+  active: boolean;
+  onClick: () => void;
+  children: React.ReactNode;
+}) {
   return (
-    <section className="border border-border bg-background p-6">
-      <h2 className="display-xl text-xl">{title}</h2>
-      <p className="mt-2 text-sm text-muted-foreground">{desc}</p>
-      <div className="mt-6">{children}</div>
+    <button
+      onClick={onClick}
+      className={cn(
+        "px-3 py-2.5 text-left text-xs font-semibold transition-colors",
+        active ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-secondary",
+      )}
+    >
+      {children}
+    </button>
+  );
+}
+
+/* ---------------------------- generic editor ---------------------------- */
+
+type Row = Record<string, any>;
+
+function useRows(table: string) {
+  const list = useServerFn(adminList);
+  return useQuery({ queryKey: ["admin", table], queryFn: () => list({ data: { table } }) });
+}
+
+function TableEditor({ def }: { def: SectionDef }) {
+  const qc = useQueryClient();
+  const rows = useRows(def.table);
+  const save = useServerFn(adminSave);
+  const del = useServerFn(adminDelete);
+  const [editing, setEditing] = useState<Row | null>(null);
+
+  const saveMut = useMutation({
+    mutationFn: (row: Row) => save({ data: { table: def.table, row } }),
+    onSuccess: () => {
+      toast.success("บันทึกแล้ว");
+      setEditing(null);
+      qc.invalidateQueries({ queryKey: ["admin", def.table] });
+      qc.invalidateQueries({ queryKey: ["site-content"] });
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+  const delMut = useMutation({
+    mutationFn: (id: string) => del({ data: { table: def.table, id } }),
+    onSuccess: () => {
+      toast.success("ลบแล้ว");
+      setEditing(null);
+      qc.invalidateQueries({ queryKey: ["admin", def.table] });
+      qc.invalidateQueries({ queryKey: ["site-content"] });
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+  const blank = useMemo(() => {
+    const r: Row = {};
+    def.fields.forEach((f) => {
+      r[f.key] = f.kind === "number" ? 0 : f.kind === "bool" ? false : f.kind === "list" ? [] : "";
+    });
+    return r;
+  }, [def]);
+
+  return (
+    <section>
+      <div className="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <h2 className="display-xl text-2xl">{def.label}</h2>
+          <p className="mt-2 text-sm text-muted-foreground">{def.subtitle}</p>
+        </div>
+        <div className="flex gap-2">
+          <button
+            onClick={() => rows.refetch()}
+            className="inline-flex items-center gap-2 border border-input bg-background px-4 py-3 text-xs uppercase tracking-[0.16em]"
+          >
+            <RefreshCw className="h-3.5 w-3.5" /> โหลดใหม่
+          </button>
+          {def.canCreate && (
+            <button
+              onClick={() => setEditing({ ...blank })}
+              className="inline-flex items-center gap-2 bg-primary px-4 py-3 text-xs uppercase tracking-[0.16em] text-primary-foreground"
+            >
+              <Plus className="h-3.5 w-3.5" /> เพิ่มรายการ
+            </button>
+          )}
+        </div>
+      </div>
+
+      {rows.isLoading && <p className="mt-8 text-sm text-muted-foreground">กำลังโหลด…</p>}
+      {rows.error && <p className="mt-8 text-sm text-destructive">{(rows.error as Error).message}</p>}
+
+      <div className="mt-8 divide-y divide-border border border-border bg-background">
+        {(rows.data ?? []).map((r: Row) => (
+          <button
+            key={String(r["id"] ?? r["key"])}
+            onClick={() => setEditing(r)}
+            className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left transition-colors hover:bg-secondary"
+          >
+            <span className="min-w-0">
+              <span className="block truncate text-sm font-semibold">
+                {String(r[def.primary] ?? "").trim() || "(ยังไม่ระบุ)"}
+              </span>
+              <span className="mt-1 block truncate text-xs text-muted-foreground">
+                {def.fields
+                  .slice(0, 4)
+                  .map((f) => `${f.label}: ${fmt(r[f.key])}`)
+                  .join(" · ")}
+              </span>
+            </span>
+            <span className="text-xs uppercase tracking-[0.16em] text-muted-foreground">แก้ไข</span>
+          </button>
+        ))}
+        {rows.data?.length === 0 && <p className="px-5 py-8 text-sm text-muted-foreground">ยังไม่มีข้อมูล</p>}
+      </div>
+
+      {editing && (
+        <RowForm
+          def={def}
+          row={editing}
+          busy={saveMut.isPending || delMut.isPending}
+          onClose={() => setEditing(null)}
+          onSave={(r) => saveMut.mutate(r)}
+          onDelete={
+            def.canDelete && editing["id"] ? () => delMut.mutate(String(editing["id"])) : undefined
+          }
+        />
+      )}
     </section>
   );
 }
 
-function Rows({ rows }: { rows: string[] }) {
+const fmt = (v: unknown) =>
+  Array.isArray(v) ? `${v.length} รายการ` : typeof v === "boolean" ? (v ? "ใช่" : "ไม่") : String(v ?? "").slice(0, 40) || "—";
+
+function RowForm({
+  def,
+  row,
+  busy,
+  onClose,
+  onSave,
+  onDelete,
+}: {
+  def: SectionDef;
+  row: Row;
+  busy: boolean;
+  onClose: () => void;
+  onSave: (r: Row) => void;
+  onDelete?: (() => void) | undefined;
+}) {
+  const [draft, setDraft] = useState<Row>(() => ({ ...row }));
+  const set = (k: string, v: unknown) => setDraft((d) => ({ ...d, [k]: v }));
+
   return (
-    <ul>
-      {rows.map((r) => (
-        <li key={r} className="flex items-center justify-between gap-4 border-t border-border py-3 last:border-b">
-          <span className="text-sm">{r}</span>
-          <span className="num text-xs text-muted-foreground">แก้ไข</span>
-        </li>
-      ))}
-    </ul>
+    <div className="fixed inset-0 z-50 grid place-items-end overflow-y-auto bg-black/40 p-0 sm:place-items-center sm:p-6">
+      <div className="w-full max-w-2xl border border-border bg-background">
+        <div className="flex items-center justify-between border-b border-border px-6 py-4">
+          <p className="text-sm font-semibold">{def.label}</p>
+          <button onClick={onClose} aria-label="ปิด">
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+        <div className="max-h-[70vh] space-y-5 overflow-y-auto px-6 py-6">
+          {def.fields.map((f) => (
+            <div key={f.key}>
+              <label className="block text-xs font-semibold uppercase tracking-[0.16em]">{f.label}</label>
+              {f.kind === "long" && (
+                <textarea
+                  rows={3}
+                  value={String(draft[f.key] ?? "")}
+                  onChange={(e) => set(f.key, e.target.value)}
+                  className="mt-2 w-full border border-input bg-background px-3 py-2 text-sm"
+                />
+              )}
+              {f.kind === "list" && (
+                <textarea
+                  rows={4}
+                  value={(Array.isArray(draft[f.key]) ? draft[f.key] : []).join("\n")}
+                  onChange={(e) => set(f.key, e.target.value.split("\n").filter((x) => x.trim()))}
+                  className="mt-2 w-full border border-input bg-background px-3 py-2 text-sm"
+                  placeholder="บรรทัดละหนึ่งรายการ"
+                />
+              )}
+              {f.kind === "select" && (
+                <select
+                  value={String(draft[f.key] ?? "")}
+                  onChange={(e) => set(f.key, e.target.value)}
+                  className="mt-2 w-full border border-input bg-background px-3 py-2 text-sm"
+                >
+                  <option value="">—</option>
+                  {f.options?.map((o) => (
+                    <option key={o} value={o}>
+                      {o}
+                    </option>
+                  ))}
+                </select>
+              )}
+              {f.kind === "bool" && (
+                <label className="mt-2 flex items-center gap-3 text-sm">
+                  <input
+                    type="checkbox"
+                    checked={!!draft[f.key]}
+                    onChange={(e) => set(f.key, e.target.checked)}
+                  />
+                  เผยแพร่บนเว็บไซต์
+                </label>
+              )}
+              {f.kind === "number" && (
+                <input
+                  type="number"
+                  value={Number(draft[f.key] ?? 0)}
+                  onChange={(e) => set(f.key, Number(e.target.value))}
+                  className="mt-2 w-full border border-input bg-background px-3 py-2 text-sm"
+                />
+              )}
+              {f.kind === "text" && (
+                <input
+                  value={String(draft[f.key] ?? "")}
+                  onChange={(e) => set(f.key, e.target.value)}
+                  className="mt-2 w-full border border-input bg-background px-3 py-2 text-sm"
+                />
+              )}
+            </div>
+          ))}
+        </div>
+        <div className="flex items-center justify-between gap-3 border-t border-border px-6 py-4">
+          {onDelete ? (
+            <button
+              onClick={onDelete}
+              disabled={busy}
+              className="inline-flex items-center gap-2 border border-destructive px-4 py-3 text-xs uppercase tracking-[0.16em] text-destructive"
+            >
+              <Trash2 className="h-3.5 w-3.5" /> ลบ
+            </button>
+          ) : (
+            <span />
+          )}
+          <button
+            onClick={() => onSave(draft)}
+            disabled={busy}
+            className="inline-flex items-center gap-2 bg-primary px-6 py-3 text-xs uppercase tracking-[0.16em] text-primary-foreground disabled:opacity-60"
+          >
+            <Save className="h-3.5 w-3.5" /> บันทึก
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ----------------------------- score editor ----------------------------- */
+
+function ScoreEditor() {
+  const qc = useQueryClient();
+  const houses = useRows("houses");
+  const scores = useRows("house_scores");
+  const saveScores = useServerFn(adminSaveScores);
+  const [month, setMonth] = useState<Month>(MONTHS[0]);
+  const [draft, setDraft] = useState<Record<string, number>>({});
+
+  useEffect(() => {
+    const next: Record<string, number> = {};
+    (scores.data ?? []).forEach((s: Row) => {
+      if (s["month"] === month) next[String(s["house_slug"])] = Number(s["score"]);
+    });
+    setDraft(next);
+  }, [scores.data, month]);
+
+  const mut = useMutation({
+    mutationFn: () =>
+      saveScores({
+        data: {
+          month,
+          scores: (houses.data ?? []).map((h: Row) => ({
+            house_slug: String(h["slug"]),
+            score: draft[String(h["slug"])] ?? 0,
+          })),
+        },
+      }),
+    onSuccess: () => {
+      toast.success("บันทึกคะแนนแล้ว");
+      qc.invalidateQueries({ queryKey: ["admin", "house_scores"] });
+      qc.invalidateQueries({ queryKey: ["site-content"] });
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+  return (
+    <section>
+      <h2 className="display-xl text-2xl">คะแนน House Competition</h2>
+      <p className="mt-2 text-sm text-muted-foreground">
+        ใส่คะแนน 0–100 ของแต่ละบ้านในเดือนที่เลือก แล้วกดบันทึก
+      </p>
+
+      <div className="mt-6 flex flex-wrap gap-1">
+        {MONTHS.map((m) => (
+          <button
+            key={m}
+            onClick={() => setMonth(m)}
+            className={cn(
+              "num border px-4 py-2 text-xs",
+              m === month ? "border-primary bg-primary text-primary-foreground" : "border-border bg-background",
+            )}
+          >
+            {m} · {MONTH_TH[m]}
+          </button>
+        ))}
+      </div>
+
+      <div className="mt-8 divide-y divide-border border border-border bg-background">
+        {(houses.data ?? []).map((h: Row) => (
+          <div key={String(h["slug"])} className="flex items-center justify-between gap-4 px-5 py-3">
+            <span className="text-sm font-semibold">
+              {String(h["name"])} <span className="text-muted-foreground">· {String(h["name_th"])}</span>
+            </span>
+            <input
+              type="number"
+              step="0.1"
+              min={0}
+              max={100}
+              value={draft[String(h["slug"])] ?? 0}
+              onChange={(e) =>
+                setDraft((d) => ({ ...d, [String(h["slug"])]: Number(e.target.value) }))
+              }
+              className="num w-28 border border-input bg-background px-3 py-2 text-right text-sm"
+            />
+          </div>
+        ))}
+      </div>
+
+      <button
+        onClick={() => mut.mutate()}
+        disabled={mut.isPending}
+        className="mt-6 inline-flex items-center gap-2 bg-primary px-6 py-4 text-xs uppercase tracking-[0.18em] text-primary-foreground disabled:opacity-60"
+      >
+        <Save className="h-4 w-4" /> บันทึกคะแนนเดือน {MONTH_TH[month]}
+      </button>
+    </section>
+  );
+}
+
+/* -------------------------------- audit -------------------------------- */
+
+function AuditView() {
+  const rows = useRows("audit_log");
+  const list = [...(rows.data ?? [])].reverse();
+  return (
+    <section>
+      <h2 className="display-xl text-2xl">ประวัติการแก้ไข</h2>
+      <div className="mt-8 divide-y divide-border border border-border bg-background">
+        {list.map((r: Row) => (
+          <div key={String(r["id"])} className="px-5 py-3">
+            <p className="text-sm">{String(r["action"])}</p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              {String(r["actor"])} · {new Date(String(r["created_at"])).toLocaleString("th-TH")}
+            </p>
+          </div>
+        ))}
+        {list.length === 0 && <p className="px-5 py-8 text-sm text-muted-foreground">ยังไม่มีประวัติ</p>}
+      </div>
+    </section>
   );
 }

@@ -1,6 +1,6 @@
 import { defineTool } from "@lovable.dev/mcp-js";
+import { loadContent } from "@/lib/content.server";
 import { z } from "zod";
-import { PROJECTS } from "@/data/sgsc";
 
 export default defineTool({
   name: "list_projects",
@@ -11,8 +11,9 @@ export default defineTool({
     org: z.string().trim().min(1).optional().describe("Filter by owning organization, e.g. สโมสรนักเรียน."),
   },
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
-  handler: ({ status, org }) => {
-    const rows = PROJECTS.filter((p) => (!status || p.status === status) && (!org || p.org.includes(org)));
+  handler: async ({ status, org }) => {
+    const c = await loadContent();
+    const rows = c.projects.filter((p) => (!status || p.status === status) && (!org || p.org.includes(org)));
     return {
       content: [
         {

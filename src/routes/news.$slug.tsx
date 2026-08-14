@@ -1,34 +1,27 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { useContent, ranking, rankOf, growth, honorsOf, membersOf, display } from "@/lib/content";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { ImgBlock, Section, Tag } from "@/components/site/primitives";
-import { NEWS } from "@/data/sgsc";
+
 
 export const Route = createFileRoute("/news/$slug")({
-  loader: ({ params }) => {
-    const n = NEWS.find((x) => x.slug === params.slug);
-    if (!n) throw notFound();
-    return { slug: n.slug, title: n.title, intro: n.intro };
-  },
-  head: ({ loaderData }) => {
-    if (!loaderData) {
-      return { meta: [{ title: "ไม่พบข่าวนี้ — SGSC" }, { name: "robots", content: "noindex" }] };
-    }
-    return {
-      meta: [
-        { title: `${loaderData.title} — SGSC News` },
-        { name: "description", content: loaderData.intro },
-        { property: "og:title", content: loaderData.title },
-        { property: "og:description", content: loaderData.intro },
-        { property: "og:type", content: "article" },
-      ],
-    };
-  },
+  head: () => ({
+    meta: [
+      { title: "ข่าวสภานักเรียน — SGSC News" },
+      { name: "description", content: "ข่าวสารและประกาศจากสภานักเรียนโรงเรียนเซนต์คาเบรียล" },
+      { property: "og:title", content: "SGSC News" },
+      { property: "og:description", content: "ข่าวสารและประกาศจากสภานักเรียน" },
+      { property: "og:type", content: "article" },
+    ],
+  }),
   component: NewsArticle,
 });
 
 function NewsArticle() {
-  const { slug } = Route.useLoaderData();
-  const n = NEWS.find((x) => x.slug === slug)!;
-  const more = NEWS.filter((x) => x.slug !== slug).slice(0, 3);
+  const c = useContent();
+  const { slug } = Route.useParams();
+  const n = c.news.find((x) => x.slug === slug);
+  if (!n) return <NotFoundBlock label="ไม่พบข่าวนี้" />;
+  const more = c.news.filter((x) => x.slug !== slug).slice(0, 3);
 
   return (
     <>
@@ -78,5 +71,14 @@ function NewsArticle() {
         </div>
       </Section>
     </>
+  );
+}
+
+function NotFoundBlock({ label }: { label: string }) {
+  return (
+    <Section>
+      <h1 className="display-xl text-3xl">{label}</h1>
+      <p className="mt-4 text-sm text-muted-foreground">ข่าวนี้อาจถูกลบหรือยังไม่ได้เผยแพร่</p>
+    </Section>
   );
 }

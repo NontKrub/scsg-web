@@ -1,6 +1,6 @@
 import { defineTool } from "@lovable.dev/mcp-js";
+import { loadContent } from "@/lib/content.server";
 import { z } from "zod";
-import { MEMBERS, TOTAL_MEMBERS } from "@/data/sgsc";
 
 export default defineTool({
   name: "list_members",
@@ -16,9 +16,10 @@ export default defineTool({
     limit: z.number().int().min(1).max(68).optional().describe("Maximum number of members to return."),
   },
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
-  handler: ({ org, search, limit }) => {
+  handler: async ({ org, search, limit }) => {
+    const c = await loadContent();
     const q = search?.toLowerCase();
-    const rows = MEMBERS.filter(
+    const rows = c.members.filter(
       (m) =>
         (!org || m.org === org) &&
         (!q ||
@@ -30,11 +31,11 @@ export default defineTool({
         {
           type: "text" as const,
           text:
-            `${rows.length} of ${TOTAL_MEMBERS} members\n` +
+            `${rows.length} of ${c.members.length} members\n` +
             rows.map((m) => `${m.name} — ${m.role} (${m.orgLabel}, ${m.klass})`).join("\n"),
         },
       ],
-      structuredContent: { total: TOTAL_MEMBERS, count: rows.length, members: rows },
+      structuredContent: { total: c.members.length, count: rows.length, members: rows },
     };
   },
 });

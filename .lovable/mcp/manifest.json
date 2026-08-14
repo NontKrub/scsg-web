@@ -96,7 +96,7 @@
           "type": "object",
           "properties": {
             "month": {
-              "description": "Month code (JUN, JUL, AUG, SEP, OCT, NOV, DEC). Defaults to the current month (AUG).",
+              "description": "Month code (JUN, JUL, AUG, SEP, OCT, NOV, DEC). Defaults to the current month.",
               "type": "string",
               "enum": [
                 "JUN",

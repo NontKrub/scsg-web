@@ -1,7 +1,8 @@
+import { useContent, ranking, rankOf, growth, honorsOf, membersOf, display } from "@/lib/content";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { MemberGrid } from "@/components/site/MemberGrid";
 import { ImgBlock, Section, SectionHead, Tag } from "@/components/site/primitives";
-import { PROJECTS, SG_MEMBERS, SG_TOTAL, TOTAL_MEMBERS } from "@/data/sgsc";
+
 
 export const Route = createFileRoute("/student-government")({
   head: () => ({
@@ -16,6 +17,7 @@ export const Route = createFileRoute("/student-government")({
 });
 
 function SG() {
+  const c = useContent();
   return (
     <>
       <Section className="pb-10">
@@ -23,16 +25,16 @@ function SG() {
         <h1 className="display-xl mt-6 text-[clamp(2.6rem,9vw,6.5rem)]">STUDENT GOVERNMENT</h1>
         <p className="mt-6 max-w-2xl text-muted-foreground">
           สโมสรนักเรียน (Student Government) คือฝ่ายบริหารซึ่งเป็น 1 ใน 4 องค์กรภายใต้ Student Congress
-          มีสมาชิก {SG_TOTAL} คน ตั้งแต่นายกสโมสรนักเรียน รองนายก เลขานุการ เหรัญญิก หัวหน้าฝ่าย จนถึงกรรมการฝ่าย
-          และทั้ง {SG_TOTAL} คนนี้นับเป็นสมาชิกสภาใน {TOTAL_MEMBERS} คนของ Student Congress ด้วย
+          มีสมาชิก {membersOf(c, "SG").length} คน ตั้งแต่นายกสโมสรนักเรียน รองนายก เลขานุการ เหรัญญิก หัวหน้าฝ่าย จนถึงกรรมการฝ่าย
+          และทั้ง {membersOf(c, "SG").length} คนนี้นับเป็นสมาชิกสภาใน {c.members.length} คนของ Student Congress ด้วย
         </p>
         <div className="mt-8 grid max-w-md grid-cols-2 gap-6">
           <div>
-            <div className="num text-5xl">{SG_TOTAL}</div>
+            <div className="num text-5xl">{membersOf(c, "SG").length}</div>
             <div className="eyebrow mt-1">สมาชิกสโมสรนักเรียน</div>
           </div>
           <div>
-            <div className="num text-5xl">{TOTAL_MEMBERS}</div>
+            <div className="num text-5xl">{c.members.length}</div>
             <div className="eyebrow mt-1">สมาชิกสภาใหญ่ทั้งหมด</div>
           </div>
         </div>
@@ -59,7 +61,7 @@ function SG() {
         <SectionHead
           eyebrow="โครงสร้าง 18 ที่นั่ง"
           title="THE 18 SEATS"
-          sub={`สโมสรนักเรียนมีสมาชิก ${SG_TOTAL} คน แบ่งเป็นฝ่ายบริหาร หัวหน้าฝ่าย และกรรมการฝ่าย ทุกคนเป็นสมาชิกสภาใหญ่ ${TOTAL_MEMBERS} คนด้วย`}
+          sub={`สโมสรนักเรียนมีสมาชิก ${membersOf(c, "SG").length} คน แบ่งเป็นฝ่ายบริหาร หัวหน้าฝ่าย และกรรมการฝ่าย ทุกคนเป็นสมาชิกสภาใหญ่ ${c.members.length} คนด้วย`}
         />
         <div className="grid gap-px bg-border md:grid-cols-3">
           {[
@@ -70,7 +72,7 @@ function SG() {
             <div key={g.t} className="bg-background p-7">
               <p className="eyebrow">{g.t}</p>
               <div className="mt-6 divide-y divide-border">
-                {SG_MEMBERS.slice(g.range[0], g.range[1]).map((m) => (
+                {membersOf(c, "SG").slice(g.range[0], g.range[1]).map((m) => (
                   <div key={m.id} className="flex items-baseline justify-between gap-4 py-3">
                     <div>
                       <p className="text-sm font-semibold">{m.name}</p>
@@ -88,7 +90,7 @@ function SG() {
       <Section className="bg-secondary">
         <SectionHead eyebrow="โครงการของสโมสรนักเรียน" title="OUR PROJECTS" />
         <div className="grid gap-px bg-border md:grid-cols-3">
-          {PROJECTS.filter((p) => p.org === "สโมสรนักเรียน").map((p) => (
+          {c.projects.filter((p) => p.org === "สโมสรนักเรียน").map((p) => (
             <div key={p.slug} className="bg-background p-7">
               <Tag>{p.status}</Tag>
               <h3 className="display-xl mt-5 text-2xl">{p.name}</h3>
@@ -226,7 +228,7 @@ function SG() {
 
 
       <Section className="bg-secondary">
-        <SectionHead eyebrow="คณะทำงาน" title={`SG MEMBERS · ${SG_TOTAL} คน`} />
+        <SectionHead eyebrow="คณะทำงาน" title={`SG MEMBERS · ${membersOf(c, "SG").length} คน`} />
         <MemberGrid initial="SG" />
       </Section>
     </>

@@ -1,6 +1,8 @@
 import { defineTool } from "@lovable.dev/mcp-js";
 import { z } from "zod";
-import { CURRENT_MONTH, HONORS, HOUSES, MONTHS, ranking, tierOf } from "@/data/sgsc";
+import { loadContent } from "@/lib/content.server";
+import { MONTHS, tierOf } from "@/data/sgsc";
+import { honorsOf, ranking } from "@/lib/derive";
 
 export default defineTool({
   name: "get_house_scores",
@@ -11,12 +13,13 @@ export default defineTool({
     month: z
       .enum(MONTHS)
       .optional()
-      .describe(`Month code (${MONTHS.join(", ")}). Defaults to the current month (${CURRENT_MONTH}).`),
+      .describe(`Month code (${MONTHS.join(", ")}). Defaults to the current month.`),
   },
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
-  handler: ({ month }) => {
-    const m = month ?? CURRENT_MONTH;
-    const rows = ranking(m).map((r) => ({
+  handler: async ({ month }) => {
+    const c = await loadContent();
+    const m = month ?? c.currentMonth;
+    const rows = ranking(c, m).map((r) => ({
       rank: r.rank,
       slug: r.house.slug,
       name: r.house.name,
@@ -24,8 +27,8 @@ export default defineTool({
       score: r.score,
       tier: tierOf(r.score).name,
     }));
-    const honors = HONORS[m];
-    const houseOfMonth = HOUSES.find((h) => h.slug === honors.houseOfMonth)?.name ?? honors.houseOfMonth;
+    const honors = honorsOf(c, m);
+    const houseOfMonth = c.houses.find((h) => h.slug === honors.houseOfMonth)?.name ?? honors.houseOfMonth;
 
     return {
       content: [
@@ -34,7 +37,7 @@ export default defineTool({
           text:
             `House Competition — ${m}\n` +
             rows.map((r) => `${r.rank}. ${r.name} (${r.nameTh}) — ${r.score} · ${r.tier}`).join("\n") +
-            `\nHouse of the Month: ${houseOfMonth}\nCharacter Excellence: ${honors.character}`,
+            `\nHouse of the Month: ${houseOfMonth || "—"}\nCharacter Excellence: ${honors.character || "—"}`,
         },
       ],
       structuredContent: { month: m, standings: rows, honors: { houseOfMonth, character: honors.character } },

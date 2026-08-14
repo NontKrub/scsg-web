@@ -1,50 +1,34 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { useContent, ranking, rankOf, growth, honorsOf, membersOf, display } from "@/lib/content";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { GrowthChart } from "@/components/site/ScoreBoard";
 import { ImgBlock, Section, SectionHead, Tag } from "@/components/site/primitives";
-import {
-  CURRENT_MONTH,
-  HOUSES,
-  MEMBERS,
-  MONTHS,
-  MONTH_TH,
-  growth,
-  rankOf,
-  tierOf,
-} from "@/data/sgsc";
+import { MONTHS, MONTH_TH, tierOf } from "@/data/sgsc";
 
 export const Route = createFileRoute("/houses/$slug")({
-  loader: ({ params }) => {
-    const house = HOUSES.find((h) => h.slug === params.slug);
-    if (!house) throw notFound();
-    return { slug: house.slug, name: house.name, nameTh: house.nameTh };
-  },
-  head: ({ loaderData }) => {
-    if (!loaderData) {
-      return { meta: [{ title: "ไม่พบบ้านนี้ — SGSC" }, { name: "robots", content: "noindex" }] };
-    }
-    return {
-      meta: [
-        { title: `${loaderData.name} — บ้าน${loaderData.nameTh} | SGSC` },
-        {
-          name: "description",
-          content: `คะแนน อันดับ คณะกรรมการ และข่าวของบ้าน${loaderData.nameTh} ในการแข่งขัน House Competition`,
-        },
-        { property: "og:title", content: `${loaderData.name} — House of Saints` },
-        { property: "og:description", content: `คะแนน อันดับ และข่าวของบ้าน${loaderData.nameTh}` },
-      ],
-    };
-  },
+  head: ({ params }) => ({
+    meta: [
+      { title: `${params.slug} — บ้านสายกีฬา | SGSC` },
+      {
+        name: "description",
+        content: "คะแนน อันดับ และคณะกรรมการของบ้านสายกีฬา ในการแข่งขัน House Competition ของสภานักเรียนเซนต์คาเบรียล",
+      },
+      { property: "og:title", content: "House of Saints — SGSC" },
+      { property: "og:description", content: "คะแนน อันดับ และคณะกรรมการของบ้านสายกีฬา" },
+    ],
+  }),
   component: HousePage,
 });
 
 function HousePage() {
-  const { slug } = Route.useLoaderData();
-  const house = HOUSES.find((h) => h.slug === slug)!;
-  const score = house.scores[CURRENT_MONTH];
+  const c = useContent();
+  const { slug } = Route.useParams();
+  const house = c.houses.find((h) => h.slug === slug);
+  if (!house) return <NotFoundBlock label="ไม่พบบ้านนี้" />;
+  const score = house.scores[c.currentMonth];
   const tier = tierOf(score);
-  const rank = rankOf(slug, CURRENT_MONTH);
-  const g = growth(slug, CURRENT_MONTH);
-  const committee = MEMBERS.filter((m) => m.org === "HOUSE" && m.orgLabel === house.name);
+  const rank = rankOf(c, slug, c.currentMonth);
+  const g = growth(c, slug, c.currentMonth);
+  const committee = c.members.filter((m) => m.org === "HOUSE" && m.orgLabel === house.name);
 
   return (
     <div className={house.cls}>
@@ -128,7 +112,7 @@ function HousePage() {
 
       {/* SCORE + GRAPH */}
       <Section>
-        <SectionHead eyebrow={`ประจำเดือน${MONTH_TH[CURRENT_MONTH]} 2026`} title="HOUSE SCORE" />
+        <SectionHead eyebrow={`ประจำเดือน${MONTH_TH[c.currentMonth]} 2026`} title="HOUSE SCORE" />
         <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr]">
           <div>
             <div className="grid grid-cols-2 gap-px bg-border">
@@ -200,5 +184,14 @@ function HousePage() {
         </div>
       </Section>
     </div>
+  );
+}
+
+function NotFoundBlock({ label }: { label: string }) {
+  return (
+    <Section>
+      <h1 className="display-xl text-3xl">{label}</h1>
+      <p className="mt-4 text-sm text-muted-foreground">ข้อมูลนี้อาจถูกลบหรือยังไม่ได้เผยแพร่</p>
+    </Section>
   );
 }

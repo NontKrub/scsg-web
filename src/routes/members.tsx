@@ -1,7 +1,8 @@
+import { useContent, ranking, rankOf, growth, honorsOf, membersOf, display } from "@/lib/content";
 import { createFileRoute } from "@tanstack/react-router";
 import { MemberGrid } from "@/components/site/MemberGrid";
 import { Section, Tag } from "@/components/site/primitives";
-import { TOTAL_MEMBERS } from "@/data/sgsc";
+
 
 export const Route = createFileRoute("/members")({
   head: () => ({
@@ -16,11 +17,12 @@ export const Route = createFileRoute("/members")({
 });
 
 function Members() {
+  const c = useContent();
   return (
     <Section>
       <Tag>Congress Members</Tag>
       <h1 className="display-xl mt-6 text-[clamp(2.4rem,8vw,6rem)]">
-        {TOTAL_MEMBERS} PEOPLE.
+        {c.members.length} PEOPLE.
         <br />
         ONE CONGRESS.
       </h1>
