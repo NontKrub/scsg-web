@@ -11,7 +11,7 @@ const NAV = [
   { to: "/clubs", label: "ชมรม" },
   { to: "/student-government", label: "สภานักเรียน" },
   { to: "/projects", label: "โครงการ" },
-  { to: "/championship", label: "คะแนนบ้าน" },
+  { to: "/competition", label: "คะแนนบ้าน" },
   { to: "/news", label: "ข่าว" },
 ];
 

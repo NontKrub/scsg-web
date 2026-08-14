@@ -16,16 +16,16 @@ import {
 export const Route = createFileRoute("/competition")({
   head: () => ({
     meta: [
-      { title: "House Championship — คะแนนบ้านนักบุญ SGSC" },
-      { name: "description", content: "ตารางคะแนน House Championship ทั้ง 9 บ้าน รายเดือน ระดับคะแนน และรางวัลประจำเดือน" },
-      { property: "og:title", content: "HOUSE CHAMPIONSHIP — SGSC" },
+      { title: "House Competition — คะแนนบ้านนักบุญ SGSC" },
+      { name: "description", content: "ตารางคะแนน House Competition ทั้ง 9 บ้าน รายเดือน ระดับคะแนน และรางวัลประจำเดือน" },
+      { property: "og:title", content: "HOUSE COMPETITION — SGSC" },
       { property: "og:description", content: "คะแนน อันดับ และรางวัลประจำเดือนของทั้ง 9 บ้าน" },
     ],
   }),
-  component: Championship,
+  component: Competition,
 });
 
-function Championship() {
+function Competition() {
   const [month, setMonth] = useState<Month>(CURRENT_MONTH);
   const honors = HONORS[month];
   const hom = HOUSES.find((h) => h.slug === honors.houseOfMonth)!;
@@ -36,7 +36,7 @@ function Championship() {
     <>
       <Section className="pb-8">
         <Tag>House of Saints</Tag>
-        <h1 className="display-xl mt-6 text-[clamp(2.6rem,9vw,6.5rem)]">HOUSE CHAMPIONSHIP</h1>
+        <h1 className="display-xl mt-6 text-[clamp(2.6rem,9vw,6.5rem)]">HOUSE COMPETITION</h1>
         <p className="mt-6 text-muted-foreground">
           ผลคะแนนประจำเดือน{MONTH_TH[month]} 2026 · เลือกเดือนเพื่อดูผลย้อนหลัง
         </p>

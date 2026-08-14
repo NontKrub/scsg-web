@@ -94,10 +94,10 @@ function Home() {
       <Section className="bg-secondary">
         <SectionHead
           eyebrow={`ประจำเดือน${MONTH_TH[CURRENT_MONTH]} 2026`}
-          title="HOUSE CHAMPIONSHIP"
+          title="HOUSE COMPETITION"
           right={
             <Link
-              to="/championship"
+              to="/competition"
               className="inline-flex items-center gap-2 bg-primary px-6 py-4 text-xs font-semibold uppercase tracking-[0.18em] text-primary-foreground"
             >
               ดูผลทั้งหมด <ArrowRight className="h-4 w-4" />

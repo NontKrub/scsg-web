@@ -117,7 +117,7 @@ function About() {
           <div>
             <h2 className="display-xl text-[clamp(1.9rem,5vw,3.4rem)]">CONGRESS MEMBERS</h2>
             <p className="mt-5 max-w-md text-primary-foreground/70">
-              สมาชิกสภาทั้งหมด {TOTAL_MEMBERS} คน มาจากสภานักเรียน คณะสีนักบุญ ชมรม และผู้แทนห้องเรียน
+              สมาชิกสภาทั้งหมด {TOTAL_MEMBERS} คน มาจากสภานักเรียน บ้านสายกีฬา ชมรม และผู้แทนห้องเรียน
             </p>
             <Link
               to="/members"
