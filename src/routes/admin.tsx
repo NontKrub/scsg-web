@@ -18,7 +18,7 @@ export const Route = createFileRoute("/admin")({
   head: () => ({
     meta: [
       { title: "Admin Console — ระบบจัดการเว็บไซต์ SGSC" },
-      { name: "description", content: "ระบบหลังบ้านสำหรับจัดการสมาชิก คะแนนบ้าน ชมรม โครงการ SG Radio และข่าวของ SGSC" },
+      { name: "description", content: "ระบบหลังบ้านสำหรับจัดการสมาชิก คะแนนบ้าน ชุมนุม โครงการ SG Radio และข่าวของ SGSC" },
       { name: "robots", content: "noindex" },
       { property: "og:title", content: "SGSC Admin Console" },
       { property: "og:description", content: "ระบบจัดการเนื้อหาและคะแนนของ SGSC" },
@@ -65,7 +65,7 @@ function Admin() {
               <div className="grid gap-px bg-border sm:grid-cols-2 lg:grid-cols-4">
                 {[
                   { v: String(TOTAL_MEMBERS), l: "สมาชิกทั้งหมด" },
-                  { v: "09", l: "บ้านนักบุญ" },
+                  { v: "09", l: "บ้านสายกีฬา" },
                   { v: String(PROJECTS.length), l: "โครงการ" },
                   { v: String(NEWS.length), l: "ข่าวเผยแพร่" },
                 ].map((s) => (
@@ -118,7 +118,7 @@ function Admin() {
           )}
 
           {tab === "CLUBS" && (
-            <Panel title="จัดการชมรม" desc="แก้ไขข้อมูล กิจกรรม และคณะกรรมการของแต่ละชมรม">
+            <Panel title="จัดการชุมนุม" desc="แก้ไขข้อมูล กิจกรรม และคณะกรรมการของแต่ละชุมนุม">
               <Rows rows={CLUBS.map((c) => `${c.name} · ${c.members} สมาชิก · หัวหน้า ${c.head}`)} />
             </Panel>
           )}

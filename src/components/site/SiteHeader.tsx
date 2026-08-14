@@ -7,8 +7,8 @@ import { cn } from "@/lib/utils";
 const NAV = [
   { to: "/about", label: "SGSC" },
   { to: "/members", label: "สมาชิกสภา" },
-  { to: "/houses", label: "บ้านนักบุญ" },
-  { to: "/clubs", label: "ชมรม" },
+  { to: "/houses", label: "บ้านสายกีฬา" },
+  { to: "/clubs", label: "ชุมนุม" },
   { to: "/student-government", label: "สโมสรนักเรียน" },
   { to: "/projects", label: "โครงการ" },
   { to: "/competition", label: "คะแนนบ้าน" },
@@ -70,7 +70,7 @@ export function SiteHeader() {
         <div className="border-t border-border px-5 py-3 md:px-10">
           <input
             autoFocus
-            placeholder="ค้นหาบ้าน ชมรม สมาชิก หรือข่าว…"
+            placeholder="ค้นหาบ้าน ชุมนุม สมาชิก หรือข่าว…"
             className="mx-auto block w-full max-w-[1400px] bg-transparent py-2 text-lg outline-none placeholder:text-muted-foreground"
           />
         </div>

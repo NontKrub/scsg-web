@@ -37,8 +37,8 @@ function About() {
         <div className="mt-12 grid grid-cols-2 gap-6 md:grid-cols-4">
           <Stat value={String(TOTAL_MEMBERS)} label="สมาชิกสภา" />
           <Stat value="04" label="องค์กรหลัก" />
-          <Stat value="09" label="บ้านนักบุญ" />
-          <Stat value="06" label="ชมรม" />
+          <Stat value="09" label="บ้านสายกีฬา" />
+          <Stat value="06" label="ชุมนุม" />
         </div>
       </Section>
 
@@ -118,7 +118,7 @@ function About() {
           <div>
             <h2 className="display-xl text-[clamp(1.9rem,5vw,3.4rem)]">CONGRESS MEMBERS</h2>
             <p className="mt-5 max-w-md text-primary-foreground/70">
-              สมาชิกสภาทั้งหมด {TOTAL_MEMBERS} คน มาจากสโมสรนักเรียน บ้านสายกีฬา ชมรม และผู้แทนห้องเรียน
+              สมาชิกสภาทั้งหมด {TOTAL_MEMBERS} คน มาจากสโมสรนักเรียน บ้านสายกีฬา ชุมนุม และผู้แทนห้องเรียน
             </p>
             <Link
               to="/members"
@@ -144,7 +144,7 @@ function About() {
         <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
           <Stat value={String(MEMBERS.filter((m) => m.org === "SG").length)} label="สโมสรนักเรียน" />
           <Stat value={String(MEMBERS.filter((m) => m.org === "HOUSE").length)} label="คณะกรรมการบ้าน" />
-          <Stat value={String(MEMBERS.filter((m) => m.org === "CLUB").length)} label="ผู้แทนชมรม" />
+          <Stat value={String(MEMBERS.filter((m) => m.org === "CLUB").length)} label="ผู้แทนชุมนุม" />
           <Stat value={String(MEMBERS.filter((m) => m.org === "CLASS").length)} label="ผู้แทนห้องเรียน" />
         </div>
       </Section>

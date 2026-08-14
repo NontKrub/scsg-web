@@ -16,7 +16,7 @@ import {
 export const Route = createFileRoute("/competition")({
   head: () => ({
     meta: [
-      { title: "House Competition — คะแนนบ้านนักบุญ SGSC" },
+      { title: "House Competition — คะแนนบ้านสายกีฬา SGSC" },
       { name: "description", content: "ตารางคะแนน House Competition ทั้ง 9 บ้าน รายเดือน ระดับคะแนน และรางวัลประจำเดือน" },
       { property: "og:title", content: "HOUSE COMPETITION — SGSC" },
       { property: "og:description", content: "คะแนน อันดับ และรางวัลประจำเดือนของทั้ง 9 บ้าน" },

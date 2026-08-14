@@ -1,6 +1,6 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ImgBlock, Section, SectionHead, Tag } from "@/components/site/primitives";
-import { CLUBS, MEMBERS, NEWS } from "@/data/sgsc";
+import { CLUBS, MEMBERS } from "@/data/sgsc";
 
 export const Route = createFileRoute("/clubs/$slug")({
   loader: ({ params }) => {
@@ -10,12 +10,12 @@ export const Route = createFileRoute("/clubs/$slug")({
   },
   head: ({ loaderData }) => {
     if (!loaderData) {
-      return { meta: [{ title: "ไม่พบชมรมนี้ — SGSC" }, { name: "robots", content: "noindex" }] };
+      return { meta: [{ title: "ไม่พบชุมนุมนี้ — SGSC" }, { name: "robots", content: "noindex" }] };
     }
     return {
       meta: [
-        { title: `${loaderData.name} — ชมรม${loaderData.nameTh} | SGSC` },
-        { name: "description", content: `${loaderData.tagline} · กิจกรรม สมาชิก และผลงานของชมรม${loaderData.nameTh}` },
+        { title: `${loaderData.name} — ชุมนุม${loaderData.nameTh} | SGSC` },
+        { name: "description", content: `${loaderData.tagline} · กิจกรรม สมาชิก และผลงานของชุมนุม${loaderData.nameTh}` },
         { property: "og:title", content: `${loaderData.name} — Clubs of Interest` },
         { property: "og:description", content: loaderData.tagline },
       ],
@@ -28,7 +28,6 @@ function ClubPage() {
   const { slug } = Route.useLoaderData();
   const club = CLUBS.find((c) => c.slug === slug)!;
   const staff = MEMBERS.filter((m) => m.org === "CLUB" && m.orgLabel === club.name);
-  const news = NEWS.filter((n) => n.cat === "CLUB");
 
   return (
     <div className={club.cls}>
@@ -44,7 +43,7 @@ function ClubPage() {
             </div>
             <div>
               <div className="num text-lg">{club.head}</div>
-              <p className="mt-2 text-[0.62rem] uppercase tracking-[0.2em] text-white/60">หัวหน้าชมรม</p>
+              <p className="mt-2 text-[0.62rem] uppercase tracking-[0.2em] text-white/60">หัวหน้าชุมนุม</p>
             </div>
             <div>
               <div className="num text-3xl">{club.activities.length}</div>
@@ -57,7 +56,7 @@ function ClubPage() {
       <Section>
         <div className="grid gap-10 lg:grid-cols-2">
           <div>
-            <Tag>เกี่ยวกับชมรม</Tag>
+            <Tag>เกี่ยวกับชุมนุม</Tag>
             <h2 className="display-xl mt-5 text-[clamp(1.7rem,4.5vw,2.6rem)]">ABOUT THE CLUB</h2>
             <p className="mt-6 leading-relaxed">{club.about}</p>
             <ul className="mt-8">
@@ -74,7 +73,7 @@ function ClubPage() {
       </Section>
 
       <Section className="bg-secondary">
-        <SectionHead eyebrow="คณะกรรมการชมรม" title="CLUB COMMITTEE" />
+        <SectionHead eyebrow="คณะกรรมการชุมนุม" title="CLUB COMMITTEE" />
         <div className="grid grid-cols-2 gap-px bg-border md:grid-cols-4">
           {staff.map((m) => (
             <div key={m.id} className="bg-background p-4">
@@ -88,22 +87,12 @@ function ClubPage() {
       </Section>
 
       <Section>
-        <SectionHead eyebrow="ผลงานและข่าว" title="CLUB NEWS" />
-        <div className="grid gap-8 md:grid-cols-3">
-          {news.map((n) => (
-            <Link key={n.slug} to="/news/$slug" params={{ slug: n.slug }} className="group">
-              <ImgBlock className="aspect-[4/3] w-full" />
-              <p className="mt-4 text-xs text-muted-foreground">{n.date}</p>
-              <h3 className="mt-2 text-lg font-semibold leading-snug group-hover:opacity-60">{n.title}</h3>
-            </Link>
-          ))}
-        </div>
-        <div className="mt-12">
+        <div>
           <Link
             to="/clubs"
             className="inline-flex border border-input px-6 py-4 text-xs font-semibold uppercase tracking-[0.18em]"
           >
-            ชมรมทั้งหมด
+            ชุมนุมทั้งหมด
           </Link>
         </div>
       </Section>
