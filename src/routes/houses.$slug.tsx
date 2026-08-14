@@ -1,7 +1,7 @@
 import { useContent, ranking, rankOf, growth, honorsOf, membersOf, display } from "@/lib/content";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { GrowthChart } from "@/components/site/ScoreBoard";
-import { ImgBlock, Section, SectionHead, Tag } from "@/components/site/primitives";
+import { Section, SectionHead, Tag } from "@/components/site/primitives";
 import { MONTHS, MONTH_TH, tierOf } from "@/data/sgsc";
 
 export const Route = createFileRoute("/houses/$slug")({

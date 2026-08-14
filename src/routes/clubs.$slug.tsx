@@ -1,6 +1,6 @@
 import { useContent, ranking, rankOf, growth, honorsOf, membersOf, display } from "@/lib/content";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ImgBlock, Section, SectionHead, Tag } from "@/components/site/primitives";
+import { Section, SectionHead, Tag } from "@/components/site/primitives";
 
 
 export const Route = createFileRoute("/clubs/$slug")({

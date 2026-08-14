@@ -1,7 +1,7 @@
 import { useContent, ranking, rankOf, growth, honorsOf, membersOf, display } from "@/lib/content";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { FilterBar, ImgBlock, Section, Tag } from "@/components/site/primitives";
+import { FilterBar, Section, Tag } from "@/components/site/primitives";
 
 
 const CATS = [
