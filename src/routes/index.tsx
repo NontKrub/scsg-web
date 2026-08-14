@@ -120,7 +120,6 @@ function Home() {
         <div className="grid gap-px bg-border md:grid-cols-2 lg:grid-cols-3">
           {c.projects.slice(0, 3).map((p) => (
             <Link key={p.slug} to={p.to} className="group bg-background p-6 md:p-8">
-              <ImgBlock className="aspect-[16/10] w-full" />
               <div className="mt-6 flex items-center justify-between">
                 <Tag>{p.status}</Tag>
                 <span className="text-[0.62rem] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
@@ -215,7 +214,7 @@ function Home() {
               หน้าสมาชิกทั้งหมด
             </Link>
           }
-          sub="สมาชิกสภา 68 คน ประกอบด้วยสโมสรนักเรียน 18 คน ประธานบ้านสายกีฬา 9 คน ผู้แทนชุมนุม 6 ชุมนุม × 3 = 18 คน และผู้แทนห้องเรียน 23 คน โดยคณะกรรมการบริหารสภา 5 คน นับรวมอยู่ใน 68 คนนี้"
+          sub="สโมสรนักเรียน 18 · ประธานบ้านสายกีฬา 9 · ผู้แทนชุมนุม 18 · ผู้แทนห้องเรียน 23"
         />
         <div className="mb-12 grid grid-cols-2 gap-px bg-border md:grid-cols-4">
           {[
@@ -278,7 +277,6 @@ function Home() {
         <div className="grid gap-8 md:grid-cols-3">
           {c.news.slice(0, 3).map((n) => (
             <Link key={n.slug} to="/news/$slug" params={{ slug: n.slug }} className="group">
-              <ImgBlock className="aspect-[4/3] w-full" />
               <div className="mt-5 flex items-center gap-3">
                 <Tag>{n.cat}</Tag>
                 <span className="text-xs text-muted-foreground">{n.date}</span>

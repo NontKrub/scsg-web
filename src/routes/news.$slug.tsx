@@ -1,6 +1,6 @@
 import { useContent, ranking, rankOf, growth, honorsOf, membersOf, display } from "@/lib/content";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ImgBlock, Section, Tag } from "@/components/site/primitives";
+import { Section, Tag } from "@/components/site/primitives";
 
 
 export const Route = createFileRoute("/news/$slug")({
@@ -38,7 +38,6 @@ function NewsArticle() {
       </Section>
 
       <Section className="pt-0">
-        <ImgBlock className="aspect-[16/9] w-full" />
         <div className="mt-12 grid gap-10 lg:grid-cols-[1fr_320px]">
           <article className="max-w-2xl">
             {n.body.map((p, i) => (
@@ -63,7 +62,6 @@ function NewsArticle() {
         <div className="grid gap-8 md:grid-cols-3">
           {more.map((m) => (
             <Link key={m.slug} to="/news/$slug" params={{ slug: m.slug }} className="group">
-              <ImgBlock className="aspect-[4/3] w-full" />
               <p className="mt-4 text-xs text-muted-foreground">{m.date}</p>
               <h3 className="mt-2 font-semibold leading-snug group-hover:opacity-60">{m.title}</h3>
             </Link>
