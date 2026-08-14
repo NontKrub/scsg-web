@@ -6,7 +6,7 @@ import { NEWS } from "@/data/sgsc";
 const CATS = [
   { key: "ALL", label: "ทั้งหมด" },
   { key: "SGSC", label: "SGSC" },
-  { key: "STUDENT GOVERNMENT", label: "สภานักเรียน" },
+  { key: "STUDENT GOVERNMENT", label: "สโมสรนักเรียน" },
   { key: "HOUSE", label: "คณะสี" },
   { key: "CLUB", label: "ชมรม" },
   { key: "PROJECT", label: "โครงการ" },
@@ -16,7 +16,7 @@ export const Route = createFileRoute("/news/")({
   head: () => ({
     meta: [
       { title: "ข่าวและประกาศ — SGSC News" },
-      { name: "description", content: "ข่าวสาร ประกาศ และกิจกรรมล่าสุดจากสภานักเรียน บ้านสายกีฬา ชมรม และโครงการของ SGSC" },
+      { name: "description", content: "ข่าวสาร ประกาศ และกิจกรรมล่าสุดจากสโมสรนักเรียน บ้านสายกีฬา ชมรม และโครงการของ SGSC" },
       { property: "og:title", content: "SGSC NEWS — ข่าวและประกาศ" },
       { property: "og:description", content: "ติดตามข่าวสารและกิจกรรมล่าสุดของ Student Congress of Saint Gabriel's College" },
     ],

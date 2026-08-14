@@ -31,7 +31,7 @@ function Radio() {
   return (
     <>
       <Section className="pb-10">
-        <Tag>โครงการสภานักเรียน</Tag>
+        <Tag>โครงการสโมสรนักเรียน</Tag>
         <h1 className="display-xl mt-6 text-[clamp(2.6rem,9vw,6.5rem)]">SG RADIO</h1>
         <p className="mt-6 max-w-2xl text-muted-foreground">
           เสียงตามสายช่วงพักกลางวัน 12:00–12:50 น. นักเรียนทุกระดับชั้นจองช่วงเวลาเพื่อขอเพลงและส่งข้อความถึงเพื่อนได้

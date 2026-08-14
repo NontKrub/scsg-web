@@ -9,7 +9,7 @@ const NAV = [
   { to: "/members", label: "สมาชิกสภา" },
   { to: "/houses", label: "บ้านนักบุญ" },
   { to: "/clubs", label: "ชมรม" },
-  { to: "/student-government", label: "สภานักเรียน" },
+  { to: "/student-government", label: "สโมสรนักเรียน" },
   { to: "/projects", label: "โครงการ" },
   { to: "/competition", label: "คะแนนบ้าน" },
   { to: "/news", label: "ข่าว" },
