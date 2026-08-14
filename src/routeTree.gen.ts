@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as ChampionshipRouteImport } from './routes/championship'
+import { Route as ClassRepresentativesRouteImport } from './routes/class-representatives'
 import { Route as ClubsRouteImport } from './routes/clubs'
 import { Route as HousesRouteImport } from './routes/houses'
 import { Route as MembersRouteImport } from './routes/members'
@@ -37,6 +38,11 @@ const AboutRoute = AboutRouteImport.update({
 const ChampionshipRoute = ChampionshipRouteImport.update({
   id: '/championship',
   path: '/championship',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ClassRepresentativesRoute = ClassRepresentativesRouteImport.update({
+  id: '/class-representatives',
+  path: '/class-representatives',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ClubsRoute = ClubsRouteImport.update({
@@ -99,6 +105,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/championship': typeof ChampionshipRoute
+  '/class-representatives': typeof ClassRepresentativesRoute
   '/clubs': typeof ClubsRouteWithChildren
   '/houses': typeof HousesRouteWithChildren
   '/members': typeof MembersRoute
@@ -115,6 +122,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/championship': typeof ChampionshipRoute
+  '/class-representatives': typeof ClassRepresentativesRoute
   '/members': typeof MembersRoute
   '/student-government': typeof StudentGovernmentRoute
   '/clubs/$slug': typeof ClubsSlugRoute
@@ -129,6 +137,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/championship': typeof ChampionshipRoute
+  '/class-representatives': typeof ClassRepresentativesRoute
   '/clubs': typeof ClubsRouteWithChildren
   '/houses': typeof HousesRouteWithChildren
   '/members': typeof MembersRoute
@@ -147,6 +156,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/championship'
+    | '/class-representatives'
     | '/clubs'
     | '/houses'
     | '/members'
@@ -163,6 +173,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/championship'
+    | '/class-representatives'
     | '/members'
     | '/student-government'
     | '/clubs/$slug'
@@ -176,6 +187,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/championship'
+    | '/class-representatives'
     | '/clubs'
     | '/houses'
     | '/members'
@@ -193,6 +205,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   ChampionshipRoute: typeof ChampionshipRoute
+  ClassRepresentativesRoute: typeof ClassRepresentativesRoute
   ClubsRoute: typeof ClubsRouteWithChildren
   HousesRoute: typeof HousesRouteWithChildren
   MembersRoute: typeof MembersRoute
@@ -221,6 +234,13 @@ declare module '@tanstack/react-router' {
       path: '/championship'
       fullPath: '/championship'
       preLoaderRoute: typeof ChampionshipRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/class-representatives': {
+      id: '/class-representatives'
+      path: '/class-representatives'
+      fullPath: '/class-representatives'
+      preLoaderRoute: typeof ClassRepresentativesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/clubs': {
@@ -344,6 +364,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   ChampionshipRoute: ChampionshipRoute,
+  ClassRepresentativesRoute: ClassRepresentativesRoute,
   ClubsRoute: ClubsRouteWithChildren,
   HousesRoute: HousesRouteWithChildren,
   MembersRoute: MembersRoute,
