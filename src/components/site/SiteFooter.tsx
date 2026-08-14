@@ -24,8 +24,7 @@ const COLS = [
     head: "โครงการ",
     links: [
       { to: "/projects", label: "โครงการทั้งหมด" },
-      { to: "/radio", label: "SG Radio" },
-      { to: "/radio/booking", label: "จองคิว SG Radio" },
+      { to: "/student-government", label: "SG Radio (สภานักเรียน)" },
       { to: "/news", label: "ข่าว SGSC" },
     ],
   },
