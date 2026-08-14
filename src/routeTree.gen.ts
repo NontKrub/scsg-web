@@ -10,33 +10,233 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AboutRouteImport } from './routes/about'
+import { Route as AdminRouteImport } from './routes/admin'
+import { Route as ChampionshipRouteImport } from './routes/championship'
+import { Route as ClassRepresentativesRouteImport } from './routes/class-representatives'
+import { Route as ClubsRouteImport } from './routes/clubs'
+import { Route as HousesRouteImport } from './routes/houses'
+import { Route as MembersRouteImport } from './routes/members'
+import { Route as NewsRouteImport } from './routes/news'
+import { Route as RadioRouteImport } from './routes/radio'
+import { Route as StudentGovernmentRouteImport } from './routes/student-government'
+import { Route as ClubsIndexRouteImport } from './routes/clubs.index'
+import { Route as ClubsSlugRouteImport } from './routes/clubs.$slug'
+import { Route as HousesIndexRouteImport } from './routes/houses.index'
+import { Route as HousesSlugRouteImport } from './routes/houses.$slug'
+import { Route as NewsIndexRouteImport } from './routes/news.index'
+import { Route as NewsSlugRouteImport } from './routes/news.$slug'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ChampionshipRoute = ChampionshipRouteImport.update({
+  id: '/championship',
+  path: '/championship',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ClassRepresentativesRoute = ClassRepresentativesRouteImport.update({
+  id: '/class-representatives',
+  path: '/class-representatives',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ClubsRoute = ClubsRouteImport.update({
+  id: '/clubs',
+  path: '/clubs',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HousesRoute = HousesRouteImport.update({
+  id: '/houses',
+  path: '/houses',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MembersRoute = MembersRouteImport.update({
+  id: '/members',
+  path: '/members',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NewsRoute = NewsRouteImport.update({
+  id: '/news',
+  path: '/news',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RadioRoute = RadioRouteImport.update({
+  id: '/radio',
+  path: '/radio',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StudentGovernmentRoute = StudentGovernmentRouteImport.update({
+  id: '/student-government',
+  path: '/student-government',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ClubsIndexRoute = ClubsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ClubsRoute,
+} as any)
+const ClubsSlugRoute = ClubsSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => ClubsRoute,
+} as any)
+const HousesIndexRoute = HousesIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => HousesRoute,
+} as any)
+const HousesSlugRoute = HousesSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => HousesRoute,
+} as any)
+const NewsIndexRoute = NewsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => NewsRoute,
+} as any)
+const NewsSlugRoute = NewsSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => NewsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/admin': typeof AdminRoute
+  '/championship': typeof ChampionshipRoute
+  '/class-representatives': typeof ClassRepresentativesRoute
+  '/clubs': typeof ClubsRouteWithChildren
+  '/houses': typeof HousesRouteWithChildren
+  '/members': typeof MembersRoute
+  '/news': typeof NewsRouteWithChildren
+  '/radio': typeof RadioRoute
+  '/student-government': typeof StudentGovernmentRoute
+  '/clubs/$slug': typeof ClubsSlugRoute
+  '/houses/$slug': typeof HousesSlugRoute
+  '/news/$slug': typeof NewsSlugRoute
+  '/clubs/': typeof ClubsIndexRoute
+  '/houses/': typeof HousesIndexRoute
+  '/news/': typeof NewsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/admin': typeof AdminRoute
+  '/championship': typeof ChampionshipRoute
+  '/class-representatives': typeof ClassRepresentativesRoute
+  '/members': typeof MembersRoute
+  '/radio': typeof RadioRoute
+  '/student-government': typeof StudentGovernmentRoute
+  '/clubs/$slug': typeof ClubsSlugRoute
+  '/houses/$slug': typeof HousesSlugRoute
+  '/news/$slug': typeof NewsSlugRoute
+  '/clubs': typeof ClubsIndexRoute
+  '/houses': typeof HousesIndexRoute
+  '/news': typeof NewsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/admin': typeof AdminRoute
+  '/championship': typeof ChampionshipRoute
+  '/class-representatives': typeof ClassRepresentativesRoute
+  '/clubs': typeof ClubsRouteWithChildren
+  '/houses': typeof HousesRouteWithChildren
+  '/members': typeof MembersRoute
+  '/news': typeof NewsRouteWithChildren
+  '/radio': typeof RadioRoute
+  '/student-government': typeof StudentGovernmentRoute
+  '/clubs/$slug': typeof ClubsSlugRoute
+  '/houses/$slug': typeof HousesSlugRoute
+  '/news/$slug': typeof NewsSlugRoute
+  '/clubs/': typeof ClubsIndexRoute
+  '/houses/': typeof HousesIndexRoute
+  '/news/': typeof NewsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/admin'
+    | '/championship'
+    | '/class-representatives'
+    | '/clubs'
+    | '/houses'
+    | '/members'
+    | '/news'
+    | '/radio'
+    | '/student-government'
+    | '/clubs/$slug'
+    | '/houses/$slug'
+    | '/news/$slug'
+    | '/clubs/'
+    | '/houses/'
+    | '/news/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/about'
+    | '/admin'
+    | '/championship'
+    | '/class-representatives'
+    | '/members'
+    | '/radio'
+    | '/student-government'
+    | '/clubs/$slug'
+    | '/houses/$slug'
+    | '/news/$slug'
+    | '/clubs'
+    | '/houses'
+    | '/news'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/admin'
+    | '/championship'
+    | '/class-representatives'
+    | '/clubs'
+    | '/houses'
+    | '/members'
+    | '/news'
+    | '/radio'
+    | '/student-government'
+    | '/clubs/$slug'
+    | '/houses/$slug'
+    | '/news/$slug'
+    | '/clubs/'
+    | '/houses/'
+    | '/news/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
+  AdminRoute: typeof AdminRoute
+  ChampionshipRoute: typeof ChampionshipRoute
+  ClassRepresentativesRoute: typeof ClassRepresentativesRoute
+  ClubsRoute: typeof ClubsRouteWithChildren
+  HousesRoute: typeof HousesRouteWithChildren
+  MembersRoute: typeof MembersRoute
+  NewsRoute: typeof NewsRouteWithChildren
+  RadioRoute: typeof RadioRoute
+  StudentGovernmentRoute: typeof StudentGovernmentRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +248,170 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/championship': {
+      id: '/championship'
+      path: '/championship'
+      fullPath: '/championship'
+      preLoaderRoute: typeof ChampionshipRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/class-representatives': {
+      id: '/class-representatives'
+      path: '/class-representatives'
+      fullPath: '/class-representatives'
+      preLoaderRoute: typeof ClassRepresentativesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/clubs': {
+      id: '/clubs'
+      path: '/clubs'
+      fullPath: '/clubs'
+      preLoaderRoute: typeof ClubsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/houses': {
+      id: '/houses'
+      path: '/houses'
+      fullPath: '/houses'
+      preLoaderRoute: typeof HousesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/members': {
+      id: '/members'
+      path: '/members'
+      fullPath: '/members'
+      preLoaderRoute: typeof MembersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/news': {
+      id: '/news'
+      path: '/news'
+      fullPath: '/news'
+      preLoaderRoute: typeof NewsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/radio': {
+      id: '/radio'
+      path: '/radio'
+      fullPath: '/radio'
+      preLoaderRoute: typeof RadioRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/student-government': {
+      id: '/student-government'
+      path: '/student-government'
+      fullPath: '/student-government'
+      preLoaderRoute: typeof StudentGovernmentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/clubs/': {
+      id: '/clubs/'
+      path: '/'
+      fullPath: '/clubs/'
+      preLoaderRoute: typeof ClubsIndexRouteImport
+      parentRoute: typeof ClubsRoute
+    }
+    '/clubs/$slug': {
+      id: '/clubs/$slug'
+      path: '/$slug'
+      fullPath: '/clubs/$slug'
+      preLoaderRoute: typeof ClubsSlugRouteImport
+      parentRoute: typeof ClubsRoute
+    }
+    '/houses/': {
+      id: '/houses/'
+      path: '/'
+      fullPath: '/houses/'
+      preLoaderRoute: typeof HousesIndexRouteImport
+      parentRoute: typeof HousesRoute
+    }
+    '/houses/$slug': {
+      id: '/houses/$slug'
+      path: '/$slug'
+      fullPath: '/houses/$slug'
+      preLoaderRoute: typeof HousesSlugRouteImport
+      parentRoute: typeof HousesRoute
+    }
+    '/news/': {
+      id: '/news/'
+      path: '/'
+      fullPath: '/news/'
+      preLoaderRoute: typeof NewsIndexRouteImport
+      parentRoute: typeof NewsRoute
+    }
+    '/news/$slug': {
+      id: '/news/$slug'
+      path: '/$slug'
+      fullPath: '/news/$slug'
+      preLoaderRoute: typeof NewsSlugRouteImport
+      parentRoute: typeof NewsRoute
+    }
   }
 }
 
+interface ClubsRouteChildren {
+  ClubsSlugRoute: typeof ClubsSlugRoute
+  ClubsIndexRoute: typeof ClubsIndexRoute
+}
+
+const ClubsRouteChildren: ClubsRouteChildren = {
+  ClubsSlugRoute: ClubsSlugRoute,
+  ClubsIndexRoute: ClubsIndexRoute,
+}
+
+const ClubsRouteWithChildren = ClubsRoute._addFileChildren(ClubsRouteChildren)
+
+interface HousesRouteChildren {
+  HousesSlugRoute: typeof HousesSlugRoute
+  HousesIndexRoute: typeof HousesIndexRoute
+}
+
+const HousesRouteChildren: HousesRouteChildren = {
+  HousesSlugRoute: HousesSlugRoute,
+  HousesIndexRoute: HousesIndexRoute,
+}
+
+const HousesRouteWithChildren =
+  HousesRoute._addFileChildren(HousesRouteChildren)
+
+interface NewsRouteChildren {
+  NewsSlugRoute: typeof NewsSlugRoute
+  NewsIndexRoute: typeof NewsIndexRoute
+}
+
+const NewsRouteChildren: NewsRouteChildren = {
+  NewsSlugRoute: NewsSlugRoute,
+  NewsIndexRoute: NewsIndexRoute,
+}
+
+const NewsRouteWithChildren = NewsRoute._addFileChildren(NewsRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutRoute: AboutRoute,
+  AdminRoute: AdminRoute,
+  ChampionshipRoute: ChampionshipRoute,
+  ClassRepresentativesRoute: ClassRepresentativesRoute,
+  ClubsRoute: ClubsRouteWithChildren,
+  HousesRoute: HousesRouteWithChildren,
+  MembersRoute: MembersRoute,
+  NewsRoute: NewsRouteWithChildren,
+  RadioRoute: RadioRoute,
+  StudentGovernmentRoute: StudentGovernmentRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

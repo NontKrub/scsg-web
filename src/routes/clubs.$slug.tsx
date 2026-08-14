@@ -1,0 +1,112 @@
+import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { ImgBlock, Section, SectionHead, Tag } from "@/components/site/primitives";
+import { CLUBS, MEMBERS, NEWS } from "@/data/sgsc";
+
+export const Route = createFileRoute("/clubs/$slug")({
+  loader: ({ params }) => {
+    const club = CLUBS.find((c) => c.slug === params.slug);
+    if (!club) throw notFound();
+    return { slug: club.slug, name: club.name, nameTh: club.nameTh, tagline: club.tagline };
+  },
+  head: ({ loaderData }) => {
+    if (!loaderData) {
+      return { meta: [{ title: "ไม่พบชมรมนี้ — SGSC" }, { name: "robots", content: "noindex" }] };
+    }
+    return {
+      meta: [
+        { title: `${loaderData.name} — ชมรม${loaderData.nameTh} | SGSC` },
+        { name: "description", content: `${loaderData.tagline} · กิจกรรม สมาชิก และผลงานของชมรม${loaderData.nameTh}` },
+        { property: "og:title", content: `${loaderData.name} — Clubs of Interest` },
+        { property: "og:description", content: loaderData.tagline },
+      ],
+    };
+  },
+  component: ClubPage,
+});
+
+function ClubPage() {
+  const { slug } = Route.useLoaderData();
+  const club = CLUBS.find((c) => c.slug === slug)!;
+  const staff = MEMBERS.filter((m) => m.org === "CLUB" && m.orgLabel === club.name);
+  const news = NEWS.filter((n) => n.cat === "CLUB");
+
+  return (
+    <div className={club.cls}>
+      <section className="border-b border-border bg-[var(--house-ink)] px-5 py-16 text-white md:px-10 md:py-24">
+        <div className="mx-auto w-full max-w-[1400px]">
+          <p className="num text-sm text-white/70">CLUB · {club.nameTh}</p>
+          <h1 className="display-xl mt-4 text-[clamp(2.4rem,8vw,5.6rem)]">{club.name}</h1>
+          <p className="mt-4 max-w-2xl text-lg text-white/80">{club.tagline}</p>
+          <div className="mt-10 grid grid-cols-2 gap-6 border-t border-white/25 pt-6 sm:grid-cols-3">
+            <div>
+              <div className="num text-3xl">{club.members}</div>
+              <p className="mt-2 text-[0.62rem] uppercase tracking-[0.2em] text-white/60">สมาชิก</p>
+            </div>
+            <div>
+              <div className="num text-lg">{club.head}</div>
+              <p className="mt-2 text-[0.62rem] uppercase tracking-[0.2em] text-white/60">หัวหน้าชมรม</p>
+            </div>
+            <div>
+              <div className="num text-3xl">{club.activities.length}</div>
+              <p className="mt-2 text-[0.62rem] uppercase tracking-[0.2em] text-white/60">กิจกรรมหลัก</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <Section>
+        <div className="grid gap-10 lg:grid-cols-2">
+          <div>
+            <Tag>เกี่ยวกับชมรม</Tag>
+            <h2 className="display-xl mt-5 text-[clamp(1.7rem,4.5vw,2.6rem)]">ABOUT THE CLUB</h2>
+            <p className="mt-6 leading-relaxed">{club.about}</p>
+            <ul className="mt-8">
+              {club.activities.map((a) => (
+                <li key={a} className="flex items-center gap-4 border-t border-border py-4 last:border-b">
+                  <span className="h-2 w-2 bg-[var(--house)]" />
+                  <span className="text-sm">{a}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <ImgBlock className="aspect-[4/3] w-full" />
+        </div>
+      </Section>
+
+      <Section className="bg-secondary">
+        <SectionHead eyebrow="คณะกรรมการชมรม" title="CLUB COMMITTEE" />
+        <div className="grid grid-cols-2 gap-px bg-border md:grid-cols-4">
+          {staff.map((m) => (
+            <div key={m.id} className="bg-background p-4">
+              <ImgBlock className="aspect-[3/4] w-full" />
+              <p className="mt-4 text-sm font-semibold">{m.name}</p>
+              <p className="mt-1 text-xs text-muted-foreground">{m.role}</p>
+              <p className="num mt-1 text-xs text-muted-foreground">{m.klass}</p>
+            </div>
+          ))}
+        </div>
+      </Section>
+
+      <Section>
+        <SectionHead eyebrow="ผลงานและข่าว" title="CLUB NEWS" />
+        <div className="grid gap-8 md:grid-cols-3">
+          {news.map((n) => (
+            <Link key={n.slug} to="/news/$slug" params={{ slug: n.slug }} className="group">
+              <ImgBlock className="aspect-[4/3] w-full" />
+              <p className="mt-4 text-xs text-muted-foreground">{n.date}</p>
+              <h3 className="mt-2 text-lg font-semibold leading-snug group-hover:opacity-60">{n.title}</h3>
+            </Link>
+          ))}
+        </div>
+        <div className="mt-12">
+          <Link
+            to="/clubs"
+            className="inline-flex border border-input px-6 py-4 text-xs font-semibold uppercase tracking-[0.18em]"
+          >
+            ชมรมทั้งหมด
+          </Link>
+        </div>
+      </Section>
+    </div>
+  );
+}
