@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { MemberGrid } from "@/components/site/MemberGrid";
 import { ImgBlock, Section, SectionHead, Tag } from "@/components/site/primitives";
-import { PROJECTS } from "@/data/sgsc";
+import { PROJECTS, SG_TOTAL, TOTAL_MEMBERS } from "@/data/sgsc";
 
 export const Route = createFileRoute("/student-government")({
   head: () => ({
@@ -22,9 +22,20 @@ function SG() {
         <Tag>องค์กรที่ 1</Tag>
         <h1 className="display-xl mt-6 text-[clamp(2.6rem,9vw,6.5rem)]">STUDENT GOVERNMENT</h1>
         <p className="mt-6 max-w-2xl text-muted-foreground">
-          สภานักเรียนคือฝ่ายบริหารของ SGSC ทำหน้าที่ริเริ่มโครงการ ดูแลบริการนักเรียน
-          และประสานงานระหว่างนักเรียนกับฝ่ายบริหารโรงเรียน
+          สภานักเรียน (Student Government) คือฝ่ายบริหารซึ่งเป็น 1 ใน 4 องค์กรภายใต้ Student Congress
+          มีสมาชิก {SG_TOTAL} คน ตั้งแต่นายกสภานักเรียน รองนายก เลขานุการ เหรัญญิก หัวหน้าฝ่าย จนถึงกรรมการฝ่าย
+          และทั้ง {SG_TOTAL} คนนี้นับเป็นสมาชิกสภาใน {TOTAL_MEMBERS} คนของ Student Congress ด้วย
         </p>
+        <div className="mt-8 grid max-w-md grid-cols-2 gap-6">
+          <div>
+            <div className="num text-5xl">{SG_TOTAL}</div>
+            <div className="eyebrow mt-1">สมาชิกสภานักเรียน</div>
+          </div>
+          <div>
+            <div className="num text-5xl">{TOTAL_MEMBERS}</div>
+            <div className="eyebrow mt-1">สมาชิกสภาใหญ่ทั้งหมด</div>
+          </div>
+        </div>
       </Section>
 
       <Section className="pt-0">
@@ -60,12 +71,6 @@ function SG() {
         </div>
         <div className="mt-10 flex flex-wrap gap-3">
           <Link
-            to="/radio"
-            className="inline-flex bg-primary px-6 py-4 text-xs font-semibold uppercase tracking-[0.18em] text-primary-foreground"
-          >
-            จองคิว SG Radio
-          </Link>
-          <Link
             to="/news"
             className="inline-flex border border-input px-6 py-4 text-xs font-semibold uppercase tracking-[0.18em]"
           >
@@ -75,7 +80,41 @@ function SG() {
       </Section>
 
       <Section>
-        <SectionHead eyebrow="คณะทำงาน" title="SG MEMBERS" />
+        <SectionHead
+          eyebrow="โครงการเรือธงของสภานักเรียน"
+          title="SG RADIO"
+          sub="SG Radio เป็นโครงการของสภานักเรียนโดยเฉพาะ ดูแลโดยฝ่ายสื่อสาร เปิดให้นักเรียนจองคิวขอเพลงและส่งข้อความช่วงพักกลางวัน"
+        />
+        <div className="grid gap-px bg-border lg:grid-cols-[1.1fr_1fr]">
+          <div className="bg-background p-7 md:p-10">
+            <ImgBlock className="aspect-[16/9] w-full" />
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link
+                to="/radio"
+                className="inline-flex bg-primary px-6 py-4 text-xs font-semibold uppercase tracking-[0.18em] text-primary-foreground"
+              >
+                จองคิว SG Radio
+              </Link>
+              <Link
+                to="/radio"
+                className="inline-flex border border-input px-6 py-4 text-xs font-semibold uppercase tracking-[0.18em]"
+              >
+                ตารางออกอากาศและกติกา
+              </Link>
+            </div>
+          </div>
+          <div className="bg-background p-7 md:p-10">
+            <p className="eyebrow">ผู้รับผิดชอบ</p>
+            <p className="mt-3 font-semibold">ฝ่ายสื่อสาร สภานักเรียน</p>
+            <p className="mt-6 text-sm text-muted-foreground">
+              ออกอากาศทุกวันจันทร์–ศุกร์ ช่วงพักกลางวัน 12:00–12:40 น. บริหารจัดการคิวผ่านระบบจองออนไลน์ของสภานักเรียน
+            </p>
+          </div>
+        </div>
+      </Section>
+
+      <Section className="bg-secondary">
+        <SectionHead eyebrow="คณะทำงาน" title={`SG MEMBERS · ${SG_TOTAL} คน`} />
         <MemberGrid initial="SG" />
       </Section>
     </>

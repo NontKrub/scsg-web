@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { OrgMap } from "@/components/site/OrgMap";
 import { ImgBlock, Section, SectionHead, Stat, Tag } from "@/components/site/primitives";
-import { EXEC_BOARD, MEMBERS, ORGS, TOTAL_MEMBERS } from "@/data/sgsc";
+import { ADVISORY_BOARD, CONGRESS_BOARD, MEMBERS, ORGS, SG_TOTAL, TOTAL_MEMBERS } from "@/data/sgsc";
 
 export const Route = createFileRoute("/about")({
   head: () => ({
@@ -52,14 +52,61 @@ function About() {
       </Section>
 
       <Section>
-        <SectionHead eyebrow="ผู้บริหารสภา" title="EXECUTIVE BOARD" />
+        <SectionHead
+          eyebrow="คณะกรรมการบริหารสภา"
+          title="CONGRESS BOARD — 5 ตำแหน่ง"
+          sub={`คณะกรรมการบริหารสภา 5 คน เลือกจากสมาชิกสภาทั้ง ${TOTAL_MEMBERS} คน ทำหน้าที่กำกับภาพรวมของทั้ง 4 องค์กร`}
+        />
         <div className="grid grid-cols-2 gap-px bg-border md:grid-cols-3 lg:grid-cols-5">
-          {EXEC_BOARD.map((m) => (
-            <div key={m.id} className="bg-background p-4">
+          {CONGRESS_BOARD.map((b) => (
+            <div key={b.role} className="bg-background p-4">
               <ImgBlock className="aspect-[3/4] w-full" />
-              <p className="mt-4 text-sm font-semibold">{m.name}</p>
-              <p className="mt-1 text-xs text-muted-foreground">{m.role}</p>
-              <p className="num mt-2 text-xs text-muted-foreground">{m.klass}</p>
+              <p className="mt-4 text-sm font-semibold">{b.member.name}</p>
+              <p className="mt-1 text-xs text-muted-foreground">{b.role}</p>
+              <p className="mt-1 text-[0.68rem] text-muted-foreground">มาจาก{b.from}</p>
+              <p className="num mt-2 text-xs text-muted-foreground">{b.member.klass}</p>
+            </div>
+          ))}
+        </div>
+      </Section>
+
+      <Section className="bg-secondary">
+        <SectionHead
+          eyebrow="ที่ปรึกษา"
+          title="ADVISORY BOARD"
+          sub="คณะที่ปรึกษาให้คำแนะนำและกำกับดูแลการทำงานของสภา ไม่นับรวมในสมาชิกสภา 68 คน"
+        />
+        <div className="grid gap-px bg-border sm:grid-cols-2 lg:grid-cols-3">
+          {ADVISORY_BOARD.map((a) => (
+            <div key={a.name} className="bg-background p-7">
+              <p className="eyebrow">{a.role}</p>
+              <p className="mt-3 text-lg font-semibold">{a.name}</p>
+              <p className="mt-3 text-sm text-muted-foreground">{a.desc}</p>
+            </div>
+          ))}
+        </div>
+      </Section>
+
+      <Section>
+        <SectionHead eyebrow="ลำดับโครงสร้าง" title="HOW IT FITS TOGETHER" />
+        <div className="grid gap-px bg-border md:grid-cols-3">
+          {[
+            {
+              t: `STUDENT CONGRESS · ${TOTAL_MEMBERS} คน`,
+              d: "องค์กรใหญ่สุด รวมสมาชิกจาก 4 องก์กร นำโดยคณะกรรมการบริหารสภา 5 ตำแหน่ง และมีคณะที่ปรึกษากำกับดูแล",
+            },
+            {
+              t: `STUDENT GOVERNMENT · ${SG_TOTAL} คน`,
+              d: "หนึ่งใน 4 องค์กรภายใต้สภา เป็นฝ่ายบริหาร ตั้งแต่นายกสภานักเรียนจนถึงกรรมการฝ่าย ดูแลโครงการอย่าง SG RADIO",
+            },
+            {
+              t: "HOUSES · CLUBS · CLASS REPS",
+              d: "อีก 3 องค์กรที่ส่งผู้แทนเข้าเป็นสมาชิกสภา ทำงานร่วมกับสภานักเรียนในระดับกิจกรรม",
+            },
+          ].map((x) => (
+            <div key={x.t} className="bg-background p-7">
+              <p className="num text-sm">{x.t}</p>
+              <p className="mt-3 text-sm text-muted-foreground">{x.d}</p>
             </div>
           ))}
         </div>

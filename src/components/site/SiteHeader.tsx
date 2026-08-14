@@ -13,7 +13,6 @@ const NAV = [
   { to: "/projects", label: "โครงการ" },
   { to: "/championship", label: "คะแนนบ้าน" },
   { to: "/news", label: "ข่าว" },
-  { to: "/radio", label: "SG Radio" },
 ];
 
 export function SiteHeader() {

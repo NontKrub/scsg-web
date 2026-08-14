@@ -7,8 +7,9 @@ import { ScoreTable } from "@/components/site/ScoreBoard";
 import { ImgBlock, Section, SectionHead, Stat, Tag } from "@/components/site/primitives";
 import {
   CLUBS,
+  ADVISORY_BOARD,
+  CONGRESS_BOARD,
   CURRENT_MONTH,
-  EXEC_BOARD,
   MONTH_TH,
   NEWS,
   PROJECTS,
@@ -62,10 +63,10 @@ function Home() {
                 รู้จัก SGSC <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
-                to="/radio"
+                to="/members"
                 className="inline-flex items-center gap-2 border border-input px-6 py-4 text-xs font-semibold uppercase tracking-[0.18em] transition-colors hover:border-primary"
               >
-                จองคิว SG Radio
+                สมาชิกสภา 68 คน
               </Link>
             </div>
           </div>
@@ -149,16 +150,39 @@ function Home() {
         </div>
       </Section>
 
-      {/* EXEC BOARD */}
+      {/* CONGRESS BOARD */}
       <Section>
-        <SectionHead eyebrow="คณะกรรมการบริหาร" title="MEET THE EXECUTIVE BOARD" />
+        <SectionHead
+          eyebrow="คณะกรรมการบริหารสภา"
+          title="THE CONGRESS BOARD."
+          sub="5 ตำแหน่งบริหารของสภานักเรียนใหญ่ เลือกจากสมาชิกสภาทั้ง 68 คน จาก 4 องค์กร"
+        />
         <div className="grid grid-cols-2 gap-px bg-border md:grid-cols-3 lg:grid-cols-5">
-          {EXEC_BOARD.map((m) => (
-            <div key={m.id} className="bg-background p-4">
+          {CONGRESS_BOARD.map((b) => (
+            <div key={b.role} className="bg-background p-4">
               <ImgBlock className="aspect-[3/4] w-full" />
-              <p className="mt-4 text-sm font-semibold">{m.name}</p>
-              <p className="mt-1 text-xs text-muted-foreground">{m.role}</p>
-              <p className="num mt-2 text-xs text-muted-foreground">{m.klass}</p>
+              <p className="mt-4 text-sm font-semibold">{b.member.name}</p>
+              <p className="mt-1 text-xs text-muted-foreground">{b.role}</p>
+              <p className="mt-1 text-[0.68rem] text-muted-foreground">มาจาก{b.from}</p>
+              <p className="num mt-2 text-xs text-muted-foreground">{b.member.klass}</p>
+            </div>
+          ))}
+        </div>
+      </Section>
+
+      {/* ADVISORY BOARD */}
+      <Section className="bg-secondary">
+        <SectionHead
+          eyebrow="ที่ปรึกษา"
+          title="ADVISORY BOARD"
+          sub="คณะที่ปรึกษาของสภา ให้คำแนะนำเชิงนโยบายและกำกับดูแลการทำงาน (ไม่นับรวมในสมาชิก 68 คน)"
+        />
+        <div className="grid gap-px bg-border sm:grid-cols-2 lg:grid-cols-3">
+          {ADVISORY_BOARD.map((a) => (
+            <div key={a.name} className="bg-background p-7">
+              <p className="eyebrow">{a.role}</p>
+              <p className="mt-3 text-lg font-semibold">{a.name}</p>
+              <p className="mt-3 text-sm text-muted-foreground">{a.desc}</p>
             </div>
           ))}
         </div>
