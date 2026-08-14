@@ -16,6 +16,7 @@ import { Route as ClubsRouteImport } from './routes/clubs'
 import { Route as HousesRouteImport } from './routes/houses'
 import { Route as MembersRouteImport } from './routes/members'
 import { Route as NewsRouteImport } from './routes/news'
+import { Route as StudentGovernmentRouteImport } from './routes/student-government'
 import { Route as ClubsIndexRouteImport } from './routes/clubs.index'
 import { Route as ClubsSlugRouteImport } from './routes/clubs.$slug'
 import { Route as HousesIndexRouteImport } from './routes/houses.index'
@@ -58,6 +59,11 @@ const NewsRoute = NewsRouteImport.update({
   path: '/news',
   getParentRoute: () => rootRouteImport,
 } as any)
+const StudentGovernmentRoute = StudentGovernmentRouteImport.update({
+  id: '/student-government',
+  path: '/student-government',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ClubsIndexRoute = ClubsIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -97,6 +103,7 @@ export interface FileRoutesByFullPath {
   '/houses': typeof HousesRouteWithChildren
   '/members': typeof MembersRoute
   '/news': typeof NewsRouteWithChildren
+  '/student-government': typeof StudentGovernmentRoute
   '/clubs/$slug': typeof ClubsSlugRoute
   '/houses/$slug': typeof HousesSlugRoute
   '/news/$slug': typeof NewsSlugRoute
@@ -109,6 +116,7 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/championship': typeof ChampionshipRoute
   '/members': typeof MembersRoute
+  '/student-government': typeof StudentGovernmentRoute
   '/clubs/$slug': typeof ClubsSlugRoute
   '/houses/$slug': typeof HousesSlugRoute
   '/news/$slug': typeof NewsSlugRoute
@@ -125,6 +133,7 @@ export interface FileRoutesById {
   '/houses': typeof HousesRouteWithChildren
   '/members': typeof MembersRoute
   '/news': typeof NewsRouteWithChildren
+  '/student-government': typeof StudentGovernmentRoute
   '/clubs/$slug': typeof ClubsSlugRoute
   '/houses/$slug': typeof HousesSlugRoute
   '/news/$slug': typeof NewsSlugRoute
@@ -142,6 +151,7 @@ export interface FileRouteTypes {
     | '/houses'
     | '/members'
     | '/news'
+    | '/student-government'
     | '/clubs/$slug'
     | '/houses/$slug'
     | '/news/$slug'
@@ -154,6 +164,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/championship'
     | '/members'
+    | '/student-government'
     | '/clubs/$slug'
     | '/houses/$slug'
     | '/news/$slug'
@@ -169,6 +180,7 @@ export interface FileRouteTypes {
     | '/houses'
     | '/members'
     | '/news'
+    | '/student-government'
     | '/clubs/$slug'
     | '/houses/$slug'
     | '/news/$slug'
@@ -185,6 +197,7 @@ export interface RootRouteChildren {
   HousesRoute: typeof HousesRouteWithChildren
   MembersRoute: typeof MembersRoute
   NewsRoute: typeof NewsRouteWithChildren
+  StudentGovernmentRoute: typeof StudentGovernmentRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -236,6 +249,13 @@ declare module '@tanstack/react-router' {
       path: '/news'
       fullPath: '/news'
       preLoaderRoute: typeof NewsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/student-government': {
+      id: '/student-government'
+      path: '/student-government'
+      fullPath: '/student-government'
+      preLoaderRoute: typeof StudentGovernmentRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/clubs/': {
@@ -328,6 +348,7 @@ const rootRouteChildren: RootRouteChildren = {
   HousesRoute: HousesRouteWithChildren,
   MembersRoute: MembersRoute,
   NewsRoute: NewsRouteWithChildren,
+  StudentGovernmentRoute: StudentGovernmentRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
