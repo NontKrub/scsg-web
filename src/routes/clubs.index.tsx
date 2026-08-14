@@ -40,7 +40,6 @@ function ClubsIndex() {
               <p className="num text-xs opacity-60">{club.nameTh}</p>
               <h2 className="display-xl mt-4 text-2xl md:text-3xl">{club.name}</h2>
               <p className="mt-3 text-sm opacity-80">{club.tagline}</p>
-              <ImgBlock className="mt-6 aspect-[4/3] w-full" />
               <div className="mt-6 flex items-center justify-between border-t border-current/20 pt-4 text-xs">
                 <span>หัวหน้าชุมนุม {display(club.head)}</span>
                 <span className="num">{club.members} คน</span>

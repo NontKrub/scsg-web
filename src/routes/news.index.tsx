@@ -48,7 +48,6 @@ function NewsIndex() {
             params={{ slug: feature.slug }}
             className="group grid gap-8 lg:grid-cols-[1.1fr_0.9fr]"
           >
-            <ImgBlock className="aspect-[16/10] w-full" />
             <div className="flex flex-col justify-center">
               <div className="flex items-center gap-3">
                 <Tag>{feature.cat}</Tag>
@@ -73,7 +72,6 @@ function NewsIndex() {
               params={{ slug: n.slug }}
               className="group bg-background p-6 transition-colors hover:bg-secondary"
             >
-              <ImgBlock className="aspect-[4/3] w-full" />
               <div className="mt-5 flex items-center gap-3">
                 <Tag>{n.cat}</Tag>
                 <span className="text-xs text-muted-foreground">{n.date}</span>

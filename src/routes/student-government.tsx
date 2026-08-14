@@ -51,7 +51,6 @@ function SG() {
             <div key={x.t} className="bg-background p-7">
               <p className="font-semibold">{x.t}</p>
               <p className="mt-3 text-sm text-muted-foreground">{x.d}</p>
-              <ImgBlock className="mt-6 aspect-[4/3] w-full" />
             </div>
           ))}
         </div>
@@ -111,7 +110,6 @@ function SG() {
         />
         <div className="grid gap-px bg-border lg:grid-cols-[1.1fr_1fr]">
           <div className="bg-background p-7 md:p-10">
-            <ImgBlock className="aspect-[16/9] w-full" />
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
                 to="/radio"

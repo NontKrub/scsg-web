@@ -120,7 +120,6 @@ function Home() {
         <div className="grid gap-px bg-border md:grid-cols-2 lg:grid-cols-3">
           {c.projects.slice(0, 3).map((p) => (
             <Link key={p.slug} to={p.to} className="group bg-background p-6 md:p-8">
-              <ImgBlock className="aspect-[16/10] w-full" />
               <div className="mt-6 flex items-center justify-between">
                 <Tag>{p.status}</Tag>
                 <span className="text-[0.62rem] font-semibold uppercase tracking-[0.16em] text-muted-foreground">

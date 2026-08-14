@@ -91,7 +91,6 @@ function HousePage() {
               </div>
             </div>
           </div>
-          <ImgBlock className="aspect-[4/3] w-full" />
         </div>
       </Section>
 
@@ -101,7 +100,6 @@ function HousePage() {
         <div className="grid grid-cols-2 gap-px bg-border md:grid-cols-3">
           {committee.map((m) => (
             <div key={m.id} className="bg-background p-4">
-              <ImgBlock className="aspect-[3/4] w-full" />
               <p className="mt-4 text-sm font-semibold">{m.name}</p>
               <p className="mt-1 text-xs text-muted-foreground">{m.role}</p>
               <p className="num mt-1 text-xs text-muted-foreground">{m.klass}</p>
