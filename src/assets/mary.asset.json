@@ -1,11 +1,11 @@
 {
   "version": 1,
-  "asset_id": "bd6e1f4d-4223-47f1-a0fa-d9b60dfbc143",
+  "asset_id": "6f623f6e-09d7-4686-9320-bbe5a17a26ca",
   "project_id": "68fdc2f5-2b8f-44fb-aab6-6a0825aec571",
-  "url": "/__l5e/assets-v1/bd6e1f4d-4223-47f1-a0fa-d9b60dfbc143/mary.jpg",
-  "r2_key": "a/v1/68fdc2f5-2b8f-44fb-aab6-6a0825aec571/bd6e1f4d-4223-47f1-a0fa-d9b60dfbc143/mary.jpg",
-  "original_filename": "mary.jpg",
-  "size": 368548,
-  "content_type": "image/jpeg",
-  "created_at": "2026-08-14T13:15:45Z"
+  "url": "/__l5e/assets-v1/6f623f6e-09d7-4686-9320-bbe5a17a26ca/mary.png",
+  "r2_key": "a/v1/68fdc2f5-2b8f-44fb-aab6-6a0825aec571/6f623f6e-09d7-4686-9320-bbe5a17a26ca/mary.png",
+  "original_filename": "mary.png",
+  "size": 1511922,
+  "content_type": "image/png",
+  "created_at": "2026-08-14T15:19:33Z"
 }

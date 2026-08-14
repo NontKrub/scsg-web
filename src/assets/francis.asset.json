@@ -1,11 +1,11 @@
 {
   "version": 1,
-  "asset_id": "b211f85d-91ae-4e69-998a-c09a0993af81",
+  "asset_id": "d49d2ba9-c575-424f-a61c-83779ab44bcd",
   "project_id": "68fdc2f5-2b8f-44fb-aab6-6a0825aec571",
-  "url": "/__l5e/assets-v1/b211f85d-91ae-4e69-998a-c09a0993af81/francis.jpg",
-  "r2_key": "a/v1/68fdc2f5-2b8f-44fb-aab6-6a0825aec571/b211f85d-91ae-4e69-998a-c09a0993af81/francis.jpg",
-  "original_filename": "francis.jpg",
-  "size": 282642,
-  "content_type": "image/jpeg",
-  "created_at": "2026-08-14T13:15:56Z"
+  "url": "/__l5e/assets-v1/d49d2ba9-c575-424f-a61c-83779ab44bcd/francis.png",
+  "r2_key": "a/v1/68fdc2f5-2b8f-44fb-aab6-6a0825aec571/d49d2ba9-c575-424f-a61c-83779ab44bcd/francis.png",
+  "original_filename": "francis.png",
+  "size": 1287712,
+  "content_type": "image/png",
+  "created_at": "2026-08-14T15:19:44Z"
 }

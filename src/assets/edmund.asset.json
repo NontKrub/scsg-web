@@ -1,11 +1,11 @@
 {
   "version": 1,
-  "asset_id": "59ce6fd1-ea5e-45d6-ab97-a2820918f8f8",
+  "asset_id": "a5ebf1a0-bfd3-49e6-a793-37988cd48d58",
   "project_id": "68fdc2f5-2b8f-44fb-aab6-6a0825aec571",
-  "url": "/__l5e/assets-v1/59ce6fd1-ea5e-45d6-ab97-a2820918f8f8/edmund.jpg",
-  "r2_key": "a/v1/68fdc2f5-2b8f-44fb-aab6-6a0825aec571/59ce6fd1-ea5e-45d6-ab97-a2820918f8f8/edmund.jpg",
-  "original_filename": "edmund.jpg",
-  "size": 358809,
-  "content_type": "image/jpeg",
-  "created_at": "2026-08-14T13:15:37Z"
+  "url": "/__l5e/assets-v1/a5ebf1a0-bfd3-49e6-a793-37988cd48d58/edmund.png",
+  "r2_key": "a/v1/68fdc2f5-2b8f-44fb-aab6-6a0825aec571/a5ebf1a0-bfd3-49e6-a793-37988cd48d58/edmund.png",
+  "original_filename": "edmund.png",
+  "size": 1486201,
+  "content_type": "image/png",
+  "created_at": "2026-08-14T15:19:29Z"
 }
