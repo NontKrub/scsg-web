@@ -406,7 +406,7 @@ CLUBS.forEach((c, ci) =>
 export const CLASS_LEVELS = ["M1", "M2", "M3", "M4", "M5", "M6"] as const;
 export const CLASS_ROOMS: { level: string; room: string; rep: string }[] = [];
 CLASS_LEVELS.forEach((lv, li) => {
-  const rooms = li < 3 ? 2 : 2;
+  const rooms = li === CLASS_LEVELS.length - 1 ? 1 : 2;
   for (let r = 1; r <= rooms; r++) {
     const rep = name(li * 3 + r + 20);
     CLASS_ROOMS.push({ level: lv, room: `${lv.replace("M", "ม.")}/${r}`, rep });
@@ -425,8 +425,49 @@ CLASS_ROOMS.forEach((c, i) =>
 );
 
 export const MEMBERS = members;
-export const EXEC_BOARD = members.slice(0, 5);
 export const TOTAL_MEMBERS = members.length;
+
+/* --- Student Government executive (18 คน อยู่ภายใต้สภานักเรียนใหญ่) --- */
+export const SG_MEMBERS = members.filter((m) => m.org === "SG");
+export const SG_TOTAL = SG_MEMBERS.length;
+
+/* --- คณะกรรมการบริหารสภา 5 ตำแหน่ง (เลือกจากสมาชิกสภา 68 คน) --- */
+export const CONGRESS_BOARD = [
+  { role: "ประธานสภานักเรียน", from: "สภานักเรียน", member: members[0]! },
+  { role: "รองประธานสภา คนที่ 1", from: "คณะสีนักบุญ", member: members[18]! },
+  { role: "รองประธานสภา คนที่ 2", from: "ชมรมตามความสนใจ", member: members[45]! },
+  { role: "เลขาธิการสภา", from: "สภานักเรียน", member: members[4]! },
+  { role: "เหรัญญิกสภา", from: "ผู้แทนห้องเรียน", member: members[57]! },
+];
+
+/* --- คณะที่ปรึกษาสภา (ไม่นับรวมในสมาชิก 68 คน) --- */
+export const ADVISORY_BOARD = [
+  {
+    name: "ภราดาผู้อำนวยการ",
+    role: "ประธานที่ปรึกษา",
+    desc: "ให้แนวทางเชิงนโยบายและอนุมัติโครงการระดับโรงเรียน",
+  },
+  {
+    name: "หัวหน้าฝ่ายกิจการนักเรียน",
+    role: "ที่ปรึกษาอาวุโส",
+    desc: "กำกับดูแลการทำงานของสภานักเรียนและองค์กรทั้งสี่",
+  },
+  {
+    name: "ครูที่ปรึกษาคณะสีนักบุญ",
+    role: "ที่ปรึกษา House of Saints",
+    desc: "ดูแลระบบคะแนน House Championship และกิจกรรมคณะสี",
+  },
+  {
+    name: "ครูที่ปรึกษาชมรม",
+    role: "ที่ปรึกษา Clubs of Interest",
+    desc: "สนับสนุนการจัดตั้งและดำเนินกิจกรรมของชมรมทั้ง 6 ชมรม",
+  },
+  {
+    name: "ครูที่ปรึกษาฝ่ายสื่อสาร",
+    role: "ที่ปรึกษาโครงการสื่อ",
+    desc: "ให้คำแนะนำงานประชาสัมพันธ์และโครงการ SG Radio ของสภานักเรียน",
+  },
+];
 
 export const ORG_FILTERS = [
   { key: "ALL", label: "ทั้งหมด" },
