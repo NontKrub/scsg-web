@@ -277,7 +277,6 @@ function Home() {
         <div className="grid gap-8 md:grid-cols-3">
           {c.news.slice(0, 3).map((n) => (
             <Link key={n.slug} to="/news/$slug" params={{ slug: n.slug }} className="group">
-              <ImgBlock className="aspect-[4/3] w-full" />
               <div className="mt-5 flex items-center gap-3">
                 <Tag>{n.cat}</Tag>
                 <span className="text-xs text-muted-foreground">{n.date}</span>
