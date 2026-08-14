@@ -208,8 +208,24 @@ function Home() {
               หน้าสมาชิกทั้งหมด
             </Link>
           }
+          sub="สมาชิกสภา 68 คน ประกอบด้วยสภานักเรียน 18 คน ประธานบ้านนักบุญ 9 คน ผู้แทนชมรม 6 ชมรม × 3 = 18 คน และผู้แทนห้องเรียน 23 คน โดยคณะกรรมการบริหารสภา 5 คน นับรวมอยู่ใน 68 คนนี้"
         />
+        <div className="mb-12 grid grid-cols-2 gap-px bg-border md:grid-cols-4">
+          {[
+            { n: "18", t: "STUDENT GOVERNMENT", th: "สภานักเรียน (นายก → กรรมการ)" },
+            { n: "09", t: "HOUSE PRESIDENTS", th: "ประธานบ้านสายกีฬา 9 บ้าน" },
+            { n: "18", t: "CLUB REPRESENTATIVES", th: "6 ชมรม × 3 ผู้แทน" },
+            { n: "23", t: "CLASS REPRESENTATIVES", th: "ผู้แทนห้องเรียน" },
+          ].map((x) => (
+            <div key={x.t} className="bg-background p-6">
+              <div className="num text-4xl">{x.n}</div>
+              <p className="num mt-4 text-xs">{x.t}</p>
+              <p className="mt-1 text-xs text-muted-foreground">{x.th}</p>
+            </div>
+          ))}
+        </div>
         <MemberGrid />
+
       </Section>
 
       {/* CLUBS */}
