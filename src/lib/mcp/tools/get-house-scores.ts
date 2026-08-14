@@ -16,13 +16,13 @@ export default defineTool({
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
   handler: ({ month }) => {
     const m = month ?? CURRENT_MONTH;
-    const rows = ranking(m).map((h, i) => ({
-      rank: i + 1,
-      slug: h.slug,
-      name: h.name,
-      nameTh: h.nameTh,
-      score: h.scores[m],
-      tier: tierOf(h.scores[m]).label,
+    const rows = ranking(m).map((r) => ({
+      rank: r.rank,
+      slug: r.house.slug,
+      name: r.house.name,
+      nameTh: r.house.nameTh,
+      score: r.score,
+      tier: tierOf(r.score).name,
     }));
     const honors = HONORS[m];
     const houseOfMonth = HOUSES.find((h) => h.slug === honors.houseOfMonth)?.name ?? honors.houseOfMonth;
