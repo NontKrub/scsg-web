@@ -45,26 +45,28 @@ function SG() {
         <SectionHead
           eyebrow="โครงสร้าง 18 ที่นั่ง"
           title="THE 18 SEATS"
-          sub={`สโมสรนักเรียนมีสมาชิก ${membersOf(c, "SG").length} คน แบ่งเป็นฝ่ายบริหาร หัวหน้าฝ่าย และกรรมการฝ่าย ทุกคนเป็นสมาชิกสภาใหญ่ ${c.members.length} คนด้วย`}
+          sub={`สโมสรนักเรียนมีสมาชิก ${membersOf(c, "SG").length} คน แบ่งตามชั้นเรียนเป็น ม.6 ม.5 และ ม.4 ทุกคนเป็นสมาชิกสภาใหญ่ ${c.members.length} คนด้วย`}
         />
         <div className="grid gap-px bg-border md:grid-cols-3">
           {[
-            { t: "ฝ่ายบริหาร", range: [0, 5] as const },
-            { t: "หัวหน้าฝ่าย", range: [5, 10] as const },
-            { t: "กรรมการฝ่าย", range: [10, 18] as const },
+            { t: "ม.6", match: "6" },
+            { t: "ม.5", match: "5" },
+            { t: "ม.4", match: "4" },
           ].map((g) => (
             <div key={g.t} className="bg-background p-7">
               <p className="eyebrow">{g.t}</p>
               <div className="mt-6 divide-y divide-border">
-                {membersOf(c, "SG").slice(g.range[0], g.range[1]).map((m) => (
-                  <div key={m.id} className="flex items-baseline justify-between gap-4 py-3">
-                    <div>
-                      <p className="text-sm font-semibold">{m.name}</p>
-                      <p className="mt-1 text-xs text-muted-foreground">{m.role}</p>
+                {membersOf(c, "SG")
+                  .filter((m) => m.klass.replace(/\s/g, "").includes(g.match))
+                  .map((m) => (
+                    <div key={m.id} className="flex items-baseline justify-between gap-4 py-3">
+                      <div>
+                        <p className="text-sm font-semibold">{m.name}</p>
+                        <p className="mt-1 text-xs text-muted-foreground">{m.role}</p>
+                      </div>
+                      <span className="num text-xs text-muted-foreground">{m.klass}</span>
                     </div>
-                    <span className="num text-xs text-muted-foreground">{m.klass}</span>
-                  </div>
-                ))}
+                  ))}
               </div>
             </div>
           ))}
