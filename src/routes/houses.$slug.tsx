@@ -195,21 +195,29 @@ function HousePage() {
       {/* ACHIEVEMENTS */}
       <Section>
         <SectionHead eyebrow="รางวัลและความสำเร็จ" title="HOUSE ACHIEVEMENTS" />
-        <div className="grid gap-px bg-border sm:grid-cols-2 lg:grid-cols-4">
-          {[
-            { t: "HOUSE OF THE MONTH", s: "กรกฎาคม 2026" },
-            { t: "CHARACTER EXCELLENCE", s: "มิถุนายน 2026" },
-            { t: "SPORTS DAY CHAMPION", s: "กรกฎาคม 2026" },
-            { t: "BEST HOUSE EVENT", s: "สิงหาคม 2026" },
-
-          ].map((a) => (
-            <div key={a.t} className="bg-background p-6">
-              <span className="block h-1 w-10 bg-[var(--house)]" />
-              <p className="num mt-6 text-sm leading-tight">{a.t}</p>
-              <p className="mt-2 text-xs text-muted-foreground">{a.s}</p>
+        {(() => {
+          const awards = MONTHS.flatMap((m) => {
+            const h = honorsOf(c, m);
+            const out: { t: string; s: string }[] = [];
+            if (h.houseOfMonth === slug) out.push({ t: "HOUSE OF THE MONTH", s: `${MONTH_TH[m]} 2026` });
+            if (h.character === slug) out.push({ t: "HOUSE EXCELLENCE AWARDS", s: `${MONTH_TH[m]} 2026` });
+            return out;
+          });
+          if (!awards.length)
+            return <p className="text-sm text-muted-foreground">ยังไม่มีรางวัลในปีการศึกษานี้</p>;
+          return (
+            <div className="grid gap-px bg-border sm:grid-cols-2 lg:grid-cols-4">
+              {awards.map((a) => (
+                <div key={a.t + a.s} className="bg-background p-6">
+                  <span className="block h-1 w-10 bg-[var(--house)]" />
+                  <p className="num mt-6 text-sm leading-tight">{a.t}</p>
+                  <p className="mt-2 text-xs text-muted-foreground">{a.s}</p>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
+          );
+        })()}
+
         <div className="mt-12 flex flex-wrap gap-3">
           <Link
             to="/competition"
