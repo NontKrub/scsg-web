@@ -3,6 +3,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { GrowthChart } from "@/components/site/ScoreBoard";
 import { Section, SectionHead, Tag } from "@/components/site/primitives";
 import { MONTHS, MONTH_TH, tierOf } from "@/data/sgsc";
+import { HOUSE_LORE } from "@/data/houseLore";
+
 
 export const Route = createFileRoute("/houses/$slug")({
   head: ({ params }) => ({
@@ -29,6 +31,8 @@ function HousePage() {
   const rank = rankOf(c, slug, c.currentMonth);
   const g = growth(c, slug, c.currentMonth);
   const committee = c.members.filter((m) => m.org === "HOUSE" && m.orgLabel === house.name);
+  const lore = HOUSE_LORE[slug];
+
 
   return (
     <div className={house.cls}>
@@ -91,8 +95,47 @@ function HousePage() {
               </div>
             </div>
           </div>
+          {lore && (
+            <div className="grid gap-px self-start bg-border sm:grid-cols-2">
+              <div className="bg-background p-6">
+                <p className="eyebrow">สัญลักษณ์ประจำบ้าน</p>
+                <p className="num mt-3 text-2xl">{lore.symbol}</p>
+                <p className="mt-2 text-sm text-muted-foreground">{lore.symbolMeaning}</p>
+              </div>
+              <div className="bg-background p-6">
+                <p className="eyebrow">คุณธรรมที่เด่นชัด</p>
+                <p className="mt-3 text-sm leading-relaxed">{lore.virtue}</p>
+              </div>
+            </div>
+          )}
         </div>
       </Section>
+
+      {/* PATRON SAINT */}
+      {lore && (
+        <Section className="bg-secondary">
+          <SectionHead eyebrow="นักบุญองค์อุปถัมภ์" title="PATRON SAINT" />
+          <div className="grid gap-10 lg:grid-cols-[0.6fr_1.4fr]">
+            <div>
+              <img
+                src={house.emblem}
+                alt={`ตราบ้าน${house.nameTh}`}
+                className="h-40 object-contain"
+              />
+              <p className="num mt-6 text-xl">{lore.patron}</p>
+              <p className="mt-1 text-sm text-muted-foreground">{lore.patronTh}</p>
+            </div>
+            <div className="space-y-4">
+              {lore.story.map((p, i) => (
+                <p key={i} className="text-base leading-relaxed">
+                  {p}
+                </p>
+              ))}
+            </div>
+          </div>
+        </Section>
+      )}
+
 
       {/* COMMITTEE */}
       <Section className="bg-secondary">
@@ -152,21 +195,29 @@ function HousePage() {
       {/* ACHIEVEMENTS */}
       <Section>
         <SectionHead eyebrow="รางวัลและความสำเร็จ" title="HOUSE ACHIEVEMENTS" />
-        <div className="grid gap-px bg-border sm:grid-cols-2 lg:grid-cols-4">
-          {[
-            { t: "HOUSE OF THE MONTH", s: "กรกฎาคม 2026" },
-            { t: "CHARACTER EXCELLENCE", s: "มิถุนายน 2026" },
-            { t: "SPORTS DAY CHAMPION", s: "กรกฎาคม 2026" },
-            { t: "BEST HOUSE EVENT", s: "สิงหาคม 2026" },
-
-          ].map((a) => (
-            <div key={a.t} className="bg-background p-6">
-              <span className="block h-1 w-10 bg-[var(--house)]" />
-              <p className="num mt-6 text-sm leading-tight">{a.t}</p>
-              <p className="mt-2 text-xs text-muted-foreground">{a.s}</p>
+        {(() => {
+          const awards = MONTHS.flatMap((m) => {
+            const h = honorsOf(c, m);
+            const out: { t: string; s: string }[] = [];
+            if (h.houseOfMonth === slug) out.push({ t: "HOUSE OF THE MONTH", s: `${MONTH_TH[m]} 2026` });
+            if (h.character === slug) out.push({ t: "HOUSE EXCELLENCE AWARDS", s: `${MONTH_TH[m]} 2026` });
+            return out;
+          });
+          if (!awards.length)
+            return <p className="text-sm text-muted-foreground">ยังไม่มีรางวัลในปีการศึกษานี้</p>;
+          return (
+            <div className="grid gap-px bg-border sm:grid-cols-2 lg:grid-cols-4">
+              {awards.map((a) => (
+                <div key={a.t + a.s} className="bg-background p-6">
+                  <span className="block h-1 w-10 bg-[var(--house)]" />
+                  <p className="num mt-6 text-sm leading-tight">{a.t}</p>
+                  <p className="mt-2 text-xs text-muted-foreground">{a.s}</p>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
+          );
+        })()}
+
         <div className="mt-12 flex flex-wrap gap-3">
           <Link
             to="/competition"
