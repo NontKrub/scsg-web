@@ -21,9 +21,10 @@ function Competition() {
   const c = useContent();
   const [month, setMonth] = useState<Month>(c.currentMonth);
   const honors = honorsOf(c, month);
-  const hom = c.houses.find((h) => h.slug === honors.houseOfMonth)!;
-  const cex = c.houses.find((h) => h.slug === honors.character)!;
-  const improved = [...c.houses].sort((a, b) => growth(c, b.slug, month) - growth(c, a.slug, month))[0]!;
+  const hom = c.houses.find((h) => h.slug === honors.houseOfMonth);
+  const cex = c.houses.find((h) => h.slug === honors.character);
+  const improved = [...c.houses].sort((a, b) => growth(c, b.slug, month) - growth(c, a.slug, month))[0];
+
 
   return (
     <>
@@ -53,7 +54,8 @@ function Competition() {
           {[
             { house: hom, title: "HOUSE OF THE MONTH", th: "บ้านประจำเดือน" },
             { house: cex, title: "CHARACTER EXCELLENCE HOUSE", th: "บ้านคุณธรรมเยี่ยม" },
-          ].map((a) => (
+          ].filter((a): a is { house: NonNullable<typeof a.house>; title: string; th: string } => !!a.house).map((a) => (
+
             <div
               key={a.title}
               className={`${a.house.cls} relative overflow-hidden border border-gold/50 bg-navy px-8 py-10`}
@@ -95,14 +97,17 @@ function Competition() {
           title="HOUSE GROWTH"
           sub="เลือกบ้านเพื่อเปรียบเทียบคะแนนรายเดือน"
           right={
-            <div className="border border-border bg-background p-6">
-              <p className="eyebrow">Most improved house</p>
-              <p className="num mt-3 text-2xl">{improved.name}</p>
-              <p className="num mt-1 text-3xl text-primary">
-                +{growth(c, improved.slug, month).toFixed(1)}%
-              </p>
-            </div>
+            improved ? (
+              <div className="border border-border bg-background p-6">
+                <p className="eyebrow">Most improved house</p>
+                <p className="num mt-3 text-2xl">{improved.name}</p>
+                <p className="num mt-1 text-3xl text-primary">
+                  +{growth(c, improved.slug, month).toFixed(1)}%
+                </p>
+              </div>
+            ) : undefined
           }
+
         />
         <HouseCompare />
         <div className="mt-12 grid grid-cols-2 gap-px bg-border sm:grid-cols-4 lg:grid-cols-7">
