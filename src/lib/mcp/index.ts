@@ -1,4 +1,7 @@
-import { defineMcp } from "@lovable.dev/mcp-js";
+import { auth, defineMcp } from "@lovable.dev/mcp-js";
+
+const projectRef = import.meta.env['VITE_SUPABASE_PROJECT_ID'] ?? "project-ref-unset";
+
 
 type McpTools = Parameters<typeof defineMcp>[0]["tools"];
 import getOrganizationTool from "./tools/get-organization";
