@@ -29,6 +29,8 @@ function HousePage() {
   const rank = rankOf(c, slug, c.currentMonth);
   const g = growth(c, slug, c.currentMonth);
   const committee = c.members.filter((m) => m.org === "HOUSE" && m.orgLabel === house.name);
+  const lore = HOUSE_LORE[slug];
+
 
   return (
     <div className={house.cls}>
