@@ -45,33 +45,21 @@ function SG() {
         <SectionHead
           eyebrow="โครงสร้าง 19 ที่นั่ง"
           title="THE 19 SEATS"
-          sub={`สโมสรนักเรียนมีสมาชิก ${membersOf(c, "SG").length} คน แบ่งตามชั้นเรียนเป็น ม.6 ม.5 และ ม.4 ทุกคนเป็นสมาชิกสภาใหญ่ ${c.members.length} คนด้วย`}
+          sub={`รายชื่อคณะกรรมการสโมสรนักเรียนทั้ง ${membersOf(c, "SG").length} คน เรียงตามตำแหน่ง ทุกคนเป็นสมาชิกสภานักเรียน ${c.members.length} คนด้วย`}
         />
-        <div className="grid gap-px bg-border md:grid-cols-3">
-          {[
-            { t: "ม.6", match: "6" },
-            { t: "ม.5", match: "5" },
-            { t: "ม.4", match: "4" },
-          ].map((g) => (
-            <div key={g.t} className="bg-background p-7">
-              <p className="eyebrow">{g.t}</p>
-              <div className="mt-6 divide-y divide-border">
-                {membersOf(c, "SG")
-                  .filter((m) => m.klass.replace(/\s/g, "").includes(g.match))
-                  .map((m) => (
-                    <div key={m.id} className="flex items-baseline justify-between gap-4 py-3">
-                      <div>
-                        <p className="text-sm font-semibold">{m.name}</p>
-                        <p className="mt-1 text-xs text-muted-foreground">{m.role}</p>
-                      </div>
-                      <span className="num text-xs text-muted-foreground">{m.klass}</span>
-                    </div>
-                  ))}
-              </div>
+        <div className="grid gap-px bg-border md:grid-cols-2 lg:grid-cols-3">
+          {membersOf(c, "SG").map((m, i) => (
+            <div key={m.id} className="bg-background p-6">
+              <span className="num text-xs text-muted-foreground">
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              <p className="mt-3 text-sm font-semibold">{display(m.name)}</p>
+              <p className="mt-1 text-xs text-muted-foreground">{display(m.role)}</p>
             </div>
           ))}
         </div>
       </Section>
+
 
 
       <Section>
