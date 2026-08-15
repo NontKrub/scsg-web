@@ -212,9 +212,14 @@ function SG() {
 
 
       <Section className="bg-secondary">
-        <SectionHead eyebrow="คณะทำงาน" title={`SG MEMBERS · ${membersOf(c, "SG").length} คน`} />
-        <MemberGrid initial="SG" />
+        <SectionHead
+          eyebrow="คณะทำงาน"
+          title={`SG MEMBERS · ${membersOf(c, "SG").length} คน`}
+          sub="สมาชิกสโมสรนักเรียนทั้ง 18 คนเป็นคนละกลุ่มกับผู้แทนชุมนุมและผู้แทนห้องเรียน ทุกคนในหน้านี้สังกัดสโมสรนักเรียน"
+        />
+        <MemberGrid initial="SG" lock />
       </Section>
+
     </>
   );
 }
