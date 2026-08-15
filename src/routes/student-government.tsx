@@ -43,8 +43,8 @@ function SG() {
 
       <Section>
         <SectionHead
-          eyebrow="โครงสร้าง 18 ที่นั่ง"
-          title="THE 18 SEATS"
+          eyebrow="โครงสร้าง 19 ที่นั่ง"
+          title="THE 19 SEATS"
           sub={`สโมสรนักเรียนมีสมาชิก ${membersOf(c, "SG").length} คน แบ่งตามชั้นเรียนเป็น ม.6 ม.5 และ ม.4 ทุกคนเป็นสมาชิกสภาใหญ่ ${c.members.length} คนด้วย`}
         />
         <div className="grid gap-px bg-border md:grid-cols-3">
@@ -201,7 +201,7 @@ function SG() {
         <SectionHead
           eyebrow="คณะทำงาน"
           title={`SG MEMBERS · ${membersOf(c, "SG").length} คน`}
-          sub="สมาชิกสโมสรนักเรียนทั้ง 18 คนเป็นคนละกลุ่มกับผู้แทนชุมนุมและผู้แทนห้องเรียน ทุกคนในหน้านี้สังกัดสโมสรนักเรียน"
+          sub="สมาชิกสโมสรนักเรียนทั้ง 19 คนเป็นคนละกลุ่มกับผู้แทนชุมนุมและผู้แทนห้องเรียน ทุกคนในหน้านี้สังกัดสโมสรนักเรียน"
         />
         <MemberGrid initial="SG" lock />
       </Section>
