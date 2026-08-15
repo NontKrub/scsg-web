@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
-import { LogOut, Plus, RefreshCw, Save, Trash2, X } from "lucide-react";
+import { ImagePlus, Loader2, LogOut, Plus, RefreshCw, Save, Trash2, X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { adminDelete, adminList, adminSave, adminSaveScores, checkAdmin } from "@/lib/admin.functions";
 import { MONTHS, MONTH_TH, RADIO_DAYS, RADIO_SLOTS, type Month } from "@/data/sgsc";
@@ -25,7 +25,7 @@ export const Route = createFileRoute("/admin")({
 
 /* ----------------------------- field schema ----------------------------- */
 
-type FieldKind = "text" | "long" | "number" | "bool" | "list" | "select";
+type FieldKind = "text" | "long" | "number" | "bool" | "list" | "select" | "image";
 type Field = { key: string; label: string; kind: FieldKind; options?: string[] };
 
 type SectionDef = {
@@ -41,6 +41,7 @@ type SectionDef = {
 
 const t = (key: string, label: string): Field => ({ key, label, kind: "text" });
 const n = (key: string, label: string): Field => ({ key, label, kind: "number" });
+const img = (key: string, label: string): Field => ({ key, label, kind: "image" });
 
 const SECTIONS: SectionDef[] = [
   {
@@ -56,7 +57,7 @@ const SECTIONS: SectionDef[] = [
       t("org_label", "ชื่อสังกัด"),
       t("klass", "ชั้น/ห้อง"),
       { key: "duties", label: "หน้าที่รับผิดชอบ", kind: "long" },
-      t("photo_url", "ลิงก์รูปภาพ"),
+      img("photo_url", "รูปภาพ"),
       n("sort", "ลำดับ"),
 
     ],
@@ -72,7 +73,7 @@ const SECTIONS: SectionDef[] = [
       t("person_name", "ชื่อ-นามสกุล"),
       t("from_org", "มาจากองค์กร"),
       t("klass", "ชั้น/ห้อง"),
-      t("photo_url", "ลิงก์รูปภาพ"),
+      img("photo_url", "รูปภาพ"),
       n("sort", "ลำดับ"),
     ],
   },
@@ -88,7 +89,7 @@ const SECTIONS: SectionDef[] = [
       t("role", "ตำแหน่ง"),
       t("person_name", "ชื่อ-นามสกุล"),
       { key: "description", label: "คำอธิบาย", kind: "long" },
-      t("photo_url", "ลิงก์รูปภาพ"),
+      img("photo_url", "รูปภาพ"),
       n("sort", "ลำดับ"),
     ],
   },
@@ -161,7 +162,7 @@ const SECTIONS: SectionDef[] = [
       { key: "body", label: "เนื้อหา (บรรทัดละย่อหน้า)", kind: "list" },
       t("related", "เกี่ยวข้องกับ"),
       t("house_slug", "slug บ้าน (ถ้ามี)"),
-      t("cover_url", "ลิงก์รูปปก"),
+      img("cover_url", "รูปปก"),
       { key: "published", label: "เผยแพร่", kind: "bool" },
     ],
   },
@@ -601,6 +602,9 @@ function RowForm({
                   className="mt-2 w-full border border-input bg-background px-3 py-2 text-sm"
                 />
               )}
+              {f.kind === "image" && (
+                <ImageField value={String(draft[f.key] ?? "")} onChange={(v) => set(f.key, v)} />
+              )}
               {f.kind === "text" && (
                 <input
                   value={String(draft[f.key] ?? "")}
@@ -631,6 +635,71 @@ function RowForm({
             <Save className="h-3.5 w-3.5" /> บันทึก
           </button>
         </div>
+      </div>
+    </div>
+  );
+}
+
+/* ----------------------------- image field ----------------------------- */
+
+function ImageField({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+  const [busy, setBusy] = useState(false);
+
+  const upload = async (file: File) => {
+    setBusy(true);
+    try {
+      const ext = (file.name.split(".").pop() ?? "jpg").toLowerCase();
+      const path = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+      const { error } = await supabase.storage.from("site-images").upload(path, file, {
+        cacheControl: "31536000",
+        contentType: file.type || "application/octet-stream",
+      });
+      if (error) throw new Error(error.message);
+      onChange(`/api/public/img/${path}`);
+      toast.success("อัปโหลดรูปภาพแล้ว");
+    } catch (e) {
+      toast.error((e as Error).message);
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <div className="mt-2 flex items-center gap-4">
+      <div className="h-20 w-20 shrink-0 overflow-hidden border border-border bg-muted">
+        {value ? (
+          <img src={value} alt="" className="h-full w-full object-cover" />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center text-muted-foreground">
+            <ImagePlus className="h-5 w-5" />
+          </div>
+        )}
+      </div>
+      <div className="flex flex-wrap items-center gap-2">
+        <label className="inline-flex cursor-pointer items-center gap-2 border border-input px-4 py-2 text-xs uppercase tracking-[0.16em]">
+          {busy ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <ImagePlus className="h-3.5 w-3.5" />}
+          {busy ? "กำลังอัปโหลด" : "อัปโหลดรูปภาพ"}
+          <input
+            type="file"
+            accept="image/*"
+            className="hidden"
+            disabled={busy}
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              e.target.value = "";
+              if (file) void upload(file);
+            }}
+          />
+        </label>
+        {value && (
+          <button
+            type="button"
+            onClick={() => onChange("")}
+            className="inline-flex items-center gap-2 border border-destructive px-4 py-2 text-xs uppercase tracking-[0.16em] text-destructive"
+          >
+            <X className="h-3.5 w-3.5" /> ลบรูป
+          </button>
+        )}
       </div>
     </div>
   );
