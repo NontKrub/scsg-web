@@ -15,6 +15,7 @@ import { Route as AdminRouteImport } from './routes/admin'
 import { Route as ClubsRouteImport } from './routes/clubs'
 import { Route as CompetitionRouteImport } from './routes/competition'
 import { Route as HousesRouteImport } from './routes/houses'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as McpRouteImport } from './routes/mcp'
 import { Route as MembersRouteImport } from './routes/members'
 import { Route as NewsRouteImport } from './routes/news'
@@ -58,6 +59,11 @@ const CompetitionRoute = CompetitionRouteImport.update({
 const HousesRoute = HousesRouteImport.update({
   id: '/houses',
   path: '/houses',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const McpRoute = McpRouteImport.update({
@@ -141,6 +147,7 @@ export interface FileRoutesByFullPath {
   '/clubs': typeof ClubsRouteWithChildren
   '/competition': typeof CompetitionRoute
   '/houses': typeof HousesRouteWithChildren
+  '/login': typeof LoginRoute
   '/mcp': typeof McpRoute
   '/members': typeof MembersRoute
   '/news': typeof NewsRouteWithChildren
@@ -161,6 +168,7 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/admin': typeof AdminRoute
   '/competition': typeof CompetitionRoute
+  '/login': typeof LoginRoute
   '/mcp': typeof McpRoute
   '/members': typeof MembersRoute
   '/radio': typeof RadioRoute
@@ -183,6 +191,7 @@ export interface FileRoutesById {
   '/clubs': typeof ClubsRouteWithChildren
   '/competition': typeof CompetitionRoute
   '/houses': typeof HousesRouteWithChildren
+  '/login': typeof LoginRoute
   '/mcp': typeof McpRoute
   '/members': typeof MembersRoute
   '/news': typeof NewsRouteWithChildren
@@ -207,6 +216,7 @@ export interface FileRouteTypes {
     | '/clubs'
     | '/competition'
     | '/houses'
+    | '/login'
     | '/mcp'
     | '/members'
     | '/news'
@@ -227,6 +237,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/admin'
     | '/competition'
+    | '/login'
     | '/mcp'
     | '/members'
     | '/radio'
@@ -248,6 +259,7 @@ export interface FileRouteTypes {
     | '/clubs'
     | '/competition'
     | '/houses'
+    | '/login'
     | '/mcp'
     | '/members'
     | '/news'
@@ -271,6 +283,7 @@ export interface RootRouteChildren {
   ClubsRoute: typeof ClubsRouteWithChildren
   CompetitionRoute: typeof CompetitionRoute
   HousesRoute: typeof HousesRouteWithChildren
+  LoginRoute: typeof LoginRoute
   McpRoute: typeof McpRoute
   MembersRoute: typeof MembersRoute
   NewsRoute: typeof NewsRouteWithChildren
@@ -323,6 +336,13 @@ declare module '@tanstack/react-router' {
       path: '/houses'
       fullPath: '/houses'
       preLoaderRoute: typeof HousesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/mcp': {
@@ -470,6 +490,7 @@ const rootRouteChildren: RootRouteChildren = {
   ClubsRoute: ClubsRouteWithChildren,
   CompetitionRoute: CompetitionRoute,
   HousesRoute: HousesRouteWithChildren,
+  LoginRoute: LoginRoute,
   McpRoute: McpRoute,
   MembersRoute: MembersRoute,
   NewsRoute: NewsRouteWithChildren,
