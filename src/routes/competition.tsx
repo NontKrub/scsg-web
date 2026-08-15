@@ -21,9 +21,10 @@ function Competition() {
   const c = useContent();
   const [month, setMonth] = useState<Month>(c.currentMonth);
   const honors = honorsOf(c, month);
-  const hom = c.houses.find((h) => h.slug === honors.houseOfMonth)!;
-  const cex = c.houses.find((h) => h.slug === honors.character)!;
-  const improved = [...c.houses].sort((a, b) => growth(c, b.slug, month) - growth(c, a.slug, month))[0]!;
+  const hom = c.houses.find((h) => h.slug === honors.houseOfMonth);
+  const cex = c.houses.find((h) => h.slug === honors.character);
+  const improved = [...c.houses].sort((a, b) => growth(c, b.slug, month) - growth(c, a.slug, month))[0];
+
 
   return (
     <>
