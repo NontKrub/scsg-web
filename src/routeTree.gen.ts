@@ -15,6 +15,7 @@ import { Route as AdminRouteImport } from './routes/admin'
 import { Route as ClubsRouteImport } from './routes/clubs'
 import { Route as CompetitionRouteImport } from './routes/competition'
 import { Route as HousesRouteImport } from './routes/houses'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as McpRouteImport } from './routes/mcp'
 import { Route as MembersRouteImport } from './routes/members'
 import { Route as NewsRouteImport } from './routes/news'
@@ -28,6 +29,7 @@ import { Route as HousesIndexRouteImport } from './routes/houses.index'
 import { Route as HousesSlugRouteImport } from './routes/houses.$slug'
 import { Route as NewsIndexRouteImport } from './routes/news.index'
 import { Route as NewsSlugRouteImport } from './routes/news.$slug'
+import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
 import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
 
 const IndexRoute = IndexRouteImport.update({
@@ -58,6 +60,11 @@ const CompetitionRoute = CompetitionRouteImport.update({
 const HousesRoute = HousesRouteImport.update({
   id: '/houses',
   path: '/houses',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const McpRoute = McpRouteImport.update({
@@ -127,6 +134,11 @@ const NewsSlugRoute = NewsSlugRouteImport.update({
   path: '/$slug',
   getParentRoute: () => NewsRoute,
 } as any)
+const DotlovableOauthConsentRoute = DotlovableOauthConsentRouteImport.update({
+  id: '/.lovable/oauth/consent',
+  path: '/.lovable/oauth/consent',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const Char91DotmcpChar93InvokeToolToolRoute =
   Char91DotmcpChar93InvokeToolToolRouteImport.update({
     id: '/.mcp/invoke-tool/$tool',
@@ -141,6 +153,7 @@ export interface FileRoutesByFullPath {
   '/clubs': typeof ClubsRouteWithChildren
   '/competition': typeof CompetitionRoute
   '/houses': typeof HousesRouteWithChildren
+  '/login': typeof LoginRoute
   '/mcp': typeof McpRoute
   '/members': typeof MembersRoute
   '/news': typeof NewsRouteWithChildren
@@ -154,6 +167,7 @@ export interface FileRoutesByFullPath {
   '/clubs/': typeof ClubsIndexRoute
   '/houses/': typeof HousesIndexRoute
   '/news/': typeof NewsIndexRoute
+  '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
 }
 export interface FileRoutesByTo {
@@ -161,6 +175,7 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/admin': typeof AdminRoute
   '/competition': typeof CompetitionRoute
+  '/login': typeof LoginRoute
   '/mcp': typeof McpRoute
   '/members': typeof MembersRoute
   '/radio': typeof RadioRoute
@@ -173,6 +188,7 @@ export interface FileRoutesByTo {
   '/clubs': typeof ClubsIndexRoute
   '/houses': typeof HousesIndexRoute
   '/news': typeof NewsIndexRoute
+  '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
 }
 export interface FileRoutesById {
@@ -183,6 +199,7 @@ export interface FileRoutesById {
   '/clubs': typeof ClubsRouteWithChildren
   '/competition': typeof CompetitionRoute
   '/houses': typeof HousesRouteWithChildren
+  '/login': typeof LoginRoute
   '/mcp': typeof McpRoute
   '/members': typeof MembersRoute
   '/news': typeof NewsRouteWithChildren
@@ -196,6 +213,7 @@ export interface FileRoutesById {
   '/clubs/': typeof ClubsIndexRoute
   '/houses/': typeof HousesIndexRoute
   '/news/': typeof NewsIndexRoute
+  '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
 }
 export interface FileRouteTypes {
@@ -207,6 +225,7 @@ export interface FileRouteTypes {
     | '/clubs'
     | '/competition'
     | '/houses'
+    | '/login'
     | '/mcp'
     | '/members'
     | '/news'
@@ -220,6 +239,7 @@ export interface FileRouteTypes {
     | '/clubs/'
     | '/houses/'
     | '/news/'
+    | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -227,6 +247,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/admin'
     | '/competition'
+    | '/login'
     | '/mcp'
     | '/members'
     | '/radio'
@@ -239,6 +260,7 @@ export interface FileRouteTypes {
     | '/clubs'
     | '/houses'
     | '/news'
+    | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
   id:
     | '__root__'
@@ -248,6 +270,7 @@ export interface FileRouteTypes {
     | '/clubs'
     | '/competition'
     | '/houses'
+    | '/login'
     | '/mcp'
     | '/members'
     | '/news'
@@ -261,6 +284,7 @@ export interface FileRouteTypes {
     | '/clubs/'
     | '/houses/'
     | '/news/'
+    | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
   fileRoutesById: FileRoutesById
 }
@@ -271,6 +295,7 @@ export interface RootRouteChildren {
   ClubsRoute: typeof ClubsRouteWithChildren
   CompetitionRoute: typeof CompetitionRoute
   HousesRoute: typeof HousesRouteWithChildren
+  LoginRoute: typeof LoginRoute
   McpRoute: typeof McpRoute
   MembersRoute: typeof MembersRoute
   NewsRoute: typeof NewsRouteWithChildren
@@ -278,6 +303,7 @@ export interface RootRouteChildren {
   StudentGovernmentRoute: typeof StudentGovernmentRoute
   Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
   Char91DotmcpChar93InvokeToolToolRoute: typeof Char91DotmcpChar93InvokeToolToolRoute
 }
 
@@ -323,6 +349,13 @@ declare module '@tanstack/react-router' {
       path: '/houses'
       fullPath: '/houses'
       preLoaderRoute: typeof HousesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/mcp': {
@@ -416,6 +449,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NewsSlugRouteImport
       parentRoute: typeof NewsRoute
     }
+    '/.lovable/oauth/consent': {
+      id: '/.lovable/oauth/consent'
+      path: '/.lovable/oauth/consent'
+      fullPath: '/.lovable/oauth/consent'
+      preLoaderRoute: typeof DotlovableOauthConsentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/.mcp/invoke-tool/$tool': {
       id: '/.mcp/invoke-tool/$tool'
       path: '/.mcp/invoke-tool/$tool'
@@ -470,6 +510,7 @@ const rootRouteChildren: RootRouteChildren = {
   ClubsRoute: ClubsRouteWithChildren,
   CompetitionRoute: CompetitionRoute,
   HousesRoute: HousesRouteWithChildren,
+  LoginRoute: LoginRoute,
   McpRoute: McpRoute,
   MembersRoute: MembersRoute,
   NewsRoute: NewsRouteWithChildren,
@@ -478,6 +519,7 @@ const rootRouteChildren: RootRouteChildren = {
   Char91DotmcpChar93ListToolsRoute: Char91DotmcpChar93ListToolsRoute,
   Char91DotwellKnownChar93OauthProtectedResourceRoute:
     Char91DotwellKnownChar93OauthProtectedResourceRoute,
+  DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
   Char91DotmcpChar93InvokeToolToolRoute: Char91DotmcpChar93InvokeToolToolRoute,
 }
 export const routeTree = rootRouteImport
