@@ -45,6 +45,14 @@ export function MemberGrid({
         <DialogContent className="max-w-lg">
           {open && (
             <div>
+              {open.photoUrl && (
+                <img
+                  src={open.photoUrl}
+                  alt={open.name}
+                  loading="lazy"
+                  className="mb-5 aspect-[3/4] w-32 border border-border object-cover"
+                />
+              )}
               <p className="eyebrow">{open.orgLabel}</p>
               <h3 className="display-xl mt-3 text-2xl">{open.name || "—"}</h3>
               <p className="mt-2 text-sm text-muted-foreground">
