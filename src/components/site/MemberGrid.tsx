@@ -6,18 +6,27 @@ import { FilterBar } from "./primitives";
 
 type Key = (typeof ORG_FILTERS)[number]["key"];
 
-export function MemberGrid({ initial = "ALL" as Key, showClass = true }: { initial?: Key; showClass?: boolean }) {
+export function MemberGrid({
+  initial = "ALL" as Key,
+  showClass = true,
+  lock = false,
+}: { initial?: Key; showClass?: boolean; lock?: boolean }) {
   const c = useContent();
   const [filter, setFilter] = useState<Key>(initial);
-  const [open, setOpen] = useState<Member | null>(null);
   const list = c.members.filter((m) => filter === "ALL" || m.org === filter);
+  const [open, setOpen] = useState<Member | null>(null);
 
   return (
     <div>
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <FilterBar options={ORG_FILTERS} value={filter} onChange={setFilter} />
+        {lock ? (
+          <p className="eyebrow">{ORG_FILTERS.find((o) => o.key === filter)?.label}</p>
+        ) : (
+          <FilterBar options={ORG_FILTERS} value={filter} onChange={setFilter} />
+        )}
         <p className="num text-sm text-muted-foreground">{String(list.length).padStart(2, "0")} คน</p>
       </div>
+
 
       <div className="mt-8 grid gap-px bg-border sm:grid-cols-2 lg:grid-cols-3">
         {list.map((m) => (
