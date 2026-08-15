@@ -88,7 +88,7 @@ function About() {
         <SectionHead
           eyebrow="ที่ปรึกษา"
           title="ADVISORY BOARD"
-          sub="คณะที่ปรึกษาให้คำแนะนำและกำกับดูแลการทำงานของสภา ไม่นับรวมในสมาชิกสภา 68 คน"
+          sub="คณะที่ปรึกษาให้คำแนะนำและกำกับดูแลการทำงานของสภา"
         />
         <div className="grid gap-px bg-border sm:grid-cols-2 lg:grid-cols-3">
           {c.advisoryBoard.map((a) => (

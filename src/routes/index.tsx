@@ -160,7 +160,7 @@ function Home() {
         <SectionHead
           eyebrow="ที่ปรึกษา"
           title="ADVISORY BOARD"
-          sub="คณะที่ปรึกษาของสภา ให้คำแนะนำเชิงนโยบายและกำกับดูแลการทำงาน (ไม่นับรวมในสมาชิก 68 คน)"
+          sub="คณะที่ปรึกษาของสภา ให้คำแนะนำเชิงนโยบายและกำกับดูแลการทำงาน"
         />
         <div className="grid gap-px bg-border sm:grid-cols-2 lg:grid-cols-3">
           {c.advisoryBoard.map((a) => (
@@ -197,9 +197,9 @@ function Home() {
         />
         <div className="mb-12 grid grid-cols-2 gap-px bg-border md:grid-cols-4">
           {[
-            { n: "18", t: "STUDENT GOVERNMENT", th: "สโมสรนักเรียน (นายก → กรรมการ)" },
+            { n: "18", t: "STUDENT GOVERNMENT", th: "สโมสรนักเรียน" },
             { n: "09", t: "HOUSE PRESIDENTS", th: "ประธานบ้านสายกีฬา 9 บ้าน" },
-            { n: "18", t: "CLUB REPRESENTATIVES", th: "6 ชุมนุม × 3 ผู้แทน" },
+            { n: "18", t: "CLUB REPRESENTATIVES", th: "6 ชุมนุม" },
             { n: "23", t: "CLASS REPRESENTATIVES", th: "ผู้แทนห้องเรียน" },
           ].map((x) => (
             <div key={x.t} className="bg-background p-6">
