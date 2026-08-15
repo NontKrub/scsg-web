@@ -115,7 +115,7 @@ export function GrowthChart({ slugs, height = 340 }: { slugs: string[]; height?:
             axisLine={false}
           />
           <YAxis
-            domain={[75, 100]}
+            domain={[60, 100]}
             stroke="var(--color-muted-foreground)"
             tick={{ fontSize: 12 }}
             tickLine={false}
