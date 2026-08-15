@@ -3,6 +3,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { GrowthChart } from "@/components/site/ScoreBoard";
 import { Section, SectionHead, Tag } from "@/components/site/primitives";
 import { MONTHS, MONTH_TH, tierOf } from "@/data/sgsc";
+import { HOUSE_LORE } from "@/data/houseLore";
+
 
 export const Route = createFileRoute("/houses/$slug")({
   head: ({ params }) => ({
