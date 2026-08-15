@@ -652,7 +652,7 @@ function ImageField({ value, onChange }: { value: string; onChange: (v: string) 
       const path = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
       const { error } = await supabase.storage.from("site-images").upload(path, file, {
         cacheControl: "31536000",
-        contentType: file.type || undefined,
+        contentType: file.type || "application/octet-stream",
       });
       if (error) throw new Error(error.message);
       onChange(`/api/public/img/${path}`);
