@@ -23,7 +23,10 @@ function Competition() {
   const honors = honorsOf(c, month);
   const hom = c.houses.find((h) => h.slug === honors.houseOfMonth);
   const cex = c.houses.find((h) => h.slug === honors.character);
-  const improved = [...c.houses].sort((a, b) => growth(c, b.slug, month) - growth(c, a.slug, month))[0];
+  const board = c.houses
+    .map((house) => ({ house, g: growth(c, house.slug, month) }))
+    .sort((a, b) => b.g - a.g);
+  const improved = board[0]?.house;
 
 
   return (
