@@ -3,7 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { HouseCompare, MonthPicker, ScoreTable } from "@/components/site/ScoreBoard";
 import { Section, SectionHead, Tag } from "@/components/site/primitives";
-import { MONTHS, MONTH_TH, TIERS, type Month } from "@/data/sgsc";
+import { MONTHS, MONTH_TH, TIERS, tierOf, type Month } from "@/data/sgsc";
 
 export const Route = createFileRoute("/competition")({
   head: () => ({
