@@ -29,3 +29,18 @@ export async function insertRadioBooking(row: {
   if (error) throw new Error(error.message);
   return { ok: true };
 }
+
+export async function insertComplaint(row: {
+  subject: string;
+  cat: string;
+  detail: string;
+  reporter: string;
+  klass: string;
+  contact: string;
+  anonymous: boolean;
+}) {
+  const db = publicClient();
+  const { error } = await db.from("complaints").insert({ ...row, status: "NEW", admin_note: "" });
+  if (error) throw new Error(error.message);
+  return { ok: true };
+}

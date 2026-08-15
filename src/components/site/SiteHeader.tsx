@@ -12,6 +12,7 @@ const NAV = [
   { to: "/student-government", label: "สโมสรนักเรียน" },
   { to: "/competition", label: "คะแนนบ้าน" },
   { to: "/news", label: "ข่าว" },
+  { to: "/complaints", label: "ร้องเรียน" },
 ];
 
 

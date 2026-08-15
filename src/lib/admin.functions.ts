@@ -14,6 +14,7 @@ const TABLES = {
   radio_slots: { pk: "id", order: "day" },
   radio_bookings: { pk: "id", order: "created_at" },
   radio_rules: { pk: "id", order: "sort" },
+  complaints: { pk: "id", order: "created_at" },
   site_settings: { pk: "key", order: "key" },
   audit_log: { pk: "id", order: "created_at" },
 } as const;
