@@ -27,22 +27,34 @@ const table = (name: string) => {
   return { name: name as AdminTable, ...t };
 };
 
-async function assertAdmin(ctx: { supabase: any; userId: string }) {
-  const { data, error } = await ctx.supabase.rpc("has_role", { _user_id: ctx.userId, _role: "admin" });
+async function isAdmin(ctx: { supabase: any; userId: string }) {
+  const { data, error } = await ctx.supabase
+    .from("user_roles")
+    .select("role")
+    .eq("user_id", ctx.userId)
+    .eq("role", "admin")
+    .maybeSingle();
   if (error) throw new Error(error.message);
-  if (!data) throw new Error("บัญชีนี้ไม่มีสิทธิ์ผู้ดูแลระบบ");
+  return !!data;
+}
+
+async function assertAdmin(ctx: { supabase: any; userId: string }) {
+  if (!(await isAdmin(ctx))) throw new Error("บัญชีนี้ไม่มีสิทธิ์ผู้ดูแลระบบ");
 }
 
 /** Whether the signed-in account is an admin. */
 export const checkAdmin = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { data } = await context.supabase.rpc("has_role", {
-      _user_id: context.userId,
-      _role: "admin",
-    });
-    return { isAdmin: !!data, userId: context.userId, email: (context.claims as { email?: string }).email ?? "" };
+    let admin = false;
+    try {
+      admin = await isAdmin(context);
+    } catch {
+      admin = false;
+    }
+    return { isAdmin: admin, userId: context.userId, email: (context.claims as { email?: string }).email ?? "" };
   });
+
 
 /** Reads any managed table. */
 export const adminList = createServerFn({ method: "GET" })
