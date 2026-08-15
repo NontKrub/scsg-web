@@ -14,6 +14,7 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as ClubsRouteImport } from './routes/clubs'
 import { Route as CompetitionRouteImport } from './routes/competition'
+import { Route as ComplaintsRouteImport } from './routes/complaints'
 import { Route as HousesRouteImport } from './routes/houses'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as McpRouteImport } from './routes/mcp'
@@ -55,6 +56,11 @@ const ClubsRoute = ClubsRouteImport.update({
 const CompetitionRoute = CompetitionRouteImport.update({
   id: '/competition',
   path: '/competition',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ComplaintsRoute = ComplaintsRouteImport.update({
+  id: '/complaints',
+  path: '/complaints',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HousesRoute = HousesRouteImport.update({
@@ -152,6 +158,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRoute
   '/clubs': typeof ClubsRouteWithChildren
   '/competition': typeof CompetitionRoute
+  '/complaints': typeof ComplaintsRoute
   '/houses': typeof HousesRouteWithChildren
   '/login': typeof LoginRoute
   '/mcp': typeof McpRoute
@@ -175,6 +182,7 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/admin': typeof AdminRoute
   '/competition': typeof CompetitionRoute
+  '/complaints': typeof ComplaintsRoute
   '/login': typeof LoginRoute
   '/mcp': typeof McpRoute
   '/members': typeof MembersRoute
@@ -198,6 +206,7 @@ export interface FileRoutesById {
   '/admin': typeof AdminRoute
   '/clubs': typeof ClubsRouteWithChildren
   '/competition': typeof CompetitionRoute
+  '/complaints': typeof ComplaintsRoute
   '/houses': typeof HousesRouteWithChildren
   '/login': typeof LoginRoute
   '/mcp': typeof McpRoute
@@ -224,6 +233,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/clubs'
     | '/competition'
+    | '/complaints'
     | '/houses'
     | '/login'
     | '/mcp'
@@ -247,6 +257,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/admin'
     | '/competition'
+    | '/complaints'
     | '/login'
     | '/mcp'
     | '/members'
@@ -269,6 +280,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/clubs'
     | '/competition'
+    | '/complaints'
     | '/houses'
     | '/login'
     | '/mcp'
@@ -294,6 +306,7 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRoute
   ClubsRoute: typeof ClubsRouteWithChildren
   CompetitionRoute: typeof CompetitionRoute
+  ComplaintsRoute: typeof ComplaintsRoute
   HousesRoute: typeof HousesRouteWithChildren
   LoginRoute: typeof LoginRoute
   McpRoute: typeof McpRoute
@@ -342,6 +355,13 @@ declare module '@tanstack/react-router' {
       path: '/competition'
       fullPath: '/competition'
       preLoaderRoute: typeof CompetitionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/complaints': {
+      id: '/complaints'
+      path: '/complaints'
+      fullPath: '/complaints'
+      preLoaderRoute: typeof ComplaintsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/houses': {
@@ -509,6 +529,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRoute,
   ClubsRoute: ClubsRouteWithChildren,
   CompetitionRoute: CompetitionRoute,
+  ComplaintsRoute: ComplaintsRoute,
   HousesRoute: HousesRouteWithChildren,
   LoginRoute: LoginRoute,
   McpRoute: McpRoute,
