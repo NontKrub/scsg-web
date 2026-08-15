@@ -41,22 +41,6 @@ function SG() {
         </div>
       </Section>
 
-      <Section className="pt-0">
-        <div className="grid gap-px bg-border sm:grid-cols-2 lg:grid-cols-4">
-          {[
-            { t: "ฝ่ายบริหาร", d: "ประธาน รองประธาน และเลขาธิการ" },
-            { t: "ฝ่ายกิจกรรม", d: "ออกแบบและจัดกิจกรรมประจำภาคเรียน" },
-            { t: "ฝ่ายสื่อสาร", d: "ดูแล SG Radio และช่องทางประชาสัมพันธ์" },
-            { t: "ฝ่ายวิชาการ", d: "ส่งเสริมการเรียนรู้และติวเตอร์เพื่อน" },
-          ].map((x) => (
-            <div key={x.t} className="bg-background p-7">
-              <p className="font-semibold">{x.t}</p>
-              <p className="mt-3 text-sm text-muted-foreground">{x.d}</p>
-            </div>
-          ))}
-        </div>
-      </Section>
-
       <Section>
         <SectionHead
           eyebrow="โครงสร้าง 18 ที่นั่ง"
