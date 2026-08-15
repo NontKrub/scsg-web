@@ -15,7 +15,7 @@ export function growth(c: SiteContent, slug: string, month: Month) {
   if (!h) return 0;
   const i = MONTHS.indexOf(month);
   if (i <= 0) return 0;
-  return +(h.scores[month] - h.scores[MONTHS[i - 1]!]).toFixed(1);
+  return +(h.scores[month] - h.scores[MONTHS[i - 1]!]).toFixed(2);
 }
 
 export function honorsOf(c: SiteContent, month: Month) {
