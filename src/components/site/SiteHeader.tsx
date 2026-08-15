@@ -6,7 +6,6 @@ import { cn } from "@/lib/utils";
 
 const NAV = [
   { to: "/about", label: "SGSC" },
-  { to: "/members", label: "สมาชิกสภา" },
   { to: "/houses", label: "บ้านสายกีฬา" },
   { to: "/clubs", label: "ชุมนุม" },
   { to: "/student-government", label: "สโมสรนักเรียน" },

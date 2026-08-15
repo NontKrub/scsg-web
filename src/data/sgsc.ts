@@ -174,7 +174,7 @@ export const ORGS = [
     nameTh: "ผู้แทนห้องเรียน",
     desc: "ผู้แทนห้องเรียน 23 คน ส่งเสียงของเพื่อนร่วมห้องถึงสภา",
     count: 23,
-    to: "/members",
+    to: "/about",
   },
 ] as const;
 

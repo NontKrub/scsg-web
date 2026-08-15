@@ -18,7 +18,6 @@ import { Route as ComplaintsRouteImport } from './routes/complaints'
 import { Route as HousesRouteImport } from './routes/houses'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as McpRouteImport } from './routes/mcp'
-import { Route as MembersRouteImport } from './routes/members'
 import { Route as NewsRouteImport } from './routes/news'
 import { Route as RadioRouteImport } from './routes/radio'
 import { Route as StudentGovernmentRouteImport } from './routes/student-government'
@@ -76,11 +75,6 @@ const LoginRoute = LoginRouteImport.update({
 const McpRoute = McpRouteImport.update({
   id: '/mcp',
   path: '/mcp',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MembersRoute = MembersRouteImport.update({
-  id: '/members',
-  path: '/members',
   getParentRoute: () => rootRouteImport,
 } as any)
 const NewsRoute = NewsRouteImport.update({
@@ -162,7 +156,6 @@ export interface FileRoutesByFullPath {
   '/houses': typeof HousesRouteWithChildren
   '/login': typeof LoginRoute
   '/mcp': typeof McpRoute
-  '/members': typeof MembersRoute
   '/news': typeof NewsRouteWithChildren
   '/radio': typeof RadioRoute
   '/student-government': typeof StudentGovernmentRoute
@@ -185,7 +178,6 @@ export interface FileRoutesByTo {
   '/complaints': typeof ComplaintsRoute
   '/login': typeof LoginRoute
   '/mcp': typeof McpRoute
-  '/members': typeof MembersRoute
   '/radio': typeof RadioRoute
   '/student-government': typeof StudentGovernmentRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
@@ -210,7 +202,6 @@ export interface FileRoutesById {
   '/houses': typeof HousesRouteWithChildren
   '/login': typeof LoginRoute
   '/mcp': typeof McpRoute
-  '/members': typeof MembersRoute
   '/news': typeof NewsRouteWithChildren
   '/radio': typeof RadioRoute
   '/student-government': typeof StudentGovernmentRoute
@@ -237,7 +228,6 @@ export interface FileRouteTypes {
     | '/houses'
     | '/login'
     | '/mcp'
-    | '/members'
     | '/news'
     | '/radio'
     | '/student-government'
@@ -260,7 +250,6 @@ export interface FileRouteTypes {
     | '/complaints'
     | '/login'
     | '/mcp'
-    | '/members'
     | '/radio'
     | '/student-government'
     | '/.mcp/list-tools'
@@ -284,7 +273,6 @@ export interface FileRouteTypes {
     | '/houses'
     | '/login'
     | '/mcp'
-    | '/members'
     | '/news'
     | '/radio'
     | '/student-government'
@@ -310,7 +298,6 @@ export interface RootRouteChildren {
   HousesRoute: typeof HousesRouteWithChildren
   LoginRoute: typeof LoginRoute
   McpRoute: typeof McpRoute
-  MembersRoute: typeof MembersRoute
   NewsRoute: typeof NewsRouteWithChildren
   RadioRoute: typeof RadioRoute
   StudentGovernmentRoute: typeof StudentGovernmentRoute
@@ -383,13 +370,6 @@ declare module '@tanstack/react-router' {
       path: '/mcp'
       fullPath: '/mcp'
       preLoaderRoute: typeof McpRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/members': {
-      id: '/members'
-      path: '/members'
-      fullPath: '/members'
-      preLoaderRoute: typeof MembersRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/news': {
@@ -533,7 +513,6 @@ const rootRouteChildren: RootRouteChildren = {
   HousesRoute: HousesRouteWithChildren,
   LoginRoute: LoginRoute,
   McpRoute: McpRoute,
-  MembersRoute: MembersRoute,
   NewsRoute: NewsRouteWithChildren,
   RadioRoute: RadioRoute,
   StudentGovernmentRoute: StudentGovernmentRoute,

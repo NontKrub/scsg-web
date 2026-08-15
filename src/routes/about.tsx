@@ -134,12 +134,6 @@ function About() {
             <p className="mt-5 max-w-md text-primary-foreground/70">
               สมาชิกสภาทั้งหมด {c.members.length} คน มาจากสโมสรนักเรียน บ้านสายกีฬา ชุมนุม และผู้แทนห้องเรียน
             </p>
-            <Link
-              to="/members"
-              className="mt-8 inline-flex border border-primary-foreground/40 px-6 py-4 text-xs font-semibold uppercase tracking-[0.18em]"
-            >
-              ดูสมาชิกทั้งหมด
-            </Link>
           </div>
           <div className="grid grid-cols-2 gap-px bg-primary-foreground/15">
             {ORGS.map((o) => (
