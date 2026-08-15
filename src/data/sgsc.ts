@@ -186,5 +186,5 @@ export const ORG_FILTERS = [
   { key: "CLASS", label: "ผู้แทนห้อง" },
 ] as const;
 
-export const RADIO_SLOTS = ["12:00", "12:10", "12:20", "12:30", "12:40"];
+export const RADIO_SLOTS = ["8.05"];
 export const RADIO_DAYS = ["จันทร์", "อังคาร", "พุธ", "พฤหัสบดี", "ศุกร์"];
