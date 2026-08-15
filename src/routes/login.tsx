@@ -10,7 +10,7 @@ function safeNext(next: unknown): string {
 
 export const Route = createFileRoute("/login")({
   ssr: false,
-  validateSearch: (s: Record<string, unknown>) => ({ next: safeNext(s.next) }),
+  validateSearch: (s: Record<string, unknown>) => ({ next: safeNext(s['next']) }),
   head: () => ({
     meta: [
       { title: "เข้าสู่ระบบ | SGSC สภานักเรียนเซนต์คาเบรียล" },
@@ -41,13 +41,16 @@ function LoginPage() {
     });
   }, [next]);
 
-  const submit = async (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
     setBusy(true);
     if (mode === "in") {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       setBusy(false);
-      if (error) return toast.error(error.message);
+      if (error) {
+        toast.error(error.message);
+        return;
+      }
       window.location.replace(next);
       return;
     }
@@ -57,7 +60,10 @@ function LoginPage() {
       options: { emailRedirectTo: `${window.location.origin}${next}` },
     });
     setBusy(false);
-    if (error) return toast.error(error.message);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
     if (data.session) window.location.replace(next);
     else toast.success("สร้างบัญชีแล้ว — กรุณายืนยันอีเมลก่อนเข้าสู่ระบบ");
   };
