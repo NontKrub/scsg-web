@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Menu, Search, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import { SGSC_LOGO } from "@/data/sgsc";
 import { cn } from "@/lib/utils";
@@ -17,7 +17,6 @@ const NAV = [
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
-  const [q, setQ] = useState(false);
   const path = useRouterState({ select: (s) => s.location.pathname });
 
   return (
@@ -50,13 +49,6 @@ export function SiteHeader() {
 
         <div className="ml-auto flex items-center gap-1 xl:ml-0">
           <button
-            aria-label="ค้นหา"
-            onClick={() => setQ((v) => !v)}
-            className="grid h-10 w-10 place-items-center text-muted-foreground transition-colors hover:text-foreground"
-          >
-            <Search className="h-4 w-4" />
-          </button>
-          <button
             aria-label="เมนู"
             onClick={() => setOpen((v) => !v)}
             className="grid h-10 w-10 place-items-center text-foreground xl:hidden"
@@ -65,16 +57,6 @@ export function SiteHeader() {
           </button>
         </div>
       </div>
-
-      {q && (
-        <div className="border-t border-border px-5 py-3 md:px-10">
-          <input
-            autoFocus
-            placeholder="ค้นหาบ้าน ชุมนุม สมาชิก หรือข่าว…"
-            className="mx-auto block w-full max-w-[1400px] bg-transparent py-2 text-lg outline-none placeholder:text-muted-foreground"
-          />
-        </div>
-      )}
 
       {open && (
         <nav className="border-t border-border bg-background px-5 pb-6 xl:hidden">
