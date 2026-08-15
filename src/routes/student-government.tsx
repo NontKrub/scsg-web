@@ -99,7 +99,7 @@ function SG() {
           </div>
           <div className="bg-background p-7 md:p-10">
             <p className="eyebrow">ผู้รับผิดชอบ</p>
-            <p className="mt-3 font-semibold">ฝ่ายสื่อสาร สโมสรนักเรียน</p>
+            <p className="mt-3 font-semibold">สโมสรนักเรียน</p>
             <p className="mt-6 text-sm text-muted-foreground">
               ออกอากาศทุกวันจันทร์–ศุกร์ ช่วงพักกลางวัน 12:00–12:40 น. บริหารจัดการคิวผ่านระบบจองออนไลน์ของสโมสรนักเรียน
             </p>
