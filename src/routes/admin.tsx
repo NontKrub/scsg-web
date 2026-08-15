@@ -198,16 +198,6 @@ const SECTIONS: SectionDef[] = [
     ],
   },
   {
-    key: "radio_rules",
-    table: "radio_rules",
-    label: "กติกา SG Radio",
-    subtitle: "ข้อกำหนดการจองที่แสดงบนหน้าเว็บ",
-    primary: "text",
-    canCreate: true,
-    canDelete: true,
-    fields: [{ key: "text", label: "กติกา", kind: "long" }, n("sort", "ลำดับ")],
-  },
-  {
     key: "complaints",
     table: "complaints",
     label: "เรื่องร้องเรียน",
