@@ -64,12 +64,14 @@ function Home() {
               >
                 รู้จัก SGSC <ArrowRight className="h-4 w-4" />
               </Link>
-              <Link
-                to="/members"
+              <a
+                href="https://sg.ac.th/doc/std_constitution.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 border border-input px-6 py-4 text-xs font-semibold uppercase tracking-[0.18em] transition-colors hover:border-primary"
               >
-                สมาชิกสภา 68 คน
-              </Link>
+                รัฐธรรมนูญนักเรียน
+              </a>
             </div>
           </div>
           <ImgBlock
