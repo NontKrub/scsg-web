@@ -107,6 +107,51 @@ export type Database = {
         }
         Relationships: []
       }
+      complaints: {
+        Row: {
+          admin_note: string
+          anonymous: boolean
+          cat: string
+          contact: string
+          created_at: string
+          detail: string
+          id: string
+          klass: string
+          reporter: string
+          status: string
+          subject: string
+          updated_at: string
+        }
+        Insert: {
+          admin_note?: string
+          anonymous?: boolean
+          cat?: string
+          contact?: string
+          created_at?: string
+          detail?: string
+          id?: string
+          klass?: string
+          reporter?: string
+          status?: string
+          subject?: string
+          updated_at?: string
+        }
+        Update: {
+          admin_note?: string
+          anonymous?: boolean
+          cat?: string
+          contact?: string
+          created_at?: string
+          detail?: string
+          id?: string
+          klass?: string
+          reporter?: string
+          status?: string
+          subject?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       congress_board: {
         Row: {
           from_org: string
