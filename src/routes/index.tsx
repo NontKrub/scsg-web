@@ -17,10 +17,10 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "FOR SAINTS. BY SAINTS. เว็บไซต์ทางการของสภานักเรียนโรงเรียนเซนต์คาเบรียล 68 ผู้นำนักเรียน 4 องค์กร 9 บ้านสายกีฬา",
+          "FOR SAINTS. BY SAINTS. เว็บไซต์ทางการของสภานักเรียนโรงเรียนเซนต์คาเบรียล 67 ผู้นำนักเรียน 4 องค์กร 9 บ้านสายกีฬา",
       },
       { property: "og:title", content: "FOR SAINTS. BY SAINTS. — SGSC" },
-      { property: "og:description", content: "68 ผู้นำนักเรียน · 4 องค์กร · 9 บ้านสายกีฬา" },
+      { property: "og:description", content: "67 ผู้นำนักเรียน · 4 องค์กร · 9 บ้านสายกีฬา" },
     ],
   }),
   component: Home,
@@ -89,7 +89,7 @@ function Home() {
           eyebrow="โครงสร้างองค์กร"
           title={
             <>
-              68 PEOPLE. 4 ORGANIZATIONS.
+              67 PEOPLE. 4 ORGANIZATIONS.
               <br />
               ONE CONGRESS.
             </>
@@ -142,7 +142,7 @@ function Home() {
         <SectionHead
           eyebrow="คณะกรรมการบริหารสภา"
           title="THE CONGRESS BOARD."
-          sub="5 ตำแหน่งบริหารของสภานักเรียนใหญ่ เลือกจากสมาชิกสภาทั้ง 68 คน จาก 4 องค์กร"
+          sub="5 ตำแหน่งบริหารของสภานักเรียนใหญ่ เลือกจากสมาชิกสภาทั้ง 67 คน จาก 4 องค์กร"
         />
         <div className="grid grid-cols-2 gap-px bg-border md:grid-cols-3 lg:grid-cols-5">
           {c.congressBoard.map((b) => (
@@ -182,19 +182,19 @@ function Home() {
           eyebrow="สมาชิกสภา"
           title={
             <>
-              68 PEOPLE.
+              67 PEOPLE.
               <br />
               ONE CONGRESS.
             </>
           }
-          sub="สโมสรนักเรียน 18 · ประธานบ้านสายกีฬา 9 · ผู้แทนชุมนุม 18 · ผู้แทนห้องเรียน 23"
+          sub="สโมสรนักเรียน 19 · ประธานบ้านสายกีฬา 9 · ผู้แทนชุมนุม 15 · ผู้แทนห้องเรียน 24"
         />
         <div className="mb-12 grid grid-cols-2 gap-px bg-border md:grid-cols-4">
           {[
-            { n: "18", t: "STUDENT GOVERNMENT", th: "สโมสรนักเรียน" },
+            { n: "19", t: "STUDENT GOVERNMENT", th: "สโมสรนักเรียน" },
             { n: "09", t: "HOUSE PRESIDENTS", th: "ประธานบ้านสายกีฬา 9 บ้าน" },
-            { n: "18", t: "CLUB REPRESENTATIVES", th: "6 ชุมนุม" },
-            { n: "23", t: "CLASS REPRESENTATIVES", th: "ผู้แทนห้องเรียน" },
+            { n: "15", t: "CLUB REPRESENTATIVES", th: "6 ชุมนุม" },
+            { n: "24", t: "CLASS REPRESENTATIVES", th: "ผู้แทนห้องเรียน" },
           ].map((x) => (
             <div key={x.t} className="bg-background p-6">
               <div className="num text-4xl">{x.n}</div>
