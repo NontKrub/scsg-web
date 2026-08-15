@@ -97,14 +97,17 @@ function Competition() {
           title="HOUSE GROWTH"
           sub="เลือกบ้านเพื่อเปรียบเทียบคะแนนรายเดือน"
           right={
-            <div className="border border-border bg-background p-6">
-              <p className="eyebrow">Most improved house</p>
-              <p className="num mt-3 text-2xl">{improved.name}</p>
-              <p className="num mt-1 text-3xl text-primary">
-                +{growth(c, improved.slug, month).toFixed(1)}%
-              </p>
-            </div>
+            improved ? (
+              <div className="border border-border bg-background p-6">
+                <p className="eyebrow">Most improved house</p>
+                <p className="num mt-3 text-2xl">{improved.name}</p>
+                <p className="num mt-1 text-3xl text-primary">
+                  +{growth(c, improved.slug, month).toFixed(1)}%
+                </p>
+              </div>
+            ) : undefined
           }
+
         />
         <HouseCompare />
         <div className="mt-12 grid grid-cols-2 gap-px bg-border sm:grid-cols-4 lg:grid-cols-7">
