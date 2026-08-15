@@ -91,8 +91,47 @@ function HousePage() {
               </div>
             </div>
           </div>
+          {lore && (
+            <div className="grid gap-px self-start bg-border sm:grid-cols-2">
+              <div className="bg-background p-6">
+                <p className="eyebrow">สัญลักษณ์ประจำบ้าน</p>
+                <p className="num mt-3 text-2xl">{lore.symbol}</p>
+                <p className="mt-2 text-sm text-muted-foreground">{lore.symbolMeaning}</p>
+              </div>
+              <div className="bg-background p-6">
+                <p className="eyebrow">คุณธรรมที่เด่นชัด</p>
+                <p className="mt-3 text-sm leading-relaxed">{lore.virtue}</p>
+              </div>
+            </div>
+          )}
         </div>
       </Section>
+
+      {/* PATRON SAINT */}
+      {lore && (
+        <Section className="bg-secondary">
+          <SectionHead eyebrow="นักบุญองค์อุปถัมภ์" title="PATRON SAINT" />
+          <div className="grid gap-10 lg:grid-cols-[0.6fr_1.4fr]">
+            <div>
+              <img
+                src={house.emblem}
+                alt={`ตราบ้าน${house.nameTh}`}
+                className="h-40 object-contain"
+              />
+              <p className="num mt-6 text-xl">{lore.patron}</p>
+              <p className="mt-1 text-sm text-muted-foreground">{lore.patronTh}</p>
+            </div>
+            <div className="space-y-4">
+              {lore.story.map((p, i) => (
+                <p key={i} className="text-base leading-relaxed">
+                  {p}
+                </p>
+              ))}
+            </div>
+          </div>
+        </Section>
+      )}
+
 
       {/* COMMITTEE */}
       <Section className="bg-secondary">
