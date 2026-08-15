@@ -74,7 +74,7 @@ function About() {
         <div className="grid grid-cols-2 gap-px bg-border md:grid-cols-3 lg:grid-cols-5">
           {c.congressBoard.map((b) => (
             <div key={b.role} className="bg-background p-4">
-              <ImgBlock className="aspect-[3/4] w-full" />
+              <ImgBlock src={b.photoUrl} alt={b.name} className="aspect-[3/4] w-full" />
               <p className="mt-4 text-sm font-semibold">{b.name}</p>
               <p className="mt-1 text-xs text-muted-foreground">{b.role}</p>
               <p className="mt-1 text-[0.68rem] text-muted-foreground">มาจาก{b.fromOrg}</p>
@@ -93,7 +93,7 @@ function About() {
         <div className="grid gap-px bg-border sm:grid-cols-2 lg:grid-cols-3">
           {c.advisoryBoard.map((a) => (
             <div key={a.name} className="bg-background p-7">
-              <ImgBlock className="mb-6 aspect-[4/3] w-full" />
+              <ImgBlock src={a.photoUrl} alt={a.name} className="mb-6 aspect-[4/3] w-full" />
               <p className="eyebrow">{a.role}</p>
               <p className="mt-3 text-lg font-semibold">{a.name}</p>
               <p className="mt-3 text-sm text-muted-foreground">{a.desc}</p>
