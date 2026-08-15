@@ -10,6 +10,7 @@ const COLS = [
       { to: "/members", label: "สมาชิกสภา" },
       { to: "/student-government", label: "สโมสรนักเรียน" },
       { to: "/members", label: "ผู้แทนห้องเรียน" },
+      { to: "/complaints", label: "ส่งเรื่องร้องเรียน" },
     ],
   },
   {
