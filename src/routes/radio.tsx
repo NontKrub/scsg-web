@@ -36,7 +36,7 @@ function Radio() {
         <Tag>โครงการสโมสรนักเรียน</Tag>
         <h1 className="display-xl mt-6 text-[clamp(2.6rem,9vw,6.5rem)]">SG RADIO</h1>
         <p className="mt-6 max-w-2xl text-muted-foreground">
-          เสียงตามสายช่วงพักกลางวัน 12:00–12:50 น. นักเรียนทุกระดับชั้นจองช่วงเวลาเพื่อขอเพลงและส่งข้อความถึงเพื่อนได้
+          เสียงตามสายช่วง 8.05 น. เป็นต้นไป นักเรียนทุกระดับชั้นจองช่วงเวลาเพื่อขอเพลงและส่งข้อความถึงเพื่อนได้
         </p>
       </Section>
 
@@ -91,7 +91,7 @@ function Radio() {
                   key={d}
                   onClick={() => {
                     setDay(d);
-                    setSlot(null);
+                    setSlot(RADIO_SLOTS[0]!);
                   }}
                   className={`px-4 py-2.5 text-xs font-semibold uppercase tracking-[0.14em] ${
                     day === d ? "bg-primary text-primary-foreground" : "border border-input bg-background"
@@ -101,24 +101,10 @@ function Radio() {
                 </button>
               ))}
             </div>
-            <p className="eyebrow mt-8">เลือกช่วงเวลา</p>
-            <div className="mt-3 grid grid-cols-5 gap-px bg-border">
-              {RADIO_SLOTS.map((s, i) => {
-                const free = states[i] === "AVAILABLE";
-                return (
-                  <button
-                    key={s}
-                    disabled={!free}
-                    onClick={() => setSlot(s)}
-                    className={`num bg-background p-4 text-xs ${
-                      slot === s ? "bg-primary text-primary-foreground" : ""
-                    } ${free ? "" : "cursor-not-allowed text-muted-foreground/50"}`}
-                  >
-                    {s}
-                    <span className="mt-2 block text-[0.6rem]">{STATE_TH[states[i]!]}</span>
-                  </button>
-                );
-              })}
+            <p className="eyebrow mt-8">ช่วงเวลา</p>
+            <div className="mt-3 border border-border bg-background p-4">
+              <span className="num text-sm">{RADIO_SLOTS[0]} น. เป็นต้นไป</span>
+              <span className="ml-3 text-xs text-muted-foreground">({STATE_TH[states[0]!]})</span>
             </div>
           </div>
 
