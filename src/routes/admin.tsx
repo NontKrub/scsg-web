@@ -262,19 +262,17 @@ function Centered({ children }: { children: React.ReactNode }) {
 }
 
 function SignIn() {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [mode, setMode] = useState<"in" | "up">("in");
   const [busy, setBusy] = useState(false);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setBusy(true);
-    const fn = mode === "in" ? supabase.auth.signInWithPassword : supabase.auth.signUp;
-    const { error } = await fn.call(supabase.auth, { email, password });
+    const email = username.includes("@") ? username.trim() : `${username.trim().toLowerCase()}@sgsc.local`;
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
     setBusy(false);
-    if (error) toast.error(error.message);
-    else if (mode === "up") toast.success("สร้างบัญชีแล้ว — ผู้ใช้คนแรกจะได้สิทธิ์ผู้ดูแลระบบ");
+    if (error) toast.error("ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง");
   };
 
   return (
@@ -282,19 +280,20 @@ function SignIn() {
       <form onSubmit={submit} className="w-full max-w-sm border border-border bg-background p-8">
         <p className="eyebrow">SGSC ADMIN</p>
         <h1 className="display-xl mt-3 text-2xl">ระบบจัดการเว็บไซต์</h1>
-        <label className="mt-8 block text-xs font-semibold uppercase tracking-[0.16em]">อีเมล</label>
+        <p className="mt-3 text-xs text-muted-foreground">สำหรับผู้ดูแลระบบเท่านั้น</p>
+        <label className="mt-8 block text-xs font-semibold uppercase tracking-[0.16em]">ชื่อผู้ใช้</label>
         <input
-          type="email"
           required
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          autoComplete="username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
           className="mt-2 w-full border border-input bg-background px-3 py-3 text-sm"
         />
         <label className="mt-5 block text-xs font-semibold uppercase tracking-[0.16em]">รหัสผ่าน</label>
         <input
           type="password"
           required
-          minLength={6}
+          autoComplete="current-password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           className="mt-2 w-full border border-input bg-background px-3 py-3 text-sm"
@@ -303,14 +302,7 @@ function SignIn() {
           disabled={busy}
           className="mt-8 w-full bg-primary px-5 py-4 text-xs font-semibold uppercase tracking-[0.18em] text-primary-foreground disabled:opacity-60"
         >
-          {mode === "in" ? "เข้าสู่ระบบ" : "สร้างบัญชีผู้ดูแล"}
-        </button>
-        <button
-          type="button"
-          onClick={() => setMode(mode === "in" ? "up" : "in")}
-          className="mt-4 w-full text-xs text-muted-foreground underline"
-        >
-          {mode === "in" ? "ยังไม่มีบัญชี? สร้างบัญชีผู้ดูแลคนแรก" : "มีบัญชีแล้ว เข้าสู่ระบบ"}
+          เข้าสู่ระบบ
         </button>
       </form>
     </div>
