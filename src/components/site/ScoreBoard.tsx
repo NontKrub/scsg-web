@@ -45,10 +45,10 @@ export function ScoreTable({ month, limit }: { month: Month; limit?: number }) {
               </span>
             </span>
             <span className="text-right">
-              <span className="num block text-2xl md:text-3xl">{r.score.toFixed(1)}%</span>
+              <span className="num block text-2xl md:text-3xl">{r.score.toFixed(2)}%</span>
               <span className="block text-xs text-muted-foreground">
                 {g >= 0 ? "+" : ""}
-                {g.toFixed(1)}
+                {g.toFixed(2)}
               </span>
             </span>
           </Link>
@@ -115,7 +115,7 @@ export function GrowthChart({ slugs, height = 340 }: { slugs: string[]; height?:
             axisLine={false}
           />
           <YAxis
-            domain={[75, 100]}
+            domain={[60, 100]}
             stroke="var(--color-muted-foreground)"
             tick={{ fontSize: 12 }}
             tickLine={false}
