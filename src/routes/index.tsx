@@ -187,14 +187,6 @@ function Home() {
               ONE CONGRESS.
             </>
           }
-          right={
-            <Link
-              to="/members"
-              className="inline-flex items-center gap-2 border border-input px-6 py-4 text-xs font-semibold uppercase tracking-[0.18em]"
-            >
-              หน้าสมาชิกทั้งหมด
-            </Link>
-          }
           sub="สโมสรนักเรียน 18 · ประธานบ้านสายกีฬา 9 · ผู้แทนชุมนุม 18 · ผู้แทนห้องเรียน 23"
         />
         <div className="mb-12 grid grid-cols-2 gap-px bg-border md:grid-cols-4">
