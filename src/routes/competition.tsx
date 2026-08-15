@@ -54,7 +54,8 @@ function Competition() {
           {[
             { house: hom, title: "HOUSE OF THE MONTH", th: "บ้านประจำเดือน" },
             { house: cex, title: "CHARACTER EXCELLENCE HOUSE", th: "บ้านคุณธรรมเยี่ยม" },
-          ].map((a) => (
+          ].filter((a): a is { house: NonNullable<typeof a.house>; title: string; th: string } => !!a.house).map((a) => (
+
             <div
               key={a.title}
               className={`${a.house.cls} relative overflow-hidden border border-gold/50 bg-navy px-8 py-10`}
