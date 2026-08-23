@@ -1,8 +1,11 @@
 import { useContent, ranking, rankOf, growth, honorsOf, membersOf, display } from "@/lib/content";
 import { createFileRoute } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
 import { Section, SectionHead, Tag } from "@/components/site/primitives";
 import { RADIO_DAYS, RADIO_SLOTS } from "@/data/sgsc";
+import { submitRadioBooking } from "@/lib/content.functions";
+
 
 export const Route = createFileRoute("/radio")({
   head: () => ({
