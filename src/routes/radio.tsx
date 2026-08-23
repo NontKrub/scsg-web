@@ -26,9 +26,13 @@ const STATE_TH: Record<string, string> = {
 function Radio() {
   const c = useContent();
   const [day, setDay] = useState(RADIO_DAYS[0]!);
-  const [slot, setSlot] = useState<string | null>(null);
-  const [sent, setSent] = useState(false);
+  const slot = RADIO_SLOTS[0]!;
+  const [form, setForm] = useState({ requester: "", klass: "", song: "", message: "" });
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [err, setErr] = useState("");
   const states = c.radioSchedule[day]!;
+  const closed = states[0] === "CLOSED";
+
 
   return (
     <>
