@@ -27,7 +27,9 @@ const STATE_TH: Record<string, string> = {
 };
 
 function Radio() {
+  const sendBooking = useServerFn(submitRadioBooking);
   const c = useContent();
+
   const [day, setDay] = useState(RADIO_DAYS[0]!);
   const slot = RADIO_SLOTS[0]!;
   const [form, setForm] = useState({ requester: "", klass: "", song: "", message: "" });
