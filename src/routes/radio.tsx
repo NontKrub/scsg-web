@@ -93,10 +93,7 @@ function Radio() {
               {RADIO_DAYS.map((d) => (
                 <button
                   key={d}
-                  onClick={() => {
-                    setDay(d);
-                    setSlot(RADIO_SLOTS[0]!);
-                  }}
+                  onClick={() => setDay(d)}
                   className={`px-4 py-2.5 text-xs font-semibold uppercase tracking-[0.14em] ${
                     day === d ? "bg-primary text-primary-foreground" : "border border-input bg-background"
                   }`}
@@ -107,28 +104,39 @@ function Radio() {
             </div>
             <p className="eyebrow mt-8">ช่วงเวลา</p>
             <div className="mt-3 border border-border bg-background p-4">
-              <span className="num text-sm">{RADIO_SLOTS[0]} น. เป็นต้นไป</span>
+              <span className="num text-sm">{slot} น. เป็นต้นไป</span>
               <span className="ml-3 text-xs text-muted-foreground">({STATE_TH[states[0]!]})</span>
             </div>
           </div>
 
           <form
-            onSubmit={(e) => {
+            onSubmit={async (e) => {
               e.preventDefault();
-              setSent(true);
+              setStatus("sending");
+              setErr("");
+              try {
+                await sendBooking({ data: { day, slot, ...form } });
+                setStatus("sent");
+                setForm({ requester: "", klass: "", song: "", message: "" });
+              } catch (e2) {
+                setErr(e2 instanceof Error ? e2.message : "ส่งคำขอไม่สำเร็จ");
+                setStatus("error");
+              }
             }}
             className="border border-border bg-background p-7"
           >
-            {[
-              { l: "ชื่อ-นามสกุล", t: "text", ph: "ชื่อของคุณ" },
-              { l: "ห้องเรียน", t: "text", ph: "ม.5/1" },
-              { l: "ชื่อเพลงที่ขอ", t: "text", ph: "ชื่อเพลง — ศิลปิน" },
-            ].map((f) => (
-              <label key={f.l} className="mb-5 block">
+            {([
+              { k: "requester", l: "ชื่อ-นามสกุล", ph: "ชื่อของคุณ" },
+              { k: "klass", l: "ห้องเรียน", ph: "ม.5/1" },
+              { k: "song", l: "ชื่อเพลงที่ขอ", ph: "ชื่อเพลง — ศิลปิน" },
+            ] as const).map((f) => (
+              <label key={f.k} className="mb-5 block">
                 <span className="eyebrow">{f.l}</span>
                 <input
                   required
-                  type={f.t}
+                  type="text"
+                  value={form[f.k]}
+                  onChange={(ev) => setForm((s) => ({ ...s, [f.k]: ev.target.value }))}
                   placeholder={f.ph}
                   maxLength={120}
                   className="mt-2 w-full border border-input bg-background px-4 py-3 text-sm outline-none focus:border-ring"
@@ -140,26 +148,30 @@ function Radio() {
               <textarea
                 rows={4}
                 maxLength={400}
+                value={form.message}
+                onChange={(ev) => setForm((s) => ({ ...s, message: ev.target.value }))}
                 placeholder="ข้อความสั้น ๆ ที่เหมาะสมกับบริบทโรงเรียน"
                 className="mt-2 w-full border border-input bg-background px-4 py-3 text-sm outline-none focus:border-ring"
               />
             </label>
             <p className="num mb-5 text-xs text-muted-foreground">
-              ช่วงที่เลือก: {day} {slot ?? "— ยังไม่เลือก"}
+              ช่วงที่เลือก: {day} {slot}
             </p>
             <button
               type="submit"
-              disabled={!slot}
+              disabled={status === "sending" || closed}
               className="w-full bg-primary px-6 py-4 text-xs font-semibold uppercase tracking-[0.18em] text-primary-foreground disabled:opacity-40"
             >
-              ส่งคำขอจองคิว
+              {closed ? "ช่วงเวลานี้ปิดรับ" : status === "sending" ? "กำลังส่ง…" : "ส่งคำขอจองคิว"}
             </button>
-            {sent && (
+            {status === "sent" && (
               <p className="mt-4 text-sm text-primary">
                 ส่งคำขอแล้ว · สถานะ “รออนุมัติ” จากทีมงาน SG Radio
               </p>
             )}
+            {status === "error" && <p className="mt-4 text-sm text-destructive">{err}</p>}
           </form>
+
         </div>
       </Section>
 
