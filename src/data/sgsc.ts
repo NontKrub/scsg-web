@@ -147,8 +147,8 @@ export const ORGS = [
     slug: "student-government",
     name: "STUDENT GOVERNMENT",
     nameTh: "สโมสรนักเรียน",
-    desc: "ฝ่ายบริหารของ SGSC 19 คน จากนายกสโมสรนักเรียนถึงกรรมการฝ่าย ดูแลกิจกรรมและบริการรวมถึง SG RADIO",
-    count: 19,
+    desc: "ฝ่ายบริหารของ SGSC 20 คน จากนายกสโมสรนักเรียนถึงกรรมการฝ่าย ดูแลกิจกรรมและบริการรวมถึง SG RADIO",
+    count: 20,
     to: "/student-government",
   },
 

@@ -47,8 +47,8 @@ const SECTIONS: SectionDef[] = [
   {
     key: "members",
     table: "members",
-    label: "สมาชิกสภา 67 คน",
-    subtitle: "ชื่อ ตำแหน่ง ชั้นเรียน หน้าที่ และรูปของสมาชิกทั้ง 67 ที่นั่ง",
+    label: "สมาชิกสภา 68 คน",
+    subtitle: "ชื่อ ตำแหน่ง ชั้นเรียน หน้าที่ และรูปของสมาชิกทั้ง 68 ที่นั่ง",
     primary: "role",
     fields: [
       t("name", "ชื่อ-นามสกุล"),
