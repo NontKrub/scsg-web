@@ -77,10 +77,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         name: "description",
         content:
-          "เว็บไซต์ทางการของสภานักเรียนโรงเรียนเซนต์คาเบรียล 67 ผู้นำนักเรียน 4 องค์กร 9 บ้านสายกีฬา",
+          "เว็บไซต์ทางการของสภานักเรียนโรงเรียนเซนต์คาเบรียล 68 ผู้นำนักเรียน 4 องค์กร 9 บ้านสายกีฬา",
       },
       { property: "og:title", content: "SGSC — Student Congress of Saint Gabriel's College" },
-      { property: "og:description", content: "67 ผู้นำนักเรียน · 4 องค์กร · 9 บ้านสายกีฬา" },
+      { property: "og:description", content: "68 ผู้นำนักเรียน · 4 องค์กร · 9 บ้านสายกีฬา" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],

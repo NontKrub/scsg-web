@@ -12,10 +12,10 @@ export const Route = createFileRoute("/about")({
       { title: "เกี่ยวกับ SGSC — สภานักเรียนเซนต์คาเบรียล" },
       {
         name: "description",
-        content: "67 นักเรียน 4 องค์กร หนึ่งสภา โครงสร้างและคณะกรรมการบริหารของ SGSC",
+        content: "68 นักเรียน 4 องค์กร หนึ่งสภา โครงสร้างและคณะกรรมการบริหารของ SGSC",
       },
       { property: "og:title", content: "เกี่ยวกับ SGSC" },
-      { property: "og:description", content: "67 STUDENTS. 4 ORGANIZATIONS. ONE CONGRESS." },
+      { property: "og:description", content: "68 STUDENTS. 4 ORGANIZATIONS. ONE CONGRESS." },
     ],
   }),
   component: About,
@@ -33,7 +33,7 @@ function About() {
         />
         <Tag>About SGSC</Tag>
         <h1 className="display-xl mt-6 text-[clamp(2.4rem,8vw,6rem)]">
-          67 STUDENTS.
+          68 STUDENTS.
           <br />
           4 ORGANIZATIONS.
           <br />
