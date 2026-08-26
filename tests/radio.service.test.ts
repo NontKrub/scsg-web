@@ -162,6 +162,38 @@ describe("RadioService reservation state machine", () => {
     );
   });
 
+  test("creates, closes, reopens, and edits an unused slot", async () => {
+    const { service } = await setup();
+
+    const created = await service.saveSlot(undefined, {
+      date: "2026-09-02",
+      startTime: "12:00",
+      note: "พักกลางวัน",
+    });
+    expect(created.state).toBe("AVAILABLE");
+
+    const closed = await service.closeSlot(created.id);
+    expect(closed.state).toBe("CLOSED");
+    const reopened = await service.reopenSlot(created.id);
+    expect(reopened.state).toBe("AVAILABLE");
+
+    const edited = await service.saveSlot(created.id, {
+      date: "2026-09-03",
+      startTime: "12:10",
+      note: "แก้เวลา",
+    });
+    expect(edited.date).toBe("2026-09-03");
+    expect(edited.startTime).toBe("12:10");
+  });
+
+  test("rejects impossible calendar dates", async () => {
+    const { service } = await setup();
+
+    await expect(
+      service.saveSlot(undefined, { date: "2026-02-30", startTime: "08:05", note: "" }),
+    ).rejects.toThrow("ข้อมูลตาราง SG Radio ไม่ถูกต้อง");
+  });
+
   test("rejects invalid booking input", () => {
     expect(() => normalizeRadioBookingInput(request("slot-sep1-0805", " "))).toThrow(
       "กรอกข้อมูลจอง",
