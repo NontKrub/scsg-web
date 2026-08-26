@@ -6,6 +6,8 @@ ALTER TABLE public.radio_slots RENAME COLUMN day TO legacy_day;
 ALTER TABLE public.radio_slots RENAME COLUMN slot TO legacy_slot;
 ALTER TABLE public.radio_slots DROP CONSTRAINT IF EXISTS radio_slots_day_slot_key;
 ALTER TABLE public.radio_slots
+  ALTER COLUMN legacy_day DROP NOT NULL,
+  ALTER COLUMN legacy_slot DROP NOT NULL,
   ADD COLUMN date date,
   ADD COLUMN start_time time without time zone,
   ADD COLUMN created_at timestamp with time zone NOT NULL DEFAULT now(),

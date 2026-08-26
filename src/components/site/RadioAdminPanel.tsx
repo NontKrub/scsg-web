@@ -286,25 +286,31 @@ function BookingRow({
           <p className="mt-1 text-xs text-muted-foreground">
             {booking.slot?.date ?? "legacy"} · {booking.slot?.startTime.slice(0, 5) ?? "—"}
           </p>
+          {!booking.slotId && (
+            <p className="mt-1 text-xs text-muted-foreground">ข้อมูลเดิมก่อนใช้ตารางวันที่จริง</p>
+          )}
         </div>
         <span className="border border-border px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.12em]">
           {booking.status}
         </span>
       </div>
-      {(booking.message || booking.additionalInfo) && (
-        <p className="mt-4 whitespace-pre-wrap text-sm text-muted-foreground">
-          {booking.message || booking.additionalInfo}
+      {booking.message && (
+        <p className="mt-4 whitespace-pre-wrap text-sm text-muted-foreground">{booking.message}</p>
+      )}
+      {booking.additionalInfo && (
+        <p className="mt-2 whitespace-pre-wrap text-sm text-muted-foreground">
+          ข้อมูลเพิ่มเติม: {booking.additionalInfo}
         </p>
       )}
       <div className="mt-4 flex flex-wrap gap-2">
-        {booking.status === "PENDING" && (
+        {booking.slotId && booking.status === "PENDING" && (
           <>
             <ActionButton busy={busy} label="อนุมัติ" onClick={() => onAction("approve")} />
             <ActionButton busy={busy} label="ปฏิเสธ" onClick={() => onAction("reject")} />
             <ActionButton busy={busy} label="ยกเลิก" onClick={() => onAction("cancel")} />
           </>
         )}
-        {booking.status === "APPROVED" && (
+        {booking.slotId && booking.status === "APPROVED" && (
           <ActionButton busy={busy} label="ทำเสร็จแล้ว" onClick={() => onAction("complete")} />
         )}
       </div>

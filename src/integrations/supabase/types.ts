@@ -455,8 +455,8 @@ export type Database = {
           created_at: string
           date: string | null
           id: string
-          legacy_day: string
-          legacy_slot: string
+          legacy_day: string | null
+          legacy_slot: string | null
           note: string
           start_time: string | null
           state: string
@@ -466,8 +466,8 @@ export type Database = {
           created_at?: string
           date?: string | null
           id?: string
-          legacy_day?: string
-          legacy_slot?: string
+          legacy_day?: string | null
+          legacy_slot?: string | null
           note?: string
           start_time?: string | null
           state?: string
@@ -477,8 +477,8 @@ export type Database = {
           created_at?: string
           date?: string | null
           id?: string
-          legacy_day?: string
-          legacy_slot?: string
+          legacy_day?: string | null
+          legacy_slot?: string | null
           note?: string
           start_time?: string | null
           state?: string
