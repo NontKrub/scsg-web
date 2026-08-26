@@ -43,22 +43,6 @@ The site is designed as a student-led public information and service platform ra
 - Student complaint and suggestion form with optional anonymous submission
 - Thai-first content with English visual headings and labels
 
-### Administration
-
-The protected admin console can manage:
-
-- Congress members
-- Congress executive board
-- Advisory board
-- Houses
-- House Competition scores and monthly honors
-- Clubs
-- News and publishing status
-- SG Radio slots and booking requests
-- Student complaints and their workflow status
-- Global site settings
-- Image fields used by editable content
-
 ### MCP integration
 
 The project also exposes MCP-compatible endpoints and tools for reading selected public SGSC information, including:
@@ -108,58 +92,6 @@ The project also exposes MCP-compatible endpoints and tools for reading selected
 | Package manager | Bun |
 | Icons | Lucide React |
 | Validation/forms | React Hook Form + Zod |
-
-## Getting started
-
-### 1. Clone the repository
-
-```bash
-git clone https://github.com/NontKrub/scsg-web.git
-cd scsg-web
-```
-
-### 2. Install dependencies
-
-```bash
-bun install
-```
-
-### 3. Configure environment variables
-
-For local development, create a `.env.local` file in the project root:
-
-```env
-# Browser / Vite
-VITE_SUPABASE_URL=your_supabase_project_url
-VITE_SUPABASE_PUBLISHABLE_KEY=your_supabase_publishable_key
-
-# Server-side authentication
-SUPABASE_URL=your_supabase_project_url
-SUPABASE_PUBLISHABLE_KEY=your_supabase_publishable_key
-
-# Server-only privileged operations
-SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
-```
-
-`SUPABASE_SERVICE_ROLE_KEY` is a privileged credential. It must only be available to the server runtime and must never be exposed to browser code.
-
-### 4. Configure the database
-
-Supabase migrations are stored in:
-
-```text
-supabase/migrations/
-```
-
-Apply the migrations to the Supabase project you intend to use. The application expects the database schema, policies, storage configuration, and supporting functions defined by these migrations.
-
-### 5. Start the development server
-
-```bash
-bun run dev
-```
-
-Open the local URL printed by Vite in your terminal.
 
 ## Available scripts
 
