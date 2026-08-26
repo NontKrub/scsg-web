@@ -86,7 +86,10 @@ export function RadioPage() {
     status: RadioBookingStatus;
   } | null>(null);
 
-  const slots = query.isError ? [] : (query.data?.slots ?? []);
+  const slots = useMemo(
+    () => (query.isError ? [] : (query.data?.slots ?? [])),
+    [query.data?.slots, query.isError],
+  );
   const rules = query.isError ? [] : (query.data?.rules ?? []);
   const dates = useMemo(() => [...new Set(slots.map((slot) => slot.date))].sort(), [slots]);
   const selectedSlots = useMemo(
