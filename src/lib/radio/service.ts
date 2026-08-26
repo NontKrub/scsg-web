@@ -40,16 +40,20 @@ function userError(error: unknown, fallback = "ไม่สามารถดำ
 
 function textValue(source: Record<string, unknown>, key: string, max: number, required = true) {
   const value = typeof source[key] === "string" ? source[key].trim() : "";
-  if (required && !value) throw new RadioServiceError("RADIO_INVALID_BOOKING", ERROR_MESSAGES.RADIO_INVALID_BOOKING);
-  if (value.length > max) throw new RadioServiceError("RADIO_INVALID_BOOKING", ERROR_MESSAGES.RADIO_INVALID_BOOKING);
+  const message = ERROR_MESSAGES["RADIO_INVALID_BOOKING"] ?? "กรอกข้อมูลจองให้ครบถ้วนและถูกต้อง";
+  if (required && !value) throw new RadioServiceError("RADIO_INVALID_BOOKING", message);
+  if (value.length > max) throw new RadioServiceError("RADIO_INVALID_BOOKING", message);
   return value;
 }
 
 export function normalizeRadioBookingInput(input: unknown): RadioBookingInput {
   const source = input && typeof input === "object" ? (input as Record<string, unknown>) : {};
   const slotId = textValue(source, "slotId", 80);
-  if (source.acceptedRules !== true) {
-    throw new RadioServiceError("RADIO_RULES_REQUIRED", ERROR_MESSAGES.RADIO_RULES_REQUIRED);
+  if (source["acceptedRules"] !== true) {
+    throw new RadioServiceError(
+      "RADIO_RULES_REQUIRED",
+      ERROR_MESSAGES["RADIO_RULES_REQUIRED"] ?? "กรุณายอมรับกติกาการใช้บริการ",
+    );
   }
   return {
     slotId,
@@ -69,7 +73,9 @@ function normalizeSlotDraft(input: unknown): RadioSlotDraft {
   const time = textValue(source, "startTime", 5);
   const validDate = /^\d{4}-\d{2}-\d{2}$/.test(date) && !Number.isNaN(Date.parse(`${date}T00:00:00Z`));
   const validTime = /^(?:[01]\d|2[0-3]):[0-5]\d$/.test(time);
-  if (!validDate || !validTime) throw new RadioServiceError("RADIO_INVALID_DATA", ERROR_MESSAGES.RADIO_INVALID_DATA);
+  if (!validDate || !validTime) {
+    throw new RadioServiceError("RADIO_INVALID_DATA", ERROR_MESSAGES["RADIO_INVALID_DATA"] ?? "ข้อมูลตาราง SG Radio ไม่ถูกต้อง");
+  }
   return { date, startTime: time, note: textValue(source, "note", 300, false) };
 }
 
@@ -80,7 +86,7 @@ export class RadioService {
     try {
       return await this.repository.getPageData();
     } catch (error) {
-      throw userError(error, ERROR_MESSAGES.RADIO_SCHEDULE_UNAVAILABLE);
+      throw userError(error, ERROR_MESSAGES["RADIO_SCHEDULE_UNAVAILABLE"] ?? "ไม่สามารถโหลดตาราง SG Radio ได้");
     }
   }
 
@@ -88,7 +94,7 @@ export class RadioService {
     try {
       return await this.repository.listSlots();
     } catch (error) {
-      throw userError(error, ERROR_MESSAGES.RADIO_SCHEDULE_UNAVAILABLE);
+      throw userError(error, ERROR_MESSAGES["RADIO_SCHEDULE_UNAVAILABLE"] ?? "ไม่สามารถโหลดตาราง SG Radio ได้");
     }
   }
 
@@ -127,7 +133,12 @@ export class RadioService {
   }
 
   async transition(id: string, nextStatus: RadioBookingStatus): Promise<RadioBooking> {
-    if (!id.trim()) throw new RadioServiceError("RADIO_BOOKING_NOT_FOUND", ERROR_MESSAGES.RADIO_BOOKING_NOT_FOUND);
+    if (!id.trim()) {
+      throw new RadioServiceError(
+        "RADIO_BOOKING_NOT_FOUND",
+        ERROR_MESSAGES["RADIO_BOOKING_NOT_FOUND"] ?? "ไม่พบคำขอจองนี้",
+      );
+    }
     try {
       return await this.repository.transitionBooking(id, nextStatus);
     } catch (error) {
@@ -153,7 +164,9 @@ export class RadioService {
   }
 
   private async slotAction(id: string, action: () => Promise<RadioSlot>) {
-    if (!id.trim()) throw new RadioServiceError("RADIO_SLOT_NOT_FOUND", ERROR_MESSAGES.RADIO_SLOT_NOT_FOUND);
+    if (!id.trim()) {
+      throw new RadioServiceError("RADIO_SLOT_NOT_FOUND", ERROR_MESSAGES["RADIO_SLOT_NOT_FOUND"] ?? "ไม่พบช่วงเวลานี้");
+    }
     try {
       return await action();
     } catch (error) {
