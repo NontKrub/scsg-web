@@ -378,39 +378,59 @@ export type Database = {
       }
       radio_bookings: {
         Row: {
+          additional_info: string
           created_at: string
-          day: string
           id: string
+          legacy_day: string
+          legacy_slot: string
           klass: string
           message: string
           requester: string
-          slot: string
+          slot_id: string | null
           song: string
+          student_id: string
           status: string
+          updated_at: string
         }
         Insert: {
+          additional_info?: string
           created_at?: string
-          day?: string
           id?: string
+          legacy_day?: string
+          legacy_slot?: string
           klass?: string
           message?: string
           requester?: string
-          slot?: string
+          slot_id?: string | null
           song?: string
+          student_id?: string
           status?: string
+          updated_at?: string
         }
         Update: {
+          additional_info?: string
           created_at?: string
-          day?: string
           id?: string
+          legacy_day?: string
+          legacy_slot?: string
           klass?: string
           message?: string
           requester?: string
-          slot?: string
+          slot_id?: string | null
           song?: string
+          student_id?: string
           status?: string
+          updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "radio_bookings_slot_id_fkey"
+            columns: ["slot_id"]
+            isOneToOne: false
+            referencedRelation: "radio_slots"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       radio_rules: {
         Row: {
@@ -432,25 +452,37 @@ export type Database = {
       }
       radio_slots: {
         Row: {
-          day: string
+          created_at: string
+          date: string | null
           id: string
+          legacy_day: string
+          legacy_slot: string
           note: string
-          slot: string
+          start_time: string | null
           state: string
+          updated_at: string
         }
         Insert: {
-          day: string
+          created_at?: string
+          date?: string | null
           id?: string
+          legacy_day?: string
+          legacy_slot?: string
           note?: string
-          slot: string
+          start_time?: string | null
           state?: string
+          updated_at?: string
         }
         Update: {
-          day?: string
+          created_at?: string
+          date?: string | null
           id?: string
+          legacy_day?: string
+          legacy_slot?: string
           note?: string
-          slot?: string
+          start_time?: string | null
           state?: string
+          updated_at?: string
         }
         Relationships: []
       }
@@ -495,7 +527,100 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      close_radio_slot: {
+        Args: { p_slot_id: string }
+        Returns: {
+          slot_id: string
+          slot_date: string
+          slot_start_time: string
+          slot_state: string
+          slot_note: string
+          slot_created_at: string
+          slot_updated_at: string
+        }[]
+      }
+      create_radio_slot: {
+        Args: { p_date: string; p_note: string; p_start_time: string }
+        Returns: {
+          slot_id: string
+          slot_date: string
+          slot_start_time: string
+          slot_state: string
+          slot_note: string
+          slot_created_at: string
+          slot_updated_at: string
+        }[]
+      }
+      reopen_radio_slot: {
+        Args: { p_slot_id: string }
+        Returns: {
+          slot_id: string
+          slot_date: string
+          slot_start_time: string
+          slot_state: string
+          slot_note: string
+          slot_created_at: string
+          slot_updated_at: string
+        }[]
+      }
+      reserve_radio_slot: {
+        Args: {
+          p_additional_info: string
+          p_klass: string
+          p_message: string
+          p_requester: string
+          p_slot_id: string
+          p_song: string
+          p_student_id: string
+        }
+        Returns: {
+          additional_info: string
+          booking_created_at: string
+          booking_id: string
+          booking_slot_id: string
+          booking_status: string
+          booking_updated_at: string
+          klass: string
+          message: string
+          requester: string
+          slot_date: string
+          slot_start_time: string
+          slot_state: string
+          song: string
+          student_id: string
+        }[]
+      }
+      transition_radio_booking: {
+        Args: { p_booking_id: string; p_next_status: string }
+        Returns: {
+          additional_info: string
+          booking_created_at: string
+          booking_id: string
+          booking_slot_id: string
+          booking_status: string
+          booking_updated_at: string
+          klass: string
+          message: string
+          requester: string
+          slot_date: string | null
+          slot_start_time: string | null
+          slot_state: string | null
+          song: string
+          student_id: string
+        }[]
+      }
+      update_radio_slot: {
+        Args: { p_date: string; p_note: string; p_slot_id: string; p_start_time: string }
+        Returns: {
+          slot_id: string
+          slot_date: string
+          slot_start_time: string
+          slot_state: string
+          slot_note: string
+          slot_created_at: string
+          slot_updated_at: string
+        }[]
+      }
     }
     Enums: {
       app_role: "admin"

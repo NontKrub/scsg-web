@@ -1,4 +1,7 @@
 import "./lib/error-capture";
+import { installSupabaseNetworkGuard } from "./lib/radio/network-guard";
+
+installSupabaseNetworkGuard();
 
 import { consumeLastCapturedError } from "./lib/error-capture";
 import { renderErrorPage } from "./lib/error-page";

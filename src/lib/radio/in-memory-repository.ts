@@ -11,7 +11,13 @@ import type {
 
 const stamp = "2026-08-26T00:00:00.000Z";
 
-function makeSlot(id: string, date: string, startTime: string, state: RadioSlot["state"], note = ""): RadioSlot {
+function makeSlot(
+  id: string,
+  date: string,
+  startTime: string,
+  state: RadioSlot["state"],
+  note = "",
+): RadioSlot {
   return { id, date, startTime, state, note, createdAt: stamp, updatedAt: stamp };
 }
 
@@ -62,7 +68,10 @@ export class InMemoryRadioRepository implements RadioRepository {
   }
 
   getPageData(): Promise<RadioPageData> {
-    return Promise.resolve({ slots: this.copySlots(), rules: ["ขอเพลงและข้อความที่เหมาะสมกับบริบทโรงเรียน", "ส่งคำขอล่วงหน้าเพื่อรอทีมงานอนุมัติ"] });
+    return Promise.resolve({
+      slots: this.copySlots(),
+      rules: ["ขอเพลงและข้อความที่เหมาะสมกับบริบทโรงเรียน", "ส่งคำขอล่วงหน้าเพื่อรอทีมงานอนุมัติ"],
+    });
   }
 
   listSlots() {
@@ -110,7 +119,9 @@ export class InMemoryRadioRepository implements RadioRepository {
         nextSlotState = slotStateAfterBookingTransition(booking.status, nextStatus, slot.state);
       } catch (error) {
         throw new RadioRepositoryError(
-          error instanceof Error && error.message === "RADIO_INVALID_DATA" ? "RADIO_INVALID_DATA" : "RADIO_INVALID_TRANSITION",
+          error instanceof Error && error.message === "RADIO_INVALID_DATA"
+            ? "RADIO_INVALID_DATA"
+            : "RADIO_INVALID_TRANSITION",
         );
       }
       booking.status = nextStatus;
@@ -124,11 +135,19 @@ export class InMemoryRadioRepository implements RadioRepository {
 
   createSlot(input: RadioSlotDraft) {
     return this.atomic(() => {
-      if (this.slots.some((slot) => slot.date === input.date && slot.startTime === input.startTime)) {
+      if (
+        this.slots.some((slot) => slot.date === input.date && slot.startTime === input.startTime)
+      ) {
         throw new RadioRepositoryError("RADIO_SLOT_CONFLICT");
       }
       const now = new Date().toISOString();
-      const slot = makeSlot(crypto.randomUUID(), input.date, input.startTime, "AVAILABLE", input.note);
+      const slot = makeSlot(
+        crypto.randomUUID(),
+        input.date,
+        input.startTime,
+        "AVAILABLE",
+        input.note,
+      );
       slot.createdAt = now;
       slot.updatedAt = now;
       this.slots.push(slot);
@@ -139,8 +158,13 @@ export class InMemoryRadioRepository implements RadioRepository {
   updateSlot(id: string, input: RadioSlotDraft) {
     return this.atomic(() => {
       const slot = this.findSlot(id);
-      if (slot.state === "PENDING" || slot.state === "BOOKED") throw new RadioRepositoryError("RADIO_SLOT_ACTIVE");
-      if (this.slots.some((row) => row.id !== id && row.date === input.date && row.startTime === input.startTime)) {
+      if (slot.state === "PENDING" || slot.state === "BOOKED")
+        throw new RadioRepositoryError("RADIO_SLOT_ACTIVE");
+      if (
+        this.slots.some(
+          (row) => row.id !== id && row.date === input.date && row.startTime === input.startTime,
+        )
+      ) {
         throw new RadioRepositoryError("RADIO_SLOT_CONFLICT");
       }
       slot.date = input.date;

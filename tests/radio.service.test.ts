@@ -1,6 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import { InMemoryRadioRepository } from "@/lib/radio/in-memory-repository";
-import { RadioService } from "@/lib/radio/service";
+import type { RadioRepository } from "@/lib/radio/repository";
+import { normalizeRadioBookingInput, RadioService } from "@/lib/radio/service";
 
 const request = (slotId: string, name = "นักเรียน ทดสอบ") => ({
   slotId,
@@ -20,7 +21,11 @@ async function setup() {
   return { repository, service, slots };
 }
 
-function slotId(slots: Awaited<ReturnType<InMemoryRadioRepository["listSlots"]>>, date: string, time: string) {
+function slotId(
+  slots: Awaited<ReturnType<InMemoryRadioRepository["listSlots"]>>,
+  date: string,
+  time: string,
+) {
   return slots.find((slot) => slot.date === date && slot.startTime === time)?.id ?? "missing-slot";
 }
 
@@ -60,7 +65,10 @@ describe("RadioService reservation state machine", () => {
     const { repository, service, slots } = await setup();
     const id = slotId(slots, "2026-09-01", "08:05");
 
-    const results = await Promise.allSettled([service.reserve(request(id, "คนที่หนึ่ง")), service.reserve(request(id, "คนที่สอง"))]);
+    const results = await Promise.allSettled([
+      service.reserve(request(id, "คนที่หนึ่ง")),
+      service.reserve(request(id, "คนที่สอง")),
+    ]);
     const bookings = await repository.listBookings();
 
     expect(results.filter((result) => result.status === "fulfilled")).toHaveLength(1);
@@ -92,6 +100,30 @@ describe("RadioService reservation state machine", () => {
     expect(updated?.state).toBe("AVAILABLE");
   });
 
+  test("cancelling a pending booking releases its slot", async () => {
+    const { repository, service, slots } = await setup();
+    const pendingSlot = slotId(slots, "2026-08-31", "08:25");
+    const booking = (await repository.listBookings()).find((row) => row.slotId === pendingSlot)!;
+
+    const cancelled = await service.cancel(booking.id);
+    const updated = (await repository.listSlots()).find((slot) => slot.id === pendingSlot);
+
+    expect(cancelled.status).toBe("CANCELLED");
+    expect(updated?.state).toBe("AVAILABLE");
+  });
+
+  test("completion keeps an approved slot BOOKED", async () => {
+    const { repository, service, slots } = await setup();
+    const approvedSlot = slotId(slots, "2026-08-31", "08:15");
+    const booking = (await repository.listBookings()).find((row) => row.slotId === approvedSlot)!;
+
+    const completed = await service.complete(booking.id);
+    const updated = (await repository.listSlots()).find((slot) => slot.id === approvedSlot);
+
+    expect(completed.status).toBe("COMPLETED");
+    expect(updated?.state).toBe("BOOKED");
+  });
+
   test("keeps two Mondays independent", async () => {
     const { repository, service, slots } = await setup();
     const first = slotId(slots, "2026-08-31", "08:05");
@@ -113,5 +145,29 @@ describe("RadioService reservation state machine", () => {
     await expect(service.approve(approved.id)).rejects.toThrow("ไม่สามารถเปลี่ยนสถานะ");
     await service.reject(rejected.id);
     await expect(service.approve(rejected.id)).rejects.toThrow("ไม่สามารถเปลี่ยนสถานะ");
+    await expect(service.transition(approved.id, "PENDING")).rejects.toThrow(
+      "ไม่สามารถเปลี่ยนสถานะ",
+    );
+  });
+
+  test("maps schedule load failure to a safe error", async () => {
+    class BrokenRepository extends InMemoryRadioRepository {
+      override getPageData(): ReturnType<RadioRepository["getPageData"]> {
+        return Promise.reject(new Error("network down"));
+      }
+    }
+
+    await expect(new RadioService(new BrokenRepository()).getPageData()).rejects.toThrow(
+      "ไม่สามารถโหลดตาราง SG Radio ได้",
+    );
+  });
+
+  test("rejects invalid booking input", () => {
+    expect(() => normalizeRadioBookingInput(request("slot-sep1-0805", " "))).toThrow(
+      "กรอกข้อมูลจอง",
+    );
+    expect(() =>
+      normalizeRadioBookingInput({ ...request("slot-sep1-0805"), acceptedRules: false }),
+    ).toThrow("ยอมรับกติกา");
   });
 });

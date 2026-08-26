@@ -1,5 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import type { Database } from "@/integrations/supabase/types";
+import type { RadioBookingInput } from "./radio/types";
 
 function publicClient() {
   const key = process.env["SUPABASE_PUBLISHABLE_KEY"]!;
@@ -16,18 +17,19 @@ function publicClient() {
   });
 }
 
-export async function insertRadioBooking(row: {
-  day: string;
-  slot: string;
-  requester: string;
-  klass: string;
-  song: string;
-  message: string;
-}) {
-  const db = publicClient();
-  const { error } = await db.from("radio_bookings").insert({ ...row, status: "PENDING" });
-  if (error) throw new Error(error.message);
-  return { ok: true };
+export async function insertRadioBooking(row: RadioBookingInput) {
+  const { getRadioService } = await import("./radio/server");
+  const booking = await getRadioService().reserve(row);
+  return {
+    ok: true,
+    booking: {
+      id: booking.id,
+      slotId: booking.slotId,
+      date: booking.slot?.date ?? "",
+      startTime: booking.slot?.startTime ?? "",
+      status: booking.status,
+    },
+  };
 }
 
 export async function insertComplaint(row: {

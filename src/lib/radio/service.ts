@@ -33,8 +33,16 @@ const ERROR_MESSAGES: Record<string, string> = {
   RADIO_SCHEDULE_UNAVAILABLE: "ไม่สามารถโหลดตาราง SG Radio ได้",
 };
 
-function userError(error: unknown, fallback = "ไม่สามารถดำเนินการ SG Radio ได้"): RadioServiceError {
-  const code = error instanceof RadioRepositoryError ? error.code : error instanceof Error ? error.message : "";
+function userError(
+  error: unknown,
+  fallback = "ไม่สามารถดำเนินการ SG Radio ได้",
+): RadioServiceError {
+  const code =
+    error instanceof RadioRepositoryError
+      ? error.code
+      : error instanceof Error
+        ? error.message
+        : "";
   return new RadioServiceError(code, ERROR_MESSAGES[code] ?? fallback);
 }
 
@@ -71,10 +79,21 @@ function normalizeSlotDraft(input: unknown): RadioSlotDraft {
   const source = input && typeof input === "object" ? (input as Record<string, unknown>) : {};
   const date = textValue(source, "date", 10);
   const time = textValue(source, "startTime", 5);
-  const validDate = /^\d{4}-\d{2}-\d{2}$/.test(date) && !Number.isNaN(Date.parse(`${date}T00:00:00Z`));
+  const dateParts = date.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  const parsedDate = dateParts
+    ? new Date(Date.UTC(Number(dateParts[1]), Number(dateParts[2]) - 1, Number(dateParts[3])))
+    : null;
+  const validDate =
+    parsedDate !== null &&
+    parsedDate.getUTCFullYear() === Number(dateParts?.[1]) &&
+    parsedDate.getUTCMonth() === Number(dateParts?.[2]) - 1 &&
+    parsedDate.getUTCDate() === Number(dateParts?.[3]);
   const validTime = /^(?:[01]\d|2[0-3]):[0-5]\d$/.test(time);
   if (!validDate || !validTime) {
-    throw new RadioServiceError("RADIO_INVALID_DATA", ERROR_MESSAGES["RADIO_INVALID_DATA"] ?? "ข้อมูลตาราง SG Radio ไม่ถูกต้อง");
+    throw new RadioServiceError(
+      "RADIO_INVALID_DATA",
+      ERROR_MESSAGES["RADIO_INVALID_DATA"] ?? "ข้อมูลตาราง SG Radio ไม่ถูกต้อง",
+    );
   }
   return { date, startTime: time, note: textValue(source, "note", 300, false) };
 }
@@ -86,7 +105,10 @@ export class RadioService {
     try {
       return await this.repository.getPageData();
     } catch (error) {
-      throw userError(error, ERROR_MESSAGES["RADIO_SCHEDULE_UNAVAILABLE"] ?? "ไม่สามารถโหลดตาราง SG Radio ได้");
+      throw userError(
+        error,
+        ERROR_MESSAGES["RADIO_SCHEDULE_UNAVAILABLE"] ?? "ไม่สามารถโหลดตาราง SG Radio ได้",
+      );
     }
   }
 
@@ -94,7 +116,10 @@ export class RadioService {
     try {
       return await this.repository.listSlots();
     } catch (error) {
-      throw userError(error, ERROR_MESSAGES["RADIO_SCHEDULE_UNAVAILABLE"] ?? "ไม่สามารถโหลดตาราง SG Radio ได้");
+      throw userError(
+        error,
+        ERROR_MESSAGES["RADIO_SCHEDULE_UNAVAILABLE"] ?? "ไม่สามารถโหลดตาราง SG Radio ได้",
+      );
     }
   }
 
@@ -149,7 +174,9 @@ export class RadioService {
   async saveSlot(id: string | undefined, input: unknown): Promise<RadioSlot> {
     const draft = normalizeSlotDraft(input);
     try {
-      return id ? await this.repository.updateSlot(id, draft) : await this.repository.createSlot(draft);
+      return id
+        ? await this.repository.updateSlot(id, draft)
+        : await this.repository.createSlot(draft);
     } catch (error) {
       throw userError(error);
     }
@@ -165,7 +192,10 @@ export class RadioService {
 
   private async slotAction(id: string, action: () => Promise<RadioSlot>) {
     if (!id.trim()) {
-      throw new RadioServiceError("RADIO_SLOT_NOT_FOUND", ERROR_MESSAGES["RADIO_SLOT_NOT_FOUND"] ?? "ไม่พบช่วงเวลานี้");
+      throw new RadioServiceError(
+        "RADIO_SLOT_NOT_FOUND",
+        ERROR_MESSAGES["RADIO_SLOT_NOT_FOUND"] ?? "ไม่พบช่วงเวลานี้",
+      );
     }
     try {
       return await action();

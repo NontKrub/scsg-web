@@ -1,5 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { isRadioMemoryBackend } from "./radio/config";
 
 const TABLES = {
   houses: { pk: "id", order: "sort" },
@@ -11,8 +12,6 @@ const TABLES = {
   clubs: { pk: "id", order: "sort" },
   news: { pk: "id", order: "created_at" },
 
-  radio_slots: { pk: "id", order: "day" },
-  radio_bookings: { pk: "id", order: "created_at" },
   radio_rules: { pk: "id", order: "sort" },
   complaints: { pk: "id", order: "created_at" },
   site_settings: { pk: "key", order: "key" },
@@ -28,6 +27,7 @@ const table = (name: string) => {
 };
 
 async function isAdmin(ctx: { supabase: any; userId: string }) {
+  if (isRadioMemoryBackend()) return true;
   const { data, error } = await ctx.supabase
     .from("user_roles")
     .select("role")
@@ -59,7 +59,7 @@ export const checkAdmin = createServerFn({ method: "GET" })
 /** Reads any managed table. */
 export const adminList = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((data: { table: string }) => ({ table: data.table }))
+  .validator((data: { table: string }) => ({ table: data.table }))
   .handler(async ({ data, context }) => {
     await assertAdmin(context);
     const t = table(data.table);
@@ -72,7 +72,7 @@ export const adminList = createServerFn({ method: "GET" })
 /** Creates or updates a row. */
 export const adminSave = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((data: { table: string; row: Record<string, any> }) => ({
+  .validator((data: { table: string; row: Record<string, any> }) => ({
     table: data.table,
     row: data.row ?? {},
   }))
@@ -96,7 +96,7 @@ export const adminSave = createServerFn({ method: "POST" })
 /** Deletes a row. */
 export const adminDelete = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((data: { table: string; id: string }) => ({ table: data.table, id: String(data.id) }))
+  .validator((data: { table: string; id: string }) => ({ table: data.table, id: String(data.id) }))
   .handler(async ({ data, context }) => {
     await assertAdmin(context);
     const t = table(data.table);
@@ -113,7 +113,7 @@ export const adminDelete = createServerFn({ method: "POST" })
 /** Bulk-saves the monthly score grid. */
 export const adminSaveScores = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((data: { month: string; scores: { house_slug: string; score: number }[] }) => ({
+  .validator((data: { month: string; scores: { house_slug: string; score: number }[] }) => ({
     month: String(data.month),
     scores: (data.scores ?? []).map((s) => ({
       house_slug: String(s.house_slug),
@@ -133,4 +133,76 @@ export const adminSaveScores = createServerFn({ method: "POST" })
       actor: (context.claims as { email?: string }).email ?? context.userId,
     });
     return { ok: true };
+  });
+
+type RadioAdminAction = "approve" | "reject" | "complete" | "cancel" | "close" | "reopen";
+
+async function radioAdminService(context: { supabase: any; userId: string }) {
+  await assertAdmin(context);
+  const { getRadioService } = await import("./radio/server");
+  return getRadioService(isRadioMemoryBackend() ? undefined : context.supabase);
+}
+
+async function auditRadioAction(context: { supabase: any; userId: string; claims: unknown }, action: string) {
+  if (isRadioMemoryBackend()) return;
+  await context.supabase.from("audit_log").insert({
+    action: `SG Radio: ${action}`,
+    actor: (context.claims as { email?: string }).email ?? context.userId,
+  });
+}
+
+/** Reads the schedule and booking queue through the Radio boundary. */
+export const getRadioAdminData = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const service = await radioAdminService(context);
+    const [slots, bookings] = await Promise.all([service.listSlots(), service.listBookings()]);
+    return { slots, bookings };
+  });
+
+/** Creates or edits a date-based schedule row. */
+export const saveRadioSlot = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .validator((data: { id?: string; date: string; startTime: string; note: string }) => ({
+    id: data.id ? String(data.id) : undefined,
+    date: String(data.date ?? ""),
+    startTime: String(data.startTime ?? ""),
+    note: String(data.note ?? ""),
+  }))
+  .handler(async ({ data, context }) => {
+    const service = await radioAdminService(context);
+    const slot = await service.saveSlot(data.id, {
+      date: data.date,
+      startTime: data.startTime,
+      note: data.note,
+    });
+    await auditRadioAction(context, data.id ? "แก้ไขช่วงเวลา" : "เพิ่มช่วงเวลา");
+    return slot;
+  });
+
+/** Runs one named, validated Radio transition. */
+export const radioAdminAction = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .validator((data: { action: string; id: string }) => {
+    const action = String(data.action);
+    if (!( ["approve", "reject", "complete", "cancel", "close", "reopen"] as string[]).includes(action)) {
+      throw new Error("การดำเนินการ SG Radio ไม่ถูกต้อง");
+    }
+    return { action: action as RadioAdminAction, id: String(data.id) };
+  })
+  .handler(async ({ data, context }) => {
+    const service = await radioAdminService(context);
+    const result = data.action === "approve"
+      ? await service.approve(data.id)
+      : data.action === "reject"
+        ? await service.reject(data.id)
+        : data.action === "complete"
+          ? await service.complete(data.id)
+          : data.action === "cancel"
+            ? await service.cancel(data.id)
+            : data.action === "close"
+              ? await service.closeSlot(data.id)
+              : await service.reopenSlot(data.id);
+    await auditRadioAction(context, data.action);
+    return result;
   });

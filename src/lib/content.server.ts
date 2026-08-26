@@ -3,12 +3,11 @@ import type { Database } from "@/integrations/supabase/types";
 import {
   EMBLEMS,
   MONTHS,
-  RADIO_DAYS,
-  RADIO_SLOTS,
   type Month,
   type SiteContent,
-  type SlotState,
 } from "@/data/sgsc";
+import { isRadioMemoryBackend } from "./radio/config";
+import { getRadioService } from "./radio/server";
 
 function publicClient() {
   const key = process.env["SUPABASE_PUBLISHABLE_KEY"]!;
@@ -30,6 +29,20 @@ const zeroScores = () =>
 
 /** Loads the entire public site content from the database. */
 export async function loadContent(): Promise<SiteContent> {
+  if (isRadioMemoryBackend()) {
+    return {
+      settings: {},
+      currentMonth: "AUG",
+      houses: [],
+      honors: {},
+      members: [],
+      congressBoard: [],
+      advisoryBoard: [],
+      clubs: [],
+      news: [],
+    };
+  }
+
   const db = publicClient();
 
   const [
@@ -42,8 +55,6 @@ export async function loadContent(): Promise<SiteContent> {
     advisors,
     clubs,
     news,
-    slots,
-    rules,
   ] = await Promise.all([
     db.from("site_settings").select("key,value"),
     db.from("houses").select("*").order("sort"),
@@ -54,8 +65,6 @@ export async function loadContent(): Promise<SiteContent> {
     db.from("advisory_board").select("*").order("sort"),
     db.from("clubs").select("*").order("sort"),
     db.from("news").select("*").eq("published", true).order("sort").order("created_at", { ascending: false }),
-    db.from("radio_slots").select("*"),
-    db.from("radio_rules").select("*").order("sort"),
   ]);
 
 
@@ -67,14 +76,6 @@ export async function loadContent(): Promise<SiteContent> {
   for (const s of scores.data ?? []) {
     const rec = scoreMap.get(s.house_slug);
     if (rec && (MONTHS as readonly string[]).includes(s.month)) rec[s.month as Month] = Number(s.score);
-  }
-
-  const radioSchedule: Record<string, SlotState[]> = {};
-  for (const day of RADIO_DAYS) {
-    radioSchedule[day] = RADIO_SLOTS.map((slot) => {
-      const row = (slots.data ?? []).find((s) => s.day === day && s.slot === slot);
-      return (row?.state ?? "AVAILABLE") as SlotState;
-    });
   }
 
   return {
@@ -151,7 +152,9 @@ export async function loadContent(): Promise<SiteContent> {
       coverUrl: n.cover_url || undefined,
     })),
 
-    radioSchedule,
-    radioRules: (rules.data ?? []).map((r) => r.text),
   };
+}
+
+export async function loadRadioPage() {
+  return getRadioService().getPageData();
 }
