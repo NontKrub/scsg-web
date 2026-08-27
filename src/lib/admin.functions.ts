@@ -1,5 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { validateAdminRow, validateScoreBatch } from "./admin.validation";
 
 const TABLES = {
   houses: { pk: "id", order: "sort" },
@@ -24,6 +25,19 @@ const table = (name: string) => {
   if (!t) throw new Error(`ตารางไม่ถูกต้อง: ${name}`);
   return { name: name as AdminTable, ...t };
 };
+
+function validateTableInput(data: unknown) {
+  if (
+    !data ||
+    typeof data !== "object" ||
+    typeof (data as Record<string, unknown>)["table"] !== "string"
+  ) {
+    throw new Error("ข้อมูลตารางไม่ถูกต้อง");
+  }
+  const tableName = (data as Record<string, unknown>)["table"];
+  if (typeof tableName !== "string") throw new Error("ข้อมูลตารางไม่ถูกต้อง");
+  return { table: tableName };
+}
 
 export async function isAdmin(ctx: { supabase: any; userId: string }) {
   const { data, error } = await ctx.supabase
@@ -57,7 +71,7 @@ export const checkAdmin = createServerFn({ method: "GET" })
 /** Reads any managed table. */
 export const adminList = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .validator((data: { table: string }) => ({ table: data.table }))
+  .validator(validateTableInput)
   .handler(async ({ data, context }) => {
     await assertAdmin(context);
     const t = table(data.table);
@@ -70,10 +84,13 @@ export const adminList = createServerFn({ method: "GET" })
 /** Creates or updates a row. */
 export const adminSave = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .validator((data: { table: string; row: Record<string, any> }) => ({
-    table: data.table,
-    row: data.row ?? {},
-  }))
+  .validator((data: unknown) => {
+    if (!data || typeof data !== "object") throw new Error("ข้อมูลผู้ดูแลไม่ถูกต้อง");
+    const input = data as Record<string, unknown>;
+    const tableName = input["table"];
+    if (typeof tableName !== "string") throw new Error("ข้อมูลตารางไม่ถูกต้อง");
+    return { table: tableName, row: validateAdminRow(tableName, input["row"]) };
+  })
   .handler(async ({ data, context }) => {
     await assertAdmin(context);
     const t = table(data.table);
@@ -94,7 +111,16 @@ export const adminSave = createServerFn({ method: "POST" })
 /** Deletes a row. */
 export const adminDelete = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .validator((data: { table: string; id: string }) => ({ table: data.table, id: String(data.id) }))
+  .validator((data: unknown) => {
+    if (!data || typeof data !== "object") throw new Error("ข้อมูลผู้ดูแลไม่ถูกต้อง");
+    const input = data as Record<string, unknown>;
+    const tableName = input["table"];
+    const rowId = input["id"];
+    if (typeof tableName !== "string" || typeof rowId !== "string" || !rowId.trim()) {
+      throw new Error("ข้อมูลผู้ดูแลไม่ถูกต้อง");
+    }
+    return { table: tableName, id: rowId.trim() };
+  })
   .handler(async ({ data, context }) => {
     await assertAdmin(context);
     const t = table(data.table);
@@ -111,19 +137,16 @@ export const adminDelete = createServerFn({ method: "POST" })
 /** Bulk-saves the monthly score grid. */
 export const adminSaveScores = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .validator((data: { month: string; scores: { house_slug: string; score: number }[] }) => ({
-    month: String(data.month),
-    scores: (data.scores ?? []).map((s) => ({
-      house_slug: String(s.house_slug),
-      score: Math.max(0, Math.min(100, Number(s.score) || 0)),
-    })),
-  }))
+  .validator(validateScoreBatch)
   .handler(async ({ data, context }) => {
     await assertAdmin(context);
-    for (const s of data.scores) {
+    for (const score of data.scores) {
       const res = await (context.supabase as any)
         .from("house_scores")
-        .upsert({ house_slug: s.house_slug, month: data.month, score: s.score }, { onConflict: "house_slug,month" });
+        .upsert(
+          { ...score, month: data.month },
+          { onConflict: "house_slug,month" },
+        );
       if (res.error) throw new Error(res.error.message);
     }
     await context.supabase.from("audit_log").insert({
