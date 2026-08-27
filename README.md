@@ -100,6 +100,7 @@ bun run dev        # Start the development server
 bun run build      # Create a production build
 bun run build:dev  # Build using development mode
 bun run preview    # Preview the production build locally
+bun run typecheck  # Check TypeScript without emitting files
 bun run lint       # Run ESLint
 bun run format     # Format the codebase with Prettier
 ```
