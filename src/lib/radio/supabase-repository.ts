@@ -106,7 +106,15 @@ export function createSupabaseRadioRepository(db: RadioDb): RadioRepository {
     const result = await db
       .from("radio_slots")
       .select("id,date,start_time,state,note,created_at,updated_at")
-      .gte("date", new Date().toISOString().slice(0, 10))
+      .gte(
+        "date",
+        new Intl.DateTimeFormat("en-CA", {
+          timeZone: "Asia/Bangkok",
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+        }).format(new Date()),
+      )
       .not("date", "is", null)
       .not("start_time", "is", null)
       .order("date", { ascending: true })

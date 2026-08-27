@@ -73,7 +73,15 @@ describe("Supabase Radio read bounds", () => {
     await repository.listSlots();
     await repository.listBookings();
 
-    expect(calls.some(([kind, column]) => kind === "gte" && column === "date")).toBe(true);
+    expect(
+      calls.some(
+        ([kind, column, value]) =>
+          kind === "gte" &&
+          column === "date" &&
+          typeof value === "string" &&
+          /^\d{4}-\d{2}-\d{2}$/.test(value),
+      ),
+    ).toBe(true);
     expect(calls).toContainEqual(["order", "created_at", { ascending: false }]);
     expect(calls).toContainEqual(["limit", 200]);
   });
