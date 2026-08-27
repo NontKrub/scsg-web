@@ -21,6 +21,10 @@ dist-ssr
 .env.*
 !.env.example
 
+# Supabase local development state
+supabase/.branches/
+supabase/.temp/
+
 # Wrangler / Cloudflare
 .wrangler/
 .dev.vars
