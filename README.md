@@ -195,6 +195,7 @@ The current Vite/TanStack configuration uses Nitro and defaults to a **Cloudflar
 - Keep Supabase Row Level Security policies enabled for user-accessible tables.
 - Privileged writes should stay inside trusted server-side functions.
 - Review database migrations and access policies before deploying changes to production.
+- Public forms use server-side validation and a honeypot. Add persistent rate limiting at the deployment edge before exposing them to untrusted high-volume traffic.
 
 ## Development notes
 

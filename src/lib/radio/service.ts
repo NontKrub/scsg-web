@@ -56,6 +56,13 @@ function textValue(source: Record<string, unknown>, key: string, max: number, re
 
 export function normalizeRadioBookingInput(input: unknown): RadioBookingInput {
   const source = input && typeof input === "object" ? (input as Record<string, unknown>) : {};
+  const honeypot = source["website"];
+  if (typeof honeypot === "string" && honeypot.trim()) {
+    throw new RadioServiceError(
+      "RADIO_INVALID_BOOKING",
+      ERROR_MESSAGES["RADIO_INVALID_BOOKING"] ?? "กรอกข้อมูลจองให้ครบถ้วนและถูกต้อง",
+    );
+  }
   const slotId = textValue(source, "slotId", 80);
   if (source["acceptedRules"] !== true) {
     throw new RadioServiceError(

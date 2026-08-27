@@ -199,6 +199,9 @@ describe("RadioService reservation state machine", () => {
       "กรอกข้อมูลจอง",
     );
     expect(() =>
+      normalizeRadioBookingInput({ ...request("slot-sep1-0805"), website: "https://bot.invalid" }),
+    ).toThrow("กรอกข้อมูลจอง");
+    expect(() =>
       normalizeRadioBookingInput({ ...request("slot-sep1-0805"), acceptedRules: false }),
     ).toThrow("ยอมรับกติกา");
   });

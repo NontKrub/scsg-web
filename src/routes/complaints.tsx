@@ -47,6 +47,7 @@ function ComplaintsPage() {
     reporter: "",
     klass: "",
     contact: "",
+    website: "",
   });
   const [done, setDone] = useState(false);
 
@@ -57,7 +58,15 @@ function ComplaintsPage() {
     mutationFn: () => send({ data: { ...form, anonymous } }),
     onSuccess: () => {
       setDone(true);
-      setForm({ subject: "", cat: "FACILITY", detail: "", reporter: "", klass: "", contact: "" });
+      setForm({
+        subject: "",
+        cat: "FACILITY",
+        detail: "",
+        reporter: "",
+        klass: "",
+        contact: "",
+        website: "",
+      });
       toast.success("ส่งเรื่องร้องเรียนแล้ว");
     },
     onError: (e: Error) => toast.error(e.message || "ส่งไม่สำเร็จ กรุณาลองอีกครั้ง"),
@@ -81,6 +90,15 @@ function ComplaintsPage() {
           }}
           className="max-w-3xl border border-border bg-background p-7 md:p-9"
         >
+          <label className="absolute -left-[9999px]" aria-hidden="true">
+            <span>Website</span>
+            <input
+              tabIndex={-1}
+              autoComplete="off"
+              value={form.website}
+              onChange={set("website")}
+            />
+          </label>
           <label className="mb-5 block">
             <span className="eyebrow">หัวข้อเรื่อง *</span>
             <input
