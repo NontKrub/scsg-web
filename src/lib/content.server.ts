@@ -6,7 +6,6 @@ import {
   type Month,
   type SiteContent,
 } from "@/data/sgsc";
-import { isRadioMemoryBackend } from "./radio/config";
 import { getRadioService } from "./radio/server";
 
 function publicClient() {
@@ -27,22 +26,13 @@ function publicClient() {
 const zeroScores = () =>
   Object.fromEntries(MONTHS.map((m) => [m, 0])) as Record<Month, number>;
 
+function dataOrThrow<T>(result: { data: T; error: { message: string } | null }): T {
+  if (result.error) throw result.error;
+  return result.data;
+}
+
 /** Loads the entire public site content from the database. */
 export async function loadContent(): Promise<SiteContent> {
-  if (isRadioMemoryBackend()) {
-    return {
-      settings: {},
-      currentMonth: "AUG",
-      houses: [],
-      honors: {},
-      members: [],
-      congressBoard: [],
-      advisoryBoard: [],
-      clubs: [],
-      news: [],
-    };
-  }
-
   const db = publicClient();
 
   const [
@@ -64,16 +54,24 @@ export async function loadContent(): Promise<SiteContent> {
     db.from("congress_board").select("*").order("sort"),
     db.from("advisory_board").select("*").order("sort"),
     db.from("clubs").select("*").order("sort"),
-    db.from("news").select("*").eq("published", true).order("sort").order("created_at", { ascending: false }),
+    db.from("news").select("*").eq("published", true).order("created_at", { ascending: false }),
   ]);
 
-
+  const settingsData = dataOrThrow(settings);
+  const housesData = dataOrThrow(houses);
+  const scoresData = dataOrThrow(scores);
+  const honorsData = dataOrThrow(honors);
+  const membersData = dataOrThrow(members);
+  const boardData = dataOrThrow(board);
+  const advisorsData = dataOrThrow(advisors);
+  const clubsData = dataOrThrow(clubs);
+  const newsData = dataOrThrow(news);
   const settingsMap: Record<string, string> = {};
-  for (const s of settings.data ?? []) settingsMap[s.key] = s.value;
+  for (const s of settingsData ?? []) settingsMap[s.key] = s.value;
 
   const scoreMap = new Map<string, Record<Month, number>>();
-  for (const h of houses.data ?? []) scoreMap.set(h.slug, zeroScores());
-  for (const s of scores.data ?? []) {
+  for (const h of housesData ?? []) scoreMap.set(h.slug, zeroScores());
+  for (const s of scoresData ?? []) {
     const rec = scoreMap.get(s.house_slug);
     if (rec && (MONTHS as readonly string[]).includes(s.month)) rec[s.month as Month] = Number(s.score);
   }
@@ -83,7 +81,7 @@ export async function loadContent(): Promise<SiteContent> {
     currentMonth: ((MONTHS as readonly string[]).includes(settingsMap["current_month"] ?? "")
       ? settingsMap["current_month"]
       : "AUG") as Month,
-    houses: (houses.data ?? []).map((h) => ({
+    houses: (housesData ?? []).map((h) => ({
       slug: h.slug,
       no: h.no,
       name: h.name,
@@ -98,12 +96,12 @@ export async function loadContent(): Promise<SiteContent> {
       scores: scoreMap.get(h.slug) ?? zeroScores(),
     })),
     honors: Object.fromEntries(
-      (honors.data ?? []).map((h) => [
+      (honorsData ?? []).map((h) => [
         h.month,
         { houseOfMonth: h.house_of_month, character: h.character_house },
       ]),
     ),
-    members: (members.data ?? []).map((m) => ({
+    members: (membersData ?? []).map((m) => ({
       id: m.id,
       name: m.name,
       role: m.role,
@@ -114,7 +112,7 @@ export async function loadContent(): Promise<SiteContent> {
       photoUrl: m.photo_url,
     })),
 
-    congressBoard: (board.data ?? []).map((b) => ({
+    congressBoard: (boardData ?? []).map((b) => ({
       id: b.id,
       role: b.role,
       fromOrg: b.from_org,
@@ -122,14 +120,14 @@ export async function loadContent(): Promise<SiteContent> {
       klass: b.klass,
       photoUrl: b.photo_url,
     })),
-    advisoryBoard: (advisors.data ?? []).map((a) => ({
+    advisoryBoard: (advisorsData ?? []).map((a) => ({
       id: a.id,
       name: a.person_name,
       role: a.role,
       desc: a.description,
       photoUrl: a.photo_url,
     })),
-    clubs: (clubs.data ?? []).map((c) => ({
+    clubs: (clubsData ?? []).map((c) => ({
       slug: c.slug,
       name: c.name,
       nameTh: c.name_th,
@@ -140,7 +138,7 @@ export async function loadContent(): Promise<SiteContent> {
       members: c.member_count,
       activities: c.activities ?? [],
     })),
-    news: (news.data ?? []).map((n) => ({
+    news: (newsData ?? []).map((n) => ({
       slug: n.slug,
       title: n.title,
       cat: n.cat as "SGSC" | "STUDENT GOVERNMENT" | "HOUSE" | "CLUB",
