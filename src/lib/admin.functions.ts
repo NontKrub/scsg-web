@@ -1,6 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import { isRadioMemoryBackend } from "./radio/config";
 
 const TABLES = {
   houses: { pk: "id", order: "sort" },
@@ -26,8 +25,7 @@ const table = (name: string) => {
   return { name: name as AdminTable, ...t };
 };
 
-async function isAdmin(ctx: { supabase: any; userId: string }) {
-  if (isRadioMemoryBackend()) return true;
+export async function isAdmin(ctx: { supabase: any; userId: string }) {
   const { data, error } = await ctx.supabase
     .from("user_roles")
     .select("role")
@@ -140,11 +138,10 @@ type RadioAdminAction = "approve" | "reject" | "complete" | "cancel" | "close" |
 async function radioAdminService(context: { supabase: any; userId: string }) {
   await assertAdmin(context);
   const { getRadioService } = await import("./radio/server");
-  return getRadioService(isRadioMemoryBackend() ? undefined : context.supabase);
+  return getRadioService(context.supabase);
 }
 
 async function auditRadioAction(context: { supabase: any; userId: string; claims: unknown }, action: string) {
-  if (isRadioMemoryBackend()) return;
   await context.supabase.from("audit_log").insert({
     action: `SG Radio: ${action}`,
     actor: (context.claims as { email?: string }).email ?? context.userId,

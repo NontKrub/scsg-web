@@ -2,11 +2,7 @@
 import { createMiddleware } from '@tanstack/react-start'
 import { getRequest } from '@tanstack/react-start/server'
 import { createClient } from '@supabase/supabase-js'
-import type { JwtPayload } from '@supabase/supabase-js'
 import type { Database } from './types'
-import { isRadioMemoryBackend, RADIO_TEST_ADMIN_ID } from '@/lib/radio/config'
-
-
 
 function isNewSupabaseApiKey(value: string): boolean {
   return value.startsWith('sb_publishable_') || value.startsWith('sb_secret_');
@@ -34,16 +30,6 @@ function createSupabaseFetch(supabaseKey: string): typeof fetch {
 
 export const requireSupabaseAuth = createMiddleware({ type: 'function' }).server(
   async ({ next }) => {
-    if (isRadioMemoryBackend()) {
-      return next({
-        context: {
-          supabase: null as unknown as ReturnType<typeof createClient<Database>>,
-          userId: RADIO_TEST_ADMIN_ID,
-          claims: { sub: RADIO_TEST_ADMIN_ID, email: 'radio-admin@test.invalid' } as JwtPayload,
-        },
-      })
-    }
-    
     const SUPABASE_URL = process.env['SUPABASE_URL'];
     const SUPABASE_PUBLISHABLE_KEY = process.env['SUPABASE_PUBLISHABLE_KEY'];
 

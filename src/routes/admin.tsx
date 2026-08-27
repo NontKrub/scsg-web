@@ -7,7 +7,6 @@ import { ImagePlus, Loader2, LogOut, Plus, RefreshCw, Save, Trash2, X } from "lu
 import { supabase } from "@/integrations/supabase/client";
 import { adminDelete, adminList, adminSave, adminSaveScores, checkAdmin } from "@/lib/admin.functions";
 import { MONTHS, MONTH_TH, type Month } from "@/data/sgsc";
-import { isRadioMemoryBackend } from "@/lib/radio/config";
 import { RadioAdminPanel } from "@/components/site/RadioAdminPanel";
 import { cn } from "@/lib/utils";
 
@@ -211,15 +210,13 @@ const SECTIONS: SectionDef[] = [
 /* -------------------------------- page --------------------------------- */
 
 function AdminPage() {
-  const testMode = isRadioMemoryBackend();
-  const [session, setSession] = useState<boolean | null>(testMode ? true : null);
+  const [session, setSession] = useState<boolean | null>(null);
 
   useEffect(() => {
-    if (testMode) return;
     supabase.auth.getSession().then(({ data }) => setSession(!!data.session));
     const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => setSession(!!s));
     return () => sub.subscription.unsubscribe();
-  }, [testMode]);
+  }, []);
 
   if (session === null) return <Centered>กำลังตรวจสอบสิทธิ์…</Centered>;
   if (!session) return <SignIn />;
@@ -285,11 +282,9 @@ function SignIn() {
 function Console() {
   const check = useServerFn(checkAdmin);
   const me = useQuery({ queryKey: ["admin", "me"], queryFn: () => check() });
-  const testMode = isRadioMemoryBackend();
-  const [section, setSection] = useState<string>(testMode ? "radio" : "scores");
+  const [section, setSection] = useState<string>("scores");
 
   const signOut = async () => {
-    if (testMode) return;
     await supabase.auth.signOut();
   };
 
