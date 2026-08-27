@@ -23,6 +23,7 @@ export const Route = createFileRoute("/houses/$slug")({
 
 function HousePage() {
   const c = useContent();
+  const currentYear = c.settings["current_year"] ?? String(new Date().getFullYear());
   const { slug } = Route.useParams();
   const house = c.houses.find((h) => h.slug === slug);
   if (!house) return <NotFoundBlock label="ไม่พบบ้านนี้" />;
@@ -47,7 +48,9 @@ function HousePage() {
         />
         <div className="relative mx-auto grid w-full max-w-[1400px] items-center gap-10 px-5 py-16 md:px-10 md:py-24 lg:grid-cols-[1.1fr_0.9fr]">
           <div className="rise">
-            <p className="num text-sm text-white/70">HOUSE {house.no} / 09</p>
+            <p className="num text-sm text-white/70">
+              HOUSE {house.no} / {String(c.houses.length).padStart(2, "0")}
+            </p>
             <h1 className="display-xl mt-4 text-[clamp(2.6rem,9vw,6.5rem)]">{house.name}</h1>
             <p className="mt-3 text-lg text-white/80">
               บ้าน{house.nameTh} · สี{house.colorLabel}
@@ -63,7 +66,7 @@ function HousePage() {
               </div>
               <div>
                 <div className="num text-[clamp(2rem,5vw,3.4rem)] leading-none">
-                  {String(rank).padStart(2, "0")}/09
+                  {String(rank).padStart(2, "0")}/{String(c.houses.length).padStart(2, "0")}
                 </div>
                 <p className="mt-2 text-[0.62rem] uppercase tracking-[0.2em] text-white/60">อันดับ</p>
               </div>
@@ -153,13 +156,16 @@ function HousePage() {
 
       {/* SCORE + GRAPH */}
       <Section>
-        <SectionHead eyebrow={`ประจำเดือน${MONTH_TH[c.currentMonth]} 2026`} title="HOUSE SCORE" />
+        <SectionHead eyebrow={`ประจำเดือน${MONTH_TH[c.currentMonth]} ${currentYear}`} title="HOUSE SCORE" />
         <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr]">
           <div>
             <div className="grid grid-cols-2 gap-px bg-border">
               {[
                 { v: `${score.toFixed(1)}%`, l: "คะแนน" },
-                { v: `${String(rank).padStart(2, "0")}/09`, l: "อันดับ" },
+                {
+                  v: `${String(rank).padStart(2, "0")}/${String(c.houses.length).padStart(2, "0")}`,
+                  l: "อันดับ",
+                },
                 { v: tier.name, l: "ระดับ" },
                 { v: `${g >= 0 ? "+" : ""}${g.toFixed(1)}`, l: "เทียบเดือนก่อน" },
               ].map((x) => (
@@ -199,8 +205,8 @@ function HousePage() {
           const awards = MONTHS.flatMap((m) => {
             const h = honorsOf(c, m);
             const out: { t: string; s: string }[] = [];
-            if (h.houseOfMonth === slug) out.push({ t: "HOUSE OF THE MONTH", s: `${MONTH_TH[m]} 2026` });
-            if (h.character === slug) out.push({ t: "HOUSE EXCELLENCE AWARDS", s: `${MONTH_TH[m]} 2026` });
+            if (h.houseOfMonth === slug) out.push({ t: "HOUSE OF THE MONTH", s: `${MONTH_TH[m]} ${currentYear}` });
+            if (h.character === slug) out.push({ t: "HOUSE EXCELLENCE AWARDS", s: `${MONTH_TH[m]} ${currentYear}` });
             return out;
           });
           if (!awards.length)

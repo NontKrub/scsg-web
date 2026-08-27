@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <em>68 student leaders · 4 organizations · 9 houses · One Congress</em>
+  <em>Student leaders · 4 organizations · One Congress</em>
 </p>
 
 ---
@@ -21,10 +21,10 @@ This repository contains the website for the **Student Congress of Saint Gabriel
 
 The Congress is represented through four main organizations:
 
-- **Student Government** — 20 student leaders
-- **House of Saints** — representatives from 9 houses
-- **Clubs of Interest** — representatives from 6 interest clubs
-- **Class Representatives** — 24 classroom representatives
+- **Student Government** — member counts come from the `members` table
+- **House of Saints** — representatives from the configured houses
+- **Clubs of Interest** — representatives from the configured clubs
+- **Class Representatives** — classroom representatives from the `members` table
 
 The site is designed as a student-led public information and service platform rather than a personalized student dashboard.
 

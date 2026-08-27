@@ -1,11 +1,14 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { ORGS, SGSC_LOGO } from "@/data/sgsc";
+import { ORG_MEMBER_TYPES, ORGS, SGSC_LOGO } from "@/data/sgsc";
+import { useContent, membersOf } from "@/lib/content";
 import { cn } from "@/lib/utils";
 
 export function OrgMap() {
+  const c = useContent();
   const [active, setActive] = useState(0);
   const org = ORGS[active]!;
+  const count = membersOf(c, ORG_MEMBER_TYPES[org.slug]).length;
 
   return (
     <div className="grid gap-10 lg:grid-cols-[1fr_1.1fr] lg:gap-16">
@@ -48,7 +51,7 @@ export function OrgMap() {
         <p className="mt-6 max-w-md text-base leading-relaxed">{org.desc}</p>
         <div className="mt-8 flex items-end gap-10">
           <div>
-            <div className="num text-5xl">{org.count}</div>
+            <div className="num text-5xl">{count}</div>
             <div className="eyebrow mt-1">สมาชิก</div>
           </div>
           <Link

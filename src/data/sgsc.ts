@@ -143,8 +143,7 @@ export const ORGS = [
     slug: "student-government",
     name: "STUDENT GOVERNMENT",
     nameTh: "สโมสรนักเรียน",
-    desc: "ฝ่ายบริหารของ SGSC 20 คน จากนายกสโมสรนักเรียนถึงกรรมการฝ่าย ดูแลกิจกรรมและบริการรวมถึง SG RADIO",
-    count: 20,
+    desc: "ฝ่ายบริหารของ SGSC จากนายกสโมสรนักเรียนถึงกรรมการฝ่าย ดูแลกิจกรรมและบริการรวมถึง SG RADIO",
     to: "/student-government",
   },
 
@@ -152,27 +151,31 @@ export const ORGS = [
     slug: "houses",
     name: "HOUSE OF SAINTS",
     nameTh: "บ้านสายกีฬา",
-    desc: "9 ประธานบ้านสายกีฬา ผู้แทนบ้านสายกีฬาทั้ง 9 บ้านในสภา",
-    count: 9,
+    desc: "ประธานบ้านสายกีฬาและผู้แทนบ้านสายกีฬาในสภา",
     to: "/houses",
   },
   {
     slug: "clubs",
     name: "CLUBS OF INTEREST",
     nameTh: "ชุมนุมตามความสนใจ",
-    desc: "6 ชุมนุม รวมผู้แทน 15 คนในสภา",
-    count: 15,
+    desc: "ชุมนุมตามความสนใจและผู้แทนในสภา",
     to: "/clubs",
   },
   {
     slug: "class-representatives",
     name: "CLASS REPRESENTATIVES",
     nameTh: "ผู้แทนห้องเรียน",
-    desc: "ผู้แทนห้องเรียน 24 คน ส่งเสียงของเพื่อนร่วมห้องถึงสภา",
-    count: 24,
+    desc: "ผู้แทนห้องเรียน ส่งเสียงของเพื่อนร่วมห้องถึงสภา",
     to: "/about",
   },
 ] as const;
+
+export const ORG_MEMBER_TYPES = {
+  "student-government": "SG",
+  houses: "HOUSE",
+  clubs: "CLUB",
+  "class-representatives": "CLASS",
+} as const;
 
 export const ORG_FILTERS = [
   { key: "ALL", label: "ทั้งหมด" },

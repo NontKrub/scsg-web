@@ -22,7 +22,7 @@ export function HouseGrid({ month, big = false }: { month: Month; big?: boolean 
           >
             <div className="flex items-start justify-between">
               <span className="num text-sm text-muted-foreground transition-colors group-hover:text-white/70">
-                {h.no} / 09
+                {h.no} / {String(c.houses.length).padStart(2, "0")}
               </span>
               <span className="num text-sm text-muted-foreground transition-colors group-hover:text-white/70">
                 RANK {String(rankOf(c, h.slug, month)).padStart(2, "0")}

@@ -19,6 +19,7 @@ export const Route = createFileRoute("/competition")({
 
 function Competition() {
   const c = useContent();
+  const currentYear = c.settings["current_year"] ?? String(new Date().getFullYear());
   const [month, setMonth] = useState<Month>(c.currentMonth);
   const honors = honorsOf(c, month);
   const hom = c.houses.find((h) => h.slug === honors.houseOfMonth);
@@ -35,7 +36,7 @@ function Competition() {
         <Tag>House of Saints</Tag>
         <h1 className="display-xl mt-6 text-[clamp(2.6rem,9vw,6.5rem)]">HOUSE COMPETITION</h1>
         <p className="mt-6 text-muted-foreground">
-          ผลคะแนนประจำเดือน{MONTH_TH[month]} 2026 · เลือกเดือนเพื่อดูผลย้อนหลัง
+          ผลคะแนนประจำเดือน{MONTH_TH[month]} {currentYear} · เลือกเดือนเพื่อดูผลย้อนหลัง
         </p>
         <div className="mt-8">
           <MonthPicker value={month} onChange={setMonth} />
@@ -78,7 +79,7 @@ function Competition() {
                     </p>
                     <h3 className="display-xl mt-3 text-2xl md:text-3xl">{a.house.name}</h3>
                     <p className="mt-2 text-sm text-primary-foreground/70">
-                      {a.th} · {MONTH_TH[month]} 2026 · {a.house.scores[month].toFixed(2)}%
+                      {a.th} · {MONTH_TH[month]} {currentYear} · {a.house.scores[month].toFixed(2)}%
                     </p>
                   </div>
                 </div>
