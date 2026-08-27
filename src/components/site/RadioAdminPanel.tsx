@@ -19,6 +19,7 @@ const adminQuery = {
 };
 
 const EMPTY_SLOT: RadioSlotDraft = { date: "", startTime: "08:05", note: "" };
+const ACTIVE_BOOKING_STATUSES = new Set<RadioBooking["status"]>(["PENDING", "APPROVED"]);
 
 export function RadioAdminPanel() {
   const queryClient = useQueryClient();
@@ -59,9 +60,12 @@ export function RadioAdminPanel() {
   const slots = [...(query.data?.slots ?? [])].sort((a, b) =>
     `${a.date}${a.startTime}`.localeCompare(`${b.date}${b.startTime}`),
   );
-  const bookings = [...(query.data?.bookings ?? [])].sort((a, b) =>
-    b.createdAt.localeCompare(a.createdAt),
-  );
+  const bookings = [...(query.data?.bookings ?? [])].sort((a, b) => {
+    const activeOrder =
+      Number(ACTIVE_BOOKING_STATUSES.has(b.status)) -
+      Number(ACTIVE_BOOKING_STATUSES.has(a.status));
+    return activeOrder || b.createdAt.localeCompare(a.createdAt);
+  });
   const busy = saveMutation.isPending || actionMutation.isPending;
 
   return (
