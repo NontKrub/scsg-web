@@ -77,10 +77,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         name: "description",
         content:
-          "เว็บไซต์ทางการของสภานักเรียนโรงเรียนเซนต์คาเบรียล 68 ผู้นำนักเรียน 4 องค์กร 9 บ้านสายกีฬา",
+          "เว็บไซต์ทางการของสภานักเรียนโรงเรียนเซนต์คาเบรียล ผู้นำนักเรียน 4 องค์กร และบ้านสายกีฬา",
       },
       { property: "og:title", content: "SGSC — Student Congress of Saint Gabriel's College" },
-      { property: "og:description", content: "68 ผู้นำนักเรียน · 4 องค์กร · 9 บ้านสายกีฬา" },
+      { property: "og:description", content: "ผู้นำนักเรียน · 4 องค์กร · บ้านสายกีฬา" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -119,22 +119,33 @@ function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const path = useRouterState({ select: (s) => s.location.pathname });
   const isAdmin = path.startsWith("/admin");
+  const isServerRoute =
+    path.startsWith("/api/") ||
+    path === "/mcp" ||
+    path.startsWith("/.mcp/") ||
+    path.startsWith("/.well-known/") ||
+    path.startsWith("/.lovable.");
+  const usesContent =
+    !isAdmin &&
+    !isServerRoute &&
+    path !== "/radio" &&
+    path !== "/complaints" &&
+    path !== "/login";
+  const site = (
+    <div className="flex min-h-screen flex-col">
+      <SiteHeader />
+      <main className="flex-1">
+        <Outlet />
+      </main>
+      <SiteFooter />
+    </div>
+  );
 
   return (
     <QueryClientProvider client={queryClient}>
-      {isAdmin ? (
+      {isAdmin || isServerRoute ? (
         <Outlet />
-      ) : (
-        <ContentProvider>
-          <div className="flex min-h-screen flex-col">
-            <SiteHeader />
-            <main className="flex-1">
-              <Outlet />
-            </main>
-            <SiteFooter />
-          </div>
-        </ContentProvider>
-      )}
+      ) : usesContent ? <ContentProvider>{site}</ContentProvider> : site}
       <Toaster />
     </QueryClientProvider>
   );
