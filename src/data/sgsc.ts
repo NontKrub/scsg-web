@@ -123,8 +123,6 @@ export type News = {
 };
 
 
-export type SlotState = "AVAILABLE" | "BOOKED" | "PENDING" | "CLOSED";
-
 export type SiteContent = {
   settings: Record<string, string>;
   currentMonth: Month;
@@ -135,8 +133,6 @@ export type SiteContent = {
   advisoryBoard: Advisor[];
   clubs: Club[];
   news: News[];
-  radioSchedule: Record<string, SlotState[]>;
-  radioRules: string[];
 };
 
 
@@ -185,6 +181,3 @@ export const ORG_FILTERS = [
   { key: "CLUB", label: "ชุมนุม" },
   { key: "CLASS", label: "ผู้แทนห้อง" },
 ] as const;
-
-export const RADIO_SLOTS = ["8.05"];
-export const RADIO_DAYS = ["จันทร์", "อังคาร", "พุธ", "พฤหัสบดี", "ศุกร์"];

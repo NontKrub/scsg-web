@@ -6,7 +6,9 @@ import { toast } from "sonner";
 import { ImagePlus, Loader2, LogOut, Plus, RefreshCw, Save, Trash2, X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { adminDelete, adminList, adminSave, adminSaveScores, checkAdmin } from "@/lib/admin.functions";
-import { MONTHS, MONTH_TH, RADIO_DAYS, RADIO_SLOTS, type Month } from "@/data/sgsc";
+import { MONTHS, MONTH_TH, type Month } from "@/data/sgsc";
+import { isRadioMemoryBackend } from "@/lib/radio/config";
+import { RadioAdminPanel } from "@/components/site/RadioAdminPanel";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/admin")({
@@ -167,38 +169,6 @@ const SECTIONS: SectionDef[] = [
     ],
   },
   {
-    key: "radio_slots",
-    table: "radio_slots",
-    label: "ผังเวลา SG Radio",
-    subtitle: "เปิด/ปิดช่วงเวลาออกอากาศในแต่ละวัน",
-    primary: "day",
-    canCreate: true,
-    canDelete: true,
-    fields: [
-      { key: "day", label: "วัน", kind: "select", options: RADIO_DAYS },
-      { key: "slot", label: "ช่วงเวลา", kind: "select", options: RADIO_SLOTS },
-      { key: "state", label: "สถานะ", kind: "select", options: ["AVAILABLE", "BOOKED", "PENDING", "CLOSED"] },
-      t("note", "หมายเหตุ"),
-    ],
-  },
-  {
-    key: "radio_bookings",
-    table: "radio_bookings",
-    label: "คำขอจอง SG Radio",
-    subtitle: "อนุมัติหรือปฏิเสธคำขอเปิดเพลง/ประกาศ",
-    primary: "song",
-    canDelete: true,
-    fields: [
-      t("day", "วัน"),
-      t("slot", "ช่วงเวลา"),
-      t("requester", "ผู้ขอ"),
-      t("klass", "ชั้น/ห้อง"),
-      t("song", "เพลง/หัวข้อ"),
-      { key: "message", label: "ข้อความ", kind: "long" },
-      { key: "status", label: "สถานะ", kind: "select", options: ["PENDING", "APPROVED", "REJECTED"] },
-    ],
-  },
-  {
     key: "complaints",
     table: "complaints",
     label: "เรื่องร้องเรียน",
@@ -241,13 +211,15 @@ const SECTIONS: SectionDef[] = [
 /* -------------------------------- page --------------------------------- */
 
 function AdminPage() {
-  const [session, setSession] = useState<boolean | null>(null);
+  const testMode = isRadioMemoryBackend();
+  const [session, setSession] = useState<boolean | null>(testMode ? true : null);
 
   useEffect(() => {
+    if (testMode) return;
     supabase.auth.getSession().then(({ data }) => setSession(!!data.session));
     const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => setSession(!!s));
     return () => sub.subscription.unsubscribe();
-  }, []);
+  }, [testMode]);
 
   if (session === null) return <Centered>กำลังตรวจสอบสิทธิ์…</Centered>;
   if (!session) return <SignIn />;
@@ -313,9 +285,11 @@ function SignIn() {
 function Console() {
   const check = useServerFn(checkAdmin);
   const me = useQuery({ queryKey: ["admin", "me"], queryFn: () => check() });
-  const [section, setSection] = useState<string>("scores");
+  const testMode = isRadioMemoryBackend();
+  const [section, setSection] = useState<string>(testMode ? "radio" : "scores");
 
   const signOut = async () => {
+    if (testMode) return;
     await supabase.auth.signOut();
   };
 
@@ -362,6 +336,9 @@ function Console() {
             <NavBtn active={section === "scores"} onClick={() => setSection("scores")}>
               คะแนน House Competition
             </NavBtn>
+            <NavBtn active={section === "radio"} onClick={() => setSection("radio")}>
+              SG Radio
+            </NavBtn>
             {SECTIONS.map((s) => (
               <NavBtn key={s.key} active={section === s.key} onClick={() => setSection(s.key)}>
                 {s.label}
@@ -375,6 +352,7 @@ function Console() {
 
         <main className="p-5 md:p-8">
           {section === "scores" && <ScoreEditor />}
+          {section === "radio" && <RadioAdminPanel />}
           {section === "audit" && <AuditView />}
           {active && <TableEditor key={active.key} def={active} />}
         </main>
