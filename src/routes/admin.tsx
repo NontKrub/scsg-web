@@ -591,7 +591,9 @@ function RowForm({
         <div className="flex items-center justify-between gap-3 border-t border-border px-6 py-4">
           {onDelete ? (
             <button
-              onClick={onDelete}
+              onClick={() => {
+                if (window.confirm("ลบรายการนี้หรือไม่?")) onDelete();
+              }}
               disabled={busy}
               className="inline-flex items-center gap-2 border border-destructive px-4 py-3 text-xs uppercase tracking-[0.16em] text-destructive"
             >
@@ -617,11 +619,24 @@ function RowForm({
 
 function ImageField({ value, onChange }: { value: string; onChange: (v: string) => void }) {
   const [busy, setBusy] = useState(false);
+  const imageExtensions: Record<string, string> = {
+    "image/jpeg": "jpg",
+    "image/png": "png",
+    "image/webp": "webp",
+  };
 
   const upload = async (file: File) => {
+    const ext = imageExtensions[file.type];
+    if (!ext) {
+      toast.error("รองรับเฉพาะไฟล์ JPG, PNG หรือ WebP");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("ขนาดรูปภาพต้องไม่เกิน 5 MB");
+      return;
+    }
     setBusy(true);
     try {
-      const ext = (file.name.split(".").pop() ?? "jpg").toLowerCase();
       const path = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
       const { error } = await supabase.storage.from("site-images").upload(path, file, {
         cacheControl: "31536000",
@@ -654,7 +669,7 @@ function ImageField({ value, onChange }: { value: string; onChange: (v: string) 
           {busy ? "กำลังอัปโหลด" : "อัปโหลดรูปภาพ"}
           <input
             type="file"
-            accept="image/*"
+            accept="image/jpeg,image/png,image/webp"
             className="hidden"
             disabled={busy}
             onChange={(e) => {

@@ -7,7 +7,14 @@ export const Route = createFileRoute("/api/public/img/$")({
     handlers: {
       GET: async ({ params }) => {
         const path = String((params as Record<string, string>)["_splat"] ?? "").replace(/^\/+/, "");
-        if (!path || path.includes("..")) return new Response("Not found", { status: 404 });
+        const segments = path.split("/");
+        if (
+          !path ||
+          path.includes("\\") ||
+          segments.some((segment) => !segment || segment === "." || segment === ".." || /[\u0000-\u001f]/.test(segment))
+        ) {
+          return new Response("Not found", { status: 404 });
+        }
 
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
         const { data, error } = await supabaseAdmin.storage.from(BUCKET).download(path);
