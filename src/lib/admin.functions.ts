@@ -140,15 +140,13 @@ export const adminSaveScores = createServerFn({ method: "POST" })
   .validator(validateScoreBatch)
   .handler(async ({ data, context }) => {
     await assertAdmin(context);
-    for (const score of data.scores) {
-      const res = await (context.supabase as any)
-        .from("house_scores")
-        .upsert(
-          { ...score, month: data.month },
-          { onConflict: "house_slug,month" },
-        );
-      if (res.error) throw new Error(res.error.message);
-    }
+    const res = await (context.supabase as any)
+      .from("house_scores")
+      .upsert(
+        data.scores.map((score) => ({ ...score, month: data.month })),
+        { onConflict: "house_slug,month" },
+      );
+    if (res.error) throw new Error(res.error.message);
     await context.supabase.from("audit_log").insert({
       action: `บันทึกคะแนนบ้านเดือน ${data.month}`,
       actor: (context.claims as { email?: string }).email ?? context.userId,
