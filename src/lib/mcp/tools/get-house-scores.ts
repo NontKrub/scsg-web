@@ -28,7 +28,8 @@ export default defineTool({
       tier: tierOf(r.score).name,
     }));
     const honors = honorsOf(c, m);
-    const houseOfMonth = c.houses.find((h) => h.slug === honors.houseOfMonth)?.name ?? honors.houseOfMonth;
+    const houseOfMonth =
+      c.houses.find((h) => h.slug === honors.houseOfMonth)?.name ?? honors.houseOfMonth;
 
     return {
       content: [
@@ -36,11 +37,17 @@ export default defineTool({
           type: "text" as const,
           text:
             `House Competition — ${m}\n` +
-            rows.map((r) => `${r.rank}. ${r.name} (${r.nameTh}) — ${r.score} · ${r.tier}`).join("\n") +
+            rows
+              .map((r) => `${r.rank}. ${r.name} (${r.nameTh}) — ${r.score} · ${r.tier}`)
+              .join("\n") +
             `\nHouse of the Month: ${houseOfMonth || "—"}\nCharacter Excellence: ${honors.character || "—"}`,
         },
       ],
-      structuredContent: { month: m, standings: rows, honors: { houseOfMonth, character: honors.character } },
+      structuredContent: {
+        month: m,
+        standings: rows,
+        honors: { houseOfMonth, character: honors.character },
+      },
     };
   },
 });

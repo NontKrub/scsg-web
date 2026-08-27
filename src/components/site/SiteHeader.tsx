@@ -14,7 +14,6 @@ const NAV = [
   { to: "/complaints", label: "ร้องเรียน" },
 ];
 
-
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const path = useRouterState({ select: (s) => s.location.pathname });
@@ -23,7 +22,11 @@ export function SiteHeader() {
     <header className="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur-md">
       <div className="mx-auto flex h-16 w-full max-w-[1400px] items-center gap-6 px-5 md:h-20 md:px-10">
         <Link to="/" className="flex items-center gap-3" onClick={() => setOpen(false)}>
-          <img src={SGSC_LOGO} alt="ตราสัญลักษณ์ SGSC" className="h-9 w-9 object-contain md:h-11 md:w-11" />
+          <img
+            src={SGSC_LOGO}
+            alt="ตราสัญลักษณ์ SGSC"
+            className="h-9 w-9 object-contain md:h-11 md:w-11"
+          />
           <span className="leading-none">
             <span className="num block text-base md:text-lg">SGSC</span>
             <span className="hidden text-[0.6rem] tracking-[0.18em] text-muted-foreground uppercase md:block">
@@ -39,7 +42,9 @@ export function SiteHeader() {
               to={n.to}
               className={cn(
                 "px-3 py-2 text-[0.78rem] font-semibold tracking-wide transition-colors",
-                path.startsWith(n.to) ? "text-primary" : "text-muted-foreground hover:text-foreground",
+                path.startsWith(n.to)
+                  ? "text-primary"
+                  : "text-muted-foreground hover:text-foreground",
               )}
             >
               {n.label}

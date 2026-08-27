@@ -2,7 +2,6 @@ import { useContent, ranking, rankOf, growth, honorsOf, membersOf, display } fro
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Section, Tag } from "@/components/site/primitives";
 
-
 export const Route = createFileRoute("/news/$slug")({
   head: () => ({
     meta: [
@@ -33,7 +32,9 @@ function NewsArticle() {
           <Tag>{n.cat}</Tag>
           <span className="text-xs text-muted-foreground">{n.date}</span>
         </div>
-        <h1 className="display-xl mt-6 max-w-4xl text-[clamp(2rem,6vw,4rem)] leading-tight">{n.title}</h1>
+        <h1 className="display-xl mt-6 max-w-4xl text-[clamp(2rem,6vw,4rem)] leading-tight">
+          {n.title}
+        </h1>
         <p className="mt-6 max-w-2xl text-lg text-muted-foreground">{n.intro}</p>
       </Section>
 

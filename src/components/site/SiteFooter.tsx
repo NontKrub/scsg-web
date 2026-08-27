@@ -26,7 +26,6 @@ export function SiteFooter() {
     <footer className="bg-navy-deep text-primary-foreground">
       <div className="mx-auto w-full max-w-[1400px] px-5 py-16 md:px-10 md:py-20">
         <div className="grid gap-12 md:grid-cols-[1.2fr_repeat(2,1fr)]">
-
           <div>
             <img src={SGSC_LOGO} alt="ตราสัญลักษณ์ SGSC" className="h-14 w-14 object-contain" />
             <p className="num mt-5 text-2xl">S.C.S.G. / SGSC</p>
@@ -57,7 +56,10 @@ export function SiteFooter() {
               <ul className="mt-5 space-y-3 text-sm">
                 {c.links.map((l) => (
                   <li key={l.to + l.label}>
-                    <Link to={l.to} className="text-primary-foreground/80 transition-colors hover:text-primary-foreground">
+                    <Link
+                      to={l.to}
+                      className="text-primary-foreground/80 transition-colors hover:text-primary-foreground"
+                    >
                       {l.label}
                     </Link>
                   </li>
@@ -68,7 +70,7 @@ export function SiteFooter() {
         </div>
 
         <div className="mt-16 flex flex-col gap-3 border-t border-primary-foreground/15 pt-6 text-xs text-primary-foreground/50 md:flex-row md:items-center md:justify-between">
-          <p>© 2026 Student Congress of Saint Gabriel&apos;s College</p>
+          <p>© {new Date().getFullYear()} Student Congress of Saint Gabriel&apos;s College</p>
           <p className="tracking-[0.2em] uppercase">Labor Omnia Vincit</p>
           <Link to="/admin" className="tracking-[0.2em] uppercase hover:text-primary-foreground">
             SGSC Control

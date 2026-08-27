@@ -34,6 +34,7 @@ type FormState = {
   message: string;
   additionalInfo: string;
   acceptedRules: boolean;
+  website: string;
 };
 
 const EMPTY_FORM: FormState = {
@@ -44,6 +45,7 @@ const EMPTY_FORM: FormState = {
   message: "",
   additionalInfo: "",
   acceptedRules: false,
+  website: "",
 };
 
 function dateParts(date: string) {
@@ -244,6 +246,16 @@ export function RadioPage() {
           </div>
 
           <form onSubmit={submit} className="border border-border bg-background p-5 sm:p-7">
+            <label className="absolute -left-[9999px]" aria-hidden="true">
+              <span>Website</span>
+              <input
+                name="website"
+                tabIndex={-1}
+                autoComplete="off"
+                value={form.website}
+                onChange={(event) => setField("website", event.target.value)}
+              />
+            </label>
             <div className="mb-6 border-b border-border pb-5">
               <p className="eyebrow">ช่วงเวลาที่เลือก</p>
               <p className="mt-2 text-sm font-semibold">

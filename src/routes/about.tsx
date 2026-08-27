@@ -4,7 +4,7 @@ import { OrgMap } from "@/components/site/OrgMap";
 import congressGroup from "@/assets/congress-group.jpg.asset.json";
 import scsgSeal from "@/assets/scsg-seal.png.asset.json";
 import { ImgBlock, Section, SectionHead, Stat, Tag } from "@/components/site/primitives";
-import { ORGS } from "@/data/sgsc";
+import { ORG_MEMBER_TYPES, ORGS } from "@/data/sgsc";
 
 export const Route = createFileRoute("/about")({
   head: () => ({
@@ -12,10 +12,10 @@ export const Route = createFileRoute("/about")({
       { title: "เกี่ยวกับ SGSC — สภานักเรียนเซนต์คาเบรียล" },
       {
         name: "description",
-        content: "68 นักเรียน 4 องค์กร หนึ่งสภา โครงสร้างและคณะกรรมการบริหารของ SGSC",
+        content: "นักเรียน 4 องค์กร หนึ่งสภา โครงสร้างและคณะกรรมการบริหารของ SGSC",
       },
       { property: "og:title", content: "เกี่ยวกับ SGSC" },
-      { property: "og:description", content: "68 STUDENTS. 4 ORGANIZATIONS. ONE CONGRESS." },
+      { property: "og:description", content: "STUDENTS. 4 ORGANIZATIONS. ONE CONGRESS." },
     ],
   }),
   component: About,
@@ -33,7 +33,7 @@ function About() {
         />
         <Tag>About SGSC</Tag>
         <h1 className="display-xl mt-6 text-[clamp(2.4rem,8vw,6rem)]">
-          68 STUDENTS.
+          {c.members.length} STUDENTS.
           <br />
           4 ORGANIZATIONS.
           <br />
@@ -45,9 +45,9 @@ function About() {
         </p>
         <div className="mt-12 grid grid-cols-2 gap-6 md:grid-cols-4">
           <Stat value={String(c.members.length)} label="สมาชิกสภา" />
-          <Stat value="04" label="องค์กรหลัก" />
-          <Stat value="09" label="บ้านสายกีฬา" />
-          <Stat value="06" label="ชุมนุม" />
+          <Stat value={String(ORGS.length).padStart(2, "0")} label="องค์กรหลัก" />
+          <Stat value={String(c.houses.length).padStart(2, "0")} label="บ้านสายกีฬา" />
+          <Stat value={String(c.clubs.length).padStart(2, "0")} label="ชุมนุม" />
         </div>
       </Section>
 
@@ -132,13 +132,14 @@ function About() {
           <div>
             <h2 className="display-xl text-[clamp(1.9rem,5vw,3.4rem)]">CONGRESS MEMBERS</h2>
             <p className="mt-5 max-w-md text-primary-foreground/70">
-              สมาชิกสภาทั้งหมด {c.members.length} คน มาจากสโมสรนักเรียน บ้านสายกีฬา ชุมนุม และผู้แทนห้องเรียน
+              สมาชิกสภาทั้งหมด {c.members.length} คน มาจากสโมสรนักเรียน บ้านสายกีฬา ชุมนุม
+              และผู้แทนห้องเรียน
             </p>
           </div>
           <div className="grid grid-cols-2 gap-px bg-primary-foreground/15">
             {ORGS.map((o) => (
               <div key={o.slug} className="bg-navy-deep p-6">
-                <div className="num text-4xl">{o.count}</div>
+                <div className="num text-4xl">{membersOf(c, ORG_MEMBER_TYPES[o.slug]).length}</div>
                 <p className="num mt-3 text-sm">{o.name}</p>
                 <p className="mt-1 text-xs text-primary-foreground/60">{o.nameTh}</p>
               </div>
@@ -150,10 +151,22 @@ function About() {
       <Section>
         <SectionHead eyebrow="ตัวเลข" title="ONE CONGRESS, MANY VOICES." />
         <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
-          <Stat value={String(c.members.filter((m) => m.org === "SG").length)} label="สโมสรนักเรียน" />
-          <Stat value={String(c.members.filter((m) => m.org === "HOUSE").length)} label="คณะกรรมการบ้าน" />
-          <Stat value={String(c.members.filter((m) => m.org === "CLUB").length)} label="ผู้แทนชุมนุม" />
-          <Stat value={String(c.members.filter((m) => m.org === "CLASS").length)} label="ผู้แทนห้องเรียน" />
+          <Stat
+            value={String(c.members.filter((m) => m.org === "SG").length)}
+            label="สโมสรนักเรียน"
+          />
+          <Stat
+            value={String(c.members.filter((m) => m.org === "HOUSE").length)}
+            label="คณะกรรมการบ้าน"
+          />
+          <Stat
+            value={String(c.members.filter((m) => m.org === "CLUB").length)}
+            label="ผู้แทนชุมนุม"
+          />
+          <Stat
+            value={String(c.members.filter((m) => m.org === "CLASS").length)}
+            label="ผู้แทนห้องเรียน"
+          />
         </div>
       </Section>
     </>

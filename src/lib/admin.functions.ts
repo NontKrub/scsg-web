@@ -1,6 +1,11 @@
 import { createServerFn } from "@tanstack/react-start";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "@/integrations/supabase/types";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import { isRadioMemoryBackend } from "./radio/config";
+import { validateAdminRow, validateScoreBatch } from "./admin.validation";
+
+export type AdminRow = Record<string, string | number | boolean | null | string[]>;
+type AdminDb = SupabaseClient<Database>;
 
 const TABLES = {
   houses: { pk: "id", order: "sort" },
@@ -26,8 +31,20 @@ const table = (name: string) => {
   return { name: name as AdminTable, ...t };
 };
 
-async function isAdmin(ctx: { supabase: any; userId: string }) {
-  if (isRadioMemoryBackend()) return true;
+function validateTableInput(data: unknown) {
+  if (
+    !data ||
+    typeof data !== "object" ||
+    typeof (data as Record<string, unknown>)["table"] !== "string"
+  ) {
+    throw new Error("ข้อมูลตารางไม่ถูกต้อง");
+  }
+  const tableName = (data as Record<string, unknown>)["table"];
+  if (typeof tableName !== "string") throw new Error("ข้อมูลตารางไม่ถูกต้อง");
+  return { table: tableName };
+}
+
+export async function isAdmin(ctx: { supabase: AdminDb; userId: string }) {
   const { data, error } = await ctx.supabase
     .from("user_roles")
     .select("role")
@@ -38,7 +55,7 @@ async function isAdmin(ctx: { supabase: any; userId: string }) {
   return !!data;
 }
 
-async function assertAdmin(ctx: { supabase: any; userId: string }) {
+async function assertAdmin(ctx: { supabase: AdminDb; userId: string }) {
   if (!(await isAdmin(ctx))) throw new Error("บัญชีนี้ไม่มีสิทธิ์ผู้ดูแลระบบ");
 }
 
@@ -52,56 +69,83 @@ export const checkAdmin = createServerFn({ method: "GET" })
     } catch {
       admin = false;
     }
-    return { isAdmin: admin, userId: context.userId, email: (context.claims as { email?: string }).email ?? "" };
+    return {
+      isAdmin: admin,
+      userId: context.userId,
+      email: (context.claims as { email?: string }).email ?? "",
+    };
   });
-
 
 /** Reads any managed table. */
 export const adminList = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .validator((data: { table: string }) => ({ table: data.table }))
+  .validator(validateTableInput)
   .handler(async ({ data, context }) => {
     await assertAdmin(context);
     const t = table(data.table);
-    const db = context.supabase as any;
+    const db = context.supabase;
     const res = await db.from(t.name).select("*").order(t.order, { ascending: true }).limit(1000);
     if (res.error) throw new Error(res.error.message);
-    return (res.data ?? []) as Record<string, any>[];
+    return (res.data ?? []) as unknown as AdminRow[];
   });
 
 /** Creates or updates a row. */
 export const adminSave = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .validator((data: { table: string; row: Record<string, any> }) => ({
-    table: data.table,
-    row: data.row ?? {},
-  }))
+  .validator((data: unknown) => {
+    if (!data || typeof data !== "object") throw new Error("ข้อมูลผู้ดูแลไม่ถูกต้อง");
+    const input = data as Record<string, unknown>;
+    const tableName = input["table"];
+    if (typeof tableName !== "string") throw new Error("ข้อมูลตารางไม่ถูกต้อง");
+    return { table: tableName, row: validateAdminRow(tableName, input["row"]) };
+  })
   .handler(async ({ data, context }) => {
     await assertAdmin(context);
     const t = table(data.table);
-    const db = context.supabase as any;
+    const db = context.supabase;
     const row = { ...data.row };
     const hasPk = !!row[t.pk];
     const res = hasPk
-      ? await db.from(t.name).update(row).eq(t.pk, row[t.pk] as string).select().maybeSingle()
-      : await db.from(t.name).insert(row).select().maybeSingle();
+      ? await db
+          .from(t.name)
+          .update(row as never)
+          .eq(t.pk as never, row[t.pk] as string)
+          .select()
+          .maybeSingle()
+      : await db
+          .from(t.name)
+          .insert(row as never)
+          .select()
+          .maybeSingle();
     if (res.error) throw new Error(res.error.message);
     await context.supabase.from("audit_log").insert({
       action: `${hasPk ? "แก้ไข" : "เพิ่ม"}ข้อมูลใน ${t.name}`,
       actor: (context.claims as { email?: string }).email ?? context.userId,
     });
-    return res.data as Record<string, any>;
+    return res.data as unknown as AdminRow;
   });
 
 /** Deletes a row. */
 export const adminDelete = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .validator((data: { table: string; id: string }) => ({ table: data.table, id: String(data.id) }))
+  .validator((data: unknown) => {
+    if (!data || typeof data !== "object") throw new Error("ข้อมูลผู้ดูแลไม่ถูกต้อง");
+    const input = data as Record<string, unknown>;
+    const tableName = input["table"];
+    const rowId = input["id"];
+    if (typeof tableName !== "string" || typeof rowId !== "string" || !rowId.trim()) {
+      throw new Error("ข้อมูลผู้ดูแลไม่ถูกต้อง");
+    }
+    return { table: tableName, id: rowId.trim() };
+  })
   .handler(async ({ data, context }) => {
     await assertAdmin(context);
     const t = table(data.table);
-    const db = context.supabase as any;
-    const res = await db.from(t.name).delete().eq(t.pk, data.id);
+    const db = context.supabase;
+    const res = await db
+      .from(t.name)
+      .delete()
+      .eq(t.pk as never, data.id);
     if (res.error) throw new Error(res.error.message);
     await context.supabase.from("audit_log").insert({
       action: `ลบข้อมูลใน ${t.name}`,
@@ -113,21 +157,14 @@ export const adminDelete = createServerFn({ method: "POST" })
 /** Bulk-saves the monthly score grid. */
 export const adminSaveScores = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .validator((data: { month: string; scores: { house_slug: string; score: number }[] }) => ({
-    month: String(data.month),
-    scores: (data.scores ?? []).map((s) => ({
-      house_slug: String(s.house_slug),
-      score: Math.max(0, Math.min(100, Number(s.score) || 0)),
-    })),
-  }))
+  .validator(validateScoreBatch)
   .handler(async ({ data, context }) => {
     await assertAdmin(context);
-    for (const s of data.scores) {
-      const res = await (context.supabase as any)
-        .from("house_scores")
-        .upsert({ house_slug: s.house_slug, month: data.month, score: s.score }, { onConflict: "house_slug,month" });
-      if (res.error) throw new Error(res.error.message);
-    }
+    const res = await context.supabase.from("house_scores").upsert(
+      data.scores.map((score) => ({ ...score, month: data.month })),
+      { onConflict: "house_slug,month" },
+    );
+    if (res.error) throw new Error(res.error.message);
     await context.supabase.from("audit_log").insert({
       action: `บันทึกคะแนนบ้านเดือน ${data.month}`,
       actor: (context.claims as { email?: string }).email ?? context.userId,
@@ -137,14 +174,16 @@ export const adminSaveScores = createServerFn({ method: "POST" })
 
 type RadioAdminAction = "approve" | "reject" | "complete" | "cancel" | "close" | "reopen";
 
-async function radioAdminService(context: { supabase: any; userId: string }) {
+async function radioAdminService(context: { supabase: AdminDb; userId: string }) {
   await assertAdmin(context);
   const { getRadioService } = await import("./radio/server");
-  return getRadioService(isRadioMemoryBackend() ? undefined : context.supabase);
+  return getRadioService(context.supabase);
 }
 
-async function auditRadioAction(context: { supabase: any; userId: string; claims: unknown }, action: string) {
-  if (isRadioMemoryBackend()) return;
+async function auditRadioAction(
+  context: { supabase: AdminDb; userId: string; claims: unknown },
+  action: string,
+) {
   await context.supabase.from("audit_log").insert({
     action: `SG Radio: ${action}`,
     actor: (context.claims as { email?: string }).email ?? context.userId,
@@ -185,24 +224,27 @@ export const radioAdminAction = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .validator((data: { action: string; id: string }) => {
     const action = String(data.action);
-    if (!( ["approve", "reject", "complete", "cancel", "close", "reopen"] as string[]).includes(action)) {
+    if (
+      !(["approve", "reject", "complete", "cancel", "close", "reopen"] as string[]).includes(action)
+    ) {
       throw new Error("การดำเนินการ SG Radio ไม่ถูกต้อง");
     }
     return { action: action as RadioAdminAction, id: String(data.id) };
   })
   .handler(async ({ data, context }) => {
     const service = await radioAdminService(context);
-    const result = data.action === "approve"
-      ? await service.approve(data.id)
-      : data.action === "reject"
-        ? await service.reject(data.id)
-        : data.action === "complete"
-          ? await service.complete(data.id)
-          : data.action === "cancel"
-            ? await service.cancel(data.id)
-            : data.action === "close"
-              ? await service.closeSlot(data.id)
-              : await service.reopenSlot(data.id);
+    const result =
+      data.action === "approve"
+        ? await service.approve(data.id)
+        : data.action === "reject"
+          ? await service.reject(data.id)
+          : data.action === "complete"
+            ? await service.complete(data.id)
+            : data.action === "cancel"
+              ? await service.cancel(data.id)
+              : data.action === "close"
+                ? await service.closeSlot(data.id)
+                : await service.reopenSlot(data.id);
     await auditRadioAction(context, data.action);
     return result;
   });

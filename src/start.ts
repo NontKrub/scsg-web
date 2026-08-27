@@ -2,10 +2,6 @@ import { createStart, createCsrfMiddleware, createMiddleware } from "@tanstack/r
 
 import { renderErrorPage } from "./lib/error-page";
 import { attachSupabaseAuth } from "@/integrations/supabase/auth-attacher";
-import { isRadioMemoryBackend } from "./lib/radio/config";
-import { installSupabaseNetworkGuard } from "./lib/radio/network-guard";
-
-installSupabaseNetworkGuard();
 
 const errorMiddleware = createMiddleware().server(async ({ next }) => {
   try {
@@ -30,6 +26,6 @@ const csrfMiddleware = createCsrfMiddleware({
 });
 
 export const startInstance = createStart(() => ({
-  functionMiddleware: isRadioMemoryBackend() ? [] : [attachSupabaseAuth],
+  functionMiddleware: [attachSupabaseAuth],
   requestMiddleware: [errorMiddleware, csrfMiddleware],
 }));

@@ -15,5 +15,13 @@ export default defineConfig({
   },
   vite: {
     plugins: [mcpPlugin()],
+    server: {
+      proxy: {
+        "/__l5e": {
+          target: "https://scsg.lovable.app",
+          changeOrigin: true,
+        },
+      },
+    },
   },
 });

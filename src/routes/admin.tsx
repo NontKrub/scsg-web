@@ -5,9 +5,15 @@ import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
 import { ImagePlus, Loader2, LogOut, Plus, RefreshCw, Save, Trash2, X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { adminDelete, adminList, adminSave, adminSaveScores, checkAdmin } from "@/lib/admin.functions";
+import {
+  adminDelete,
+  adminList,
+  adminSave,
+  adminSaveScores,
+  checkAdmin,
+  type AdminRow,
+} from "@/lib/admin.functions";
 import { MONTHS, MONTH_TH, type Month } from "@/data/sgsc";
-import { isRadioMemoryBackend } from "@/lib/radio/config";
 import { RadioAdminPanel } from "@/components/site/RadioAdminPanel";
 import { cn } from "@/lib/utils";
 
@@ -16,7 +22,10 @@ export const Route = createFileRoute("/admin")({
   head: () => ({
     meta: [
       { title: "ระบบจัดการเว็บไซต์ — SGSC Admin" },
-      { name: "description", content: "ระบบหลังบ้านสำหรับจัดการข้อมูลเว็บไซต์สภานักเรียนโรงเรียนเซนต์คาเบรียล" },
+      {
+        name: "description",
+        content: "ระบบหลังบ้านสำหรับจัดการข้อมูลเว็บไซต์สภานักเรียนโรงเรียนเซนต์คาเบรียล",
+      },
       { name: "robots", content: "noindex, nofollow" },
       { property: "og:title", content: "SGSC Admin" },
       { property: "og:description", content: "ระบบหลังบ้านของสภานักเรียนโรงเรียนเซนต์คาเบรียล" },
@@ -61,7 +70,6 @@ const SECTIONS: SectionDef[] = [
       { key: "duties", label: "หน้าที่รับผิดชอบ", kind: "long" },
       img("photo_url", "รูปภาพ"),
       n("sort", "ลำดับ"),
-
     ],
   },
   {
@@ -158,7 +166,12 @@ const SECTIONS: SectionDef[] = [
     fields: [
       t("slug", "slug"),
       t("title", "หัวข้อ"),
-      { key: "cat", label: "หมวด", kind: "select", options: ["SGSC", "STUDENT GOVERNMENT", "HOUSE", "CLUB"] },
+      {
+        key: "cat",
+        label: "หมวด",
+        kind: "select",
+        options: ["SGSC", "STUDENT GOVERNMENT", "HOUSE", "CLUB"],
+      },
       t("date_label", "วันที่"),
       { key: "intro", label: "เกริ่นนำ", kind: "long" },
       { key: "body", label: "เนื้อหา (บรรทัดละย่อหน้า)", kind: "list" },
@@ -211,15 +224,13 @@ const SECTIONS: SectionDef[] = [
 /* -------------------------------- page --------------------------------- */
 
 function AdminPage() {
-  const testMode = isRadioMemoryBackend();
-  const [session, setSession] = useState<boolean | null>(testMode ? true : null);
+  const [session, setSession] = useState<boolean | null>(null);
 
   useEffect(() => {
-    if (testMode) return;
     supabase.auth.getSession().then(({ data }) => setSession(!!data.session));
     const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => setSession(!!s));
     return () => sub.subscription.unsubscribe();
-  }, [testMode]);
+  }, []);
 
   if (session === null) return <Centered>กำลังตรวจสอบสิทธิ์…</Centered>;
   if (!session) return <SignIn />;
@@ -242,7 +253,9 @@ function SignIn() {
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setBusy(true);
-    const email = username.includes("@") ? username.trim() : `${username.trim().toLowerCase()}@sgsc.local`;
+    const email = username.includes("@")
+      ? username.trim()
+      : `${username.trim().toLowerCase()}@sgsc.local`;
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     setBusy(false);
     if (error) toast.error("ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง");
@@ -254,7 +267,9 @@ function SignIn() {
         <p className="eyebrow">SGSC ADMIN</p>
         <h1 className="display-xl mt-3 text-2xl">ระบบจัดการเว็บไซต์</h1>
         <p className="mt-3 text-xs text-muted-foreground">สำหรับผู้ดูแลระบบเท่านั้น</p>
-        <label className="mt-8 block text-xs font-semibold uppercase tracking-[0.16em]">ชื่อผู้ใช้</label>
+        <label className="mt-8 block text-xs font-semibold uppercase tracking-[0.16em]">
+          ชื่อผู้ใช้
+        </label>
         <input
           required
           autoComplete="username"
@@ -262,7 +277,9 @@ function SignIn() {
           onChange={(e) => setUsername(e.target.value)}
           className="mt-2 w-full border border-input bg-background px-3 py-3 text-sm"
         />
-        <label className="mt-5 block text-xs font-semibold uppercase tracking-[0.16em]">รหัสผ่าน</label>
+        <label className="mt-5 block text-xs font-semibold uppercase tracking-[0.16em]">
+          รหัสผ่าน
+        </label>
         <input
           type="password"
           required
@@ -285,11 +302,9 @@ function SignIn() {
 function Console() {
   const check = useServerFn(checkAdmin);
   const me = useQuery({ queryKey: ["admin", "me"], queryFn: () => check() });
-  const testMode = isRadioMemoryBackend();
-  const [section, setSection] = useState<string>(testMode ? "radio" : "scores");
+  const [section, setSection] = useState<string>("scores");
 
   const signOut = async () => {
-    if (testMode) return;
     await supabase.auth.signOut();
   };
 
@@ -300,7 +315,10 @@ function Console() {
         <div className="max-w-sm text-center">
           <p className="text-base font-semibold text-foreground">บัญชีนี้ไม่มีสิทธิ์ผู้ดูแลระบบ</p>
           <p className="mt-2">ติดต่อผู้ดูแลระบบเพื่อขอสิทธิ์ แล้วเข้าสู่ระบบอีกครั้ง</p>
-          <button onClick={signOut} className="mt-6 border border-input px-5 py-3 text-xs uppercase tracking-[0.16em]">
+          <button
+            onClick={signOut}
+            className="mt-6 border border-input px-5 py-3 text-xs uppercase tracking-[0.16em]"
+          >
             ออกจากระบบ
           </button>
         </div>
@@ -385,7 +403,7 @@ function NavBtn({
 
 /* ---------------------------- generic editor ---------------------------- */
 
-type Row = Record<string, any>;
+type Row = AdminRow;
 
 function useRows(table: string) {
   const list = useServerFn(adminList);
@@ -455,7 +473,9 @@ function TableEditor({ def }: { def: SectionDef }) {
       </div>
 
       {rows.isLoading && <p className="mt-8 text-sm text-muted-foreground">กำลังโหลด…</p>}
-      {rows.error && <p className="mt-8 text-sm text-destructive">{(rows.error as Error).message}</p>}
+      {rows.error && (
+        <p className="mt-8 text-sm text-destructive">{(rows.error as Error).message}</p>
+      )}
 
       <div className="mt-8 divide-y divide-border border border-border bg-background">
         {(rows.data ?? []).map((r: Row) => (
@@ -478,7 +498,9 @@ function TableEditor({ def }: { def: SectionDef }) {
             <span className="text-xs uppercase tracking-[0.16em] text-muted-foreground">แก้ไข</span>
           </button>
         ))}
-        {rows.data?.length === 0 && <p className="px-5 py-8 text-sm text-muted-foreground">ยังไม่มีข้อมูล</p>}
+        {rows.data?.length === 0 && (
+          <p className="px-5 py-8 text-sm text-muted-foreground">ยังไม่มีข้อมูล</p>
+        )}
       </div>
 
       {editing && (
@@ -498,7 +520,13 @@ function TableEditor({ def }: { def: SectionDef }) {
 }
 
 const fmt = (v: unknown) =>
-  Array.isArray(v) ? `${v.length} รายการ` : typeof v === "boolean" ? (v ? "ใช่" : "ไม่") : String(v ?? "").slice(0, 40) || "—";
+  Array.isArray(v)
+    ? `${v.length} รายการ`
+    : typeof v === "boolean"
+      ? v
+        ? "ใช่"
+        : "ไม่"
+      : String(v ?? "").slice(0, 40) || "—";
 
 function RowForm({
   def,
@@ -516,7 +544,7 @@ function RowForm({
   onDelete?: (() => void) | undefined;
 }) {
   const [draft, setDraft] = useState<Row>(() => ({ ...row }));
-  const set = (k: string, v: unknown) => setDraft((d) => ({ ...d, [k]: v }));
+  const set = (k: string, v: AdminRow[string]) => setDraft((d) => ({ ...d, [k]: v }));
 
   return (
     <div className="fixed inset-0 z-50 grid place-items-end overflow-y-auto bg-black/40 p-0 sm:place-items-center sm:p-6">
@@ -530,7 +558,9 @@ function RowForm({
         <div className="max-h-[70vh] space-y-5 overflow-y-auto px-6 py-6">
           {def.fields.map((f) => (
             <div key={f.key}>
-              <label className="block text-xs font-semibold uppercase tracking-[0.16em]">{f.label}</label>
+              <label className="block text-xs font-semibold uppercase tracking-[0.16em]">
+                {f.label}
+              </label>
               {f.kind === "long" && (
                 <textarea
                   rows={3}
@@ -542,8 +572,13 @@ function RowForm({
               {f.kind === "list" && (
                 <textarea
                   rows={4}
-                  value={(Array.isArray(draft[f.key]) ? draft[f.key] : []).join("\n")}
-                  onChange={(e) => set(f.key, e.target.value.split("\n").filter((x) => x.trim()))}
+                  value={Array.isArray(draft[f.key]) ? (draft[f.key] as string[]).join("\n") : ""}
+                  onChange={(e) =>
+                    set(
+                      f.key,
+                      e.target.value.split("\n").filter((x) => x.trim()),
+                    )
+                  }
                   className="mt-2 w-full border border-input bg-background px-3 py-2 text-sm"
                   placeholder="บรรทัดละหนึ่งรายการ"
                 />
@@ -596,7 +631,9 @@ function RowForm({
         <div className="flex items-center justify-between gap-3 border-t border-border px-6 py-4">
           {onDelete ? (
             <button
-              onClick={onDelete}
+              onClick={() => {
+                if (window.confirm("ลบรายการนี้หรือไม่?")) onDelete();
+              }}
               disabled={busy}
               className="inline-flex items-center gap-2 border border-destructive px-4 py-3 text-xs uppercase tracking-[0.16em] text-destructive"
             >
@@ -622,11 +659,24 @@ function RowForm({
 
 function ImageField({ value, onChange }: { value: string; onChange: (v: string) => void }) {
   const [busy, setBusy] = useState(false);
+  const imageExtensions: Record<string, string> = {
+    "image/jpeg": "jpg",
+    "image/png": "png",
+    "image/webp": "webp",
+  };
 
   const upload = async (file: File) => {
+    const ext = imageExtensions[file.type];
+    if (!ext) {
+      toast.error("รองรับเฉพาะไฟล์ JPG, PNG หรือ WebP");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("ขนาดรูปภาพต้องไม่เกิน 5 MB");
+      return;
+    }
     setBusy(true);
     try {
-      const ext = (file.name.split(".").pop() ?? "jpg").toLowerCase();
       const path = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
       const { error } = await supabase.storage.from("site-images").upload(path, file, {
         cacheControl: "31536000",
@@ -655,11 +705,15 @@ function ImageField({ value, onChange }: { value: string; onChange: (v: string) 
       </div>
       <div className="flex flex-wrap items-center gap-2">
         <label className="inline-flex cursor-pointer items-center gap-2 border border-input px-4 py-2 text-xs uppercase tracking-[0.16em]">
-          {busy ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <ImagePlus className="h-3.5 w-3.5" />}
+          {busy ? (
+            <Loader2 className="h-3.5 w-3.5 animate-spin" />
+          ) : (
+            <ImagePlus className="h-3.5 w-3.5" />
+          )}
           {busy ? "กำลังอัปโหลด" : "อัปโหลดรูปภาพ"}
           <input
             type="file"
-            accept="image/*"
+            accept="image/jpeg,image/png,image/webp"
             className="hidden"
             disabled={busy}
             onChange={(e) => {
@@ -734,7 +788,9 @@ function ScoreEditor() {
             onClick={() => setMonth(m)}
             className={cn(
               "num border px-4 py-2 text-xs",
-              m === month ? "border-primary bg-primary text-primary-foreground" : "border-border bg-background",
+              m === month
+                ? "border-primary bg-primary text-primary-foreground"
+                : "border-border bg-background",
             )}
           >
             {m} · {MONTH_TH[m]}
@@ -744,9 +800,13 @@ function ScoreEditor() {
 
       <div className="mt-8 divide-y divide-border border border-border bg-background">
         {(houses.data ?? []).map((h: Row) => (
-          <div key={String(h["slug"])} className="flex items-center justify-between gap-4 px-5 py-3">
+          <div
+            key={String(h["slug"])}
+            className="flex items-center justify-between gap-4 px-5 py-3"
+          >
             <span className="text-sm font-semibold">
-              {String(h["name"])} <span className="text-muted-foreground">· {String(h["name_th"])}</span>
+              {String(h["name"])}{" "}
+              <span className="text-muted-foreground">· {String(h["name_th"])}</span>
             </span>
             <input
               type="number"
@@ -791,7 +851,9 @@ function AuditView() {
             </p>
           </div>
         ))}
-        {list.length === 0 && <p className="px-5 py-8 text-sm text-muted-foreground">ยังไม่มีประวัติ</p>}
+        {list.length === 0 && (
+          <p className="px-5 py-8 text-sm text-muted-foreground">ยังไม่มีประวัติ</p>
+        )}
       </div>
     </section>
   );

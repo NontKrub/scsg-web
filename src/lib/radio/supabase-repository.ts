@@ -106,6 +106,15 @@ export function createSupabaseRadioRepository(db: RadioDb): RadioRepository {
     const result = await db
       .from("radio_slots")
       .select("id,date,start_time,state,note,created_at,updated_at")
+      .gte(
+        "date",
+        new Intl.DateTimeFormat("en-CA", {
+          timeZone: "Asia/Bangkok",
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+        }).format(new Date()),
+      )
       .not("date", "is", null)
       .not("start_time", "is", null)
       .order("date", { ascending: true })
@@ -120,8 +129,8 @@ export function createSupabaseRadioRepository(db: RadioDb): RadioRepository {
       .select(
         "id,slot_id,requester,student_id,klass,song,message,additional_info,status,created_at,updated_at,radio_slots(date,start_time,state)",
       )
-      .order("created_at", { ascending: true })
-      .limit(1000);
+      .order("created_at", { ascending: false })
+      .limit(200);
     if (result.error) throwDatabaseError(result.error, "RADIO_INVALID_DATA");
     return (result.data ?? []).flatMap((row) => {
       const joined = Array.isArray(row.radio_slots) ? row.radio_slots[0] : row.radio_slots;

@@ -1,7 +1,3 @@
-import { isRadioMemoryBackend } from "./config";
-
-const installed = Symbol.for("scsg.radio.supabaseNetworkGuard");
-
 function configuredSupabaseHost() {
   const env = typeof process === "undefined" ? undefined : process.env;
   const configuredUrl = import.meta.env["VITE_SUPABASE_URL"] ?? env?.["SUPABASE_URL"];
@@ -33,19 +29,4 @@ export function isSupabaseUrl(value: string | URL | Request) {
   } catch {
     return false;
   }
-}
-
-export function installSupabaseNetworkGuard() {
-  if (!isRadioMemoryBackend() || typeof globalThis.fetch !== "function") return;
-  const scope = globalThis as typeof globalThis & { [installed]?: boolean };
-  if (scope[installed]) return;
-  const originalFetch = globalThis.fetch.bind(globalThis);
-  globalThis.fetch = (input, init) => {
-    const value =
-      typeof Request !== "undefined" && input instanceof Request ? input : String(input);
-    if (isSupabaseUrl(value))
-      throw new Error("Supabase network request blocked in Radio test mode");
-    return originalFetch(input, init);
-  };
-  scope[installed] = true;
 }

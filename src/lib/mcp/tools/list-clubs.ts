@@ -4,7 +4,8 @@ import { loadContent } from "@/lib/content.server";
 export default defineTool({
   name: "list_clubs",
   title: "List interest clubs",
-  description: "List the 6 interest clubs (ชุมนุม) of SGSC with their tagline, member count, and activities.",
+  description:
+    "List the 6 interest clubs (ชุมนุม) of SGSC with their tagline, member count, and activities.",
   inputSchema: {},
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
   handler: async () => {
@@ -21,7 +22,9 @@ export default defineTool({
       content: [
         {
           type: "text" as const,
-          text: clubs.map((c) => `${c.name} (${c.nameTh}) — ${c.tagline} · ${c.members} คน`).join("\n"),
+          text: clubs
+            .map((c) => `${c.name} (${c.nameTh}) — ${c.tagline} · ${c.members} คน`)
+            .join("\n"),
         },
       ],
       structuredContent: { count: clubs.length, clubs },

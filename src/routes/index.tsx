@@ -8,7 +8,7 @@ import { ScoreTable } from "@/components/site/ScoreBoard";
 import congressGroup from "@/assets/congress-group.jpg.asset.json";
 import scsgSeal from "@/assets/scsg-seal.png.asset.json";
 import { ImgBlock, Section, SectionHead, Stat, Tag } from "@/components/site/primitives";
-import { MONTH_TH } from "@/data/sgsc";
+import { MONTH_TH, ORGS } from "@/data/sgsc";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -17,10 +17,10 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "FOR SAINTS. BY SAINTS. เว็บไซต์ทางการของสภานักเรียนโรงเรียนเซนต์คาเบรียล 68 ผู้นำนักเรียน 4 องค์กร 9 บ้านสายกีฬา",
+          "FOR SAINTS. BY SAINTS. เว็บไซต์ทางการของสภานักเรียนโรงเรียนเซนต์คาเบรียล 4 องค์กร บ้านสายกีฬา",
       },
       { property: "og:title", content: "FOR SAINTS. BY SAINTS. — SGSC" },
-      { property: "og:description", content: "68 ผู้นำนักเรียน · 4 องค์กร · 9 บ้านสายกีฬา" },
+      { property: "og:description", content: "ผู้นำนักเรียน · 4 องค์กร · บ้านสายกีฬา" },
     ],
   }),
   component: Home,
@@ -28,6 +28,14 @@ export const Route = createFileRoute("/")({
 
 function Home() {
   const c = useContent();
+  const currentYear = c.settings["current_year"] ?? String(new Date().getFullYear());
+  const houseCount = c.houses.length;
+  const memberGroups = [
+    { org: "SG" as const, t: "STUDENT GOVERNMENT", th: "สโมสรนักเรียน" },
+    { org: "HOUSE" as const, t: "HOUSE PRESIDENTS", th: "ประธานบ้านสายกีฬา" },
+    { org: "CLUB" as const, t: "CLUB REPRESENTATIVES", th: `${c.clubs.length} ชุมนุม` },
+    { org: "CLASS" as const, t: "CLASS REPRESENTATIVES", th: "ผู้แทนห้องเรียน" },
+  ];
   return (
     <>
       {/* HERO */}
@@ -54,8 +62,8 @@ function Home() {
             </p>
             <div className="mt-10 grid grid-cols-3 gap-6">
               <Stat value={String(c.members.length)} label="ผู้นำนักเรียน" />
-              <Stat value="04" label="องค์กร" />
-              <Stat value="09" label="บ้านสายกีฬา" />
+              <Stat value={String(ORGS.length).padStart(2, "0")} label="องค์กร" />
+              <Stat value={String(houseCount).padStart(2, "0")} label="บ้านสายกีฬา" />
             </div>
             <div className="mt-10 flex flex-wrap gap-3">
               <Link
@@ -89,7 +97,7 @@ function Home() {
           eyebrow="โครงสร้างองค์กร"
           title={
             <>
-              68 PEOPLE. 4 ORGANIZATIONS.
+              {c.members.length} PEOPLE. {ORGS.length} ORGANIZATIONS.
               <br />
               ONE CONGRESS.
             </>
@@ -102,7 +110,7 @@ function Home() {
       {/* HOUSE SCORE HIGHLIGHT */}
       <Section className="bg-secondary">
         <SectionHead
-          eyebrow={`ประจำเดือน${MONTH_TH[c.currentMonth]} 2026`}
+          eyebrow={`ประจำเดือน${MONTH_TH[c.currentMonth]} ${currentYear}`}
           title="HOUSE COMPETITION"
           right={
             <Link
@@ -116,12 +124,11 @@ function Home() {
         <ScoreTable month={c.currentMonth} limit={3} />
       </Section>
 
-
       {/* c.houses */}
       <Section className="bg-navy-deep text-primary-foreground">
         <div className="mb-10 flex flex-col gap-6 border-t border-primary-foreground/20 pt-6 md:flex-row md:items-end md:justify-between">
           <h2 className="display-xl text-[clamp(1.9rem,5vw,3.6rem)]">
-            09 c.houses.
+            {String(houseCount).padStart(2, "0")} HOUSES.
             <br />
             ONE SAINT GABRIEL&apos;S.
           </h2>
@@ -142,7 +149,7 @@ function Home() {
         <SectionHead
           eyebrow="คณะกรรมการบริหารสภา"
           title="THE CONGRESS BOARD."
-          sub="5 ตำแหน่งบริหารของสภานักเรียนใหญ่ เลือกจากสมาชิกสภาทั้ง 68 คน จาก 4 องค์กร"
+          sub={`5 ตำแหน่งบริหารของสภานักเรียนใหญ่ เลือกจากสมาชิกสภาทั้ง ${c.members.length} คน จาก ${ORGS.length} องค์กร`}
         />
         <div className="grid grid-cols-2 gap-px bg-border md:grid-cols-3 lg:grid-cols-5">
           {c.congressBoard.map((b) => (
@@ -182,29 +189,27 @@ function Home() {
           eyebrow="สมาชิกสภา"
           title={
             <>
-              68 PEOPLE.
+              {c.members.length} PEOPLE.
               <br />
               ONE CONGRESS.
             </>
           }
-          sub="สโมสรนักเรียน 20 · ประธานบ้านสายกีฬา 9 · ผู้แทนชุมนุม 15 · ผู้แทนห้องเรียน 24"
+          sub={memberGroups
+            .map((group) => `${membersOf(c, group.org).length} ${group.th}`)
+            .join(" · ")}
         />
         <div className="mb-12 grid grid-cols-2 gap-px bg-border md:grid-cols-4">
-          {[
-            { n: "20", t: "STUDENT GOVERNMENT", th: "สโมสรนักเรียน" },
-            { n: "09", t: "HOUSE PRESIDENTS", th: "ประธานบ้านสายกีฬา 9 บ้าน" },
-            { n: "15", t: "CLUB REPRESENTATIVES", th: "6 ชุมนุม" },
-            { n: "24", t: "CLASS REPRESENTATIVES", th: "ผู้แทนห้องเรียน" },
-          ].map((x) => (
+          {memberGroups.map((x) => (
             <div key={x.t} className="bg-background p-6">
-              <div className="num text-4xl">{x.n}</div>
+              <div className="num text-4xl">
+                {String(membersOf(c, x.org).length).padStart(2, "0")}
+              </div>
               <p className="num mt-4 text-xs">{x.t}</p>
               <p className="mt-1 text-xs text-muted-foreground">{x.th}</p>
             </div>
           ))}
         </div>
         <MemberGrid />
-
       </Section>
 
       {/* c.clubs */}
@@ -224,7 +229,9 @@ function Home() {
                 </span>
                 <span className="h-8 w-8 bg-[var(--house)] transition-colors group-hover:bg-white/80" />
               </div>
-              <h3 className="display-xl mt-10 text-2xl transition-colors group-hover:text-white">{club.name}</h3>
+              <h3 className="display-xl mt-10 text-2xl transition-colors group-hover:text-white">
+                {club.name}
+              </h3>
               <p className="mt-2 text-sm text-muted-foreground transition-colors group-hover:text-white/80">
                 {club.nameTh} · {club.tagline}
               </p>

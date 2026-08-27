@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <em>68 student leaders · 4 organizations · 9 houses · One Congress</em>
+  <em>Student leaders · 4 organizations · One Congress</em>
 </p>
 
 ---
@@ -21,10 +21,10 @@ This repository contains the website for the **Student Congress of Saint Gabriel
 
 The Congress is represented through four main organizations:
 
-- **Student Government** — 20 student leaders
-- **House of Saints** — representatives from 9 houses
-- **Clubs of Interest** — representatives from 6 interest clubs
-- **Class Representatives** — 24 classroom representatives
+- **Student Government** — member counts come from the `members` table
+- **House of Saints** — representatives from the configured houses
+- **Clubs of Interest** — representatives from the configured clubs
+- **Class Representatives** — classroom representatives from the `members` table
 
 The site is designed as a student-led public information and service platform rather than a personalized student dashboard.
 
@@ -100,6 +100,7 @@ bun run dev        # Start the development server
 bun run build      # Create a production build
 bun run build:dev  # Build using development mode
 bun run preview    # Preview the production build locally
+bun run typecheck  # Check TypeScript without emitting files
 bun run lint       # Run ESLint
 bun run format     # Format the codebase with Prettier
 ```
@@ -195,6 +196,7 @@ The current Vite/TanStack configuration uses Nitro and defaults to a **Cloudflar
 - Keep Supabase Row Level Security policies enabled for user-accessible tables.
 - Privileged writes should stay inside trusted server-side functions.
 - Review database migrations and access policies before deploying changes to production.
+- Public forms use server-side validation and a honeypot. Add persistent rate limiting at the deployment edge before exposing them to untrusted high-volume traffic.
 
 ## Development notes
 

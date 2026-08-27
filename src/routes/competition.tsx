@@ -9,7 +9,10 @@ export const Route = createFileRoute("/competition")({
   head: () => ({
     meta: [
       { title: "House Competition — คะแนนบ้านสายกีฬา SGSC" },
-      { name: "description", content: "ตารางคะแนน House Competition ทั้ง 9 บ้าน รายเดือน ระดับคะแนน และรางวัลประจำเดือน" },
+      {
+        name: "description",
+        content: "ตารางคะแนน House Competition ทั้ง 9 บ้าน รายเดือน ระดับคะแนน และรางวัลประจำเดือน",
+      },
       { property: "og:title", content: "HOUSE COMPETITION — SGSC" },
       { property: "og:description", content: "คะแนน อันดับ และรางวัลประจำเดือนของทั้ง 9 บ้าน" },
     ],
@@ -19,6 +22,7 @@ export const Route = createFileRoute("/competition")({
 
 function Competition() {
   const c = useContent();
+  const currentYear = c.settings["current_year"] ?? String(new Date().getFullYear());
   const [month, setMonth] = useState<Month>(c.currentMonth);
   const honors = honorsOf(c, month);
   const hom = c.houses.find((h) => h.slug === honors.houseOfMonth);
@@ -28,14 +32,13 @@ function Competition() {
     .sort((a, b) => b.g - a.g);
   const improved = board[0]?.house;
 
-
   return (
     <>
       <Section className="pb-8">
         <Tag>House of Saints</Tag>
         <h1 className="display-xl mt-6 text-[clamp(2.6rem,9vw,6.5rem)]">HOUSE COMPETITION</h1>
         <p className="mt-6 text-muted-foreground">
-          ผลคะแนนประจำเดือน{MONTH_TH[month]} 2026 · เลือกเดือนเพื่อดูผลย้อนหลัง
+          ผลคะแนนประจำเดือน{MONTH_TH[month]} {currentYear} · เลือกเดือนเพื่อดูผลย้อนหลัง
         </p>
         <div className="mt-8">
           <MonthPicker value={month} onChange={setMonth} />
@@ -58,7 +61,10 @@ function Competition() {
             { house: hom, title: "HOUSE OF THE MONTH", th: "บ้านประจำเดือน" },
             { house: cex, title: "HOUSE EXCELLENCE AWARDS", th: "รางวัลบ้านยอดเยี่ยม" },
           ]
-            .filter((a): a is { house: NonNullable<typeof a.house>; title: string; th: string } => !!a.house)
+            .filter(
+              (a): a is { house: NonNullable<typeof a.house>; title: string; th: string } =>
+                !!a.house,
+            )
             .map((a) => (
               <div
                 key={a.title}
@@ -71,14 +77,18 @@ function Competition() {
               >
                 <div className="absolute inset-x-0 top-0 h-1 bg-[var(--house)]" />
                 <div className="flex items-center gap-6">
-                  <img src={a.house.emblem} alt="" className="h-24 w-24 object-contain md:h-32 md:w-32" />
+                  <img
+                    src={a.house.emblem}
+                    alt=""
+                    className="h-24 w-24 object-contain md:h-32 md:w-32"
+                  />
                   <div>
                     <p className="text-[0.62rem] uppercase tracking-[0.22em] text-primary-foreground">
                       {a.title}
                     </p>
                     <h3 className="display-xl mt-3 text-2xl md:text-3xl">{a.house.name}</h3>
                     <p className="mt-2 text-sm text-primary-foreground/70">
-                      {a.th} · {MONTH_TH[month]} 2026 · {a.house.scores[month].toFixed(2)}%
+                      {a.th} · {MONTH_TH[month]} {currentYear} · {a.house.scores[month].toFixed(2)}%
                     </p>
                   </div>
                 </div>
@@ -88,7 +98,11 @@ function Competition() {
       </Section>
 
       <Section>
-        <SectionHead eyebrow="อันดับการพัฒนา" title="IMPROVEMENT LEADERBOARD" sub={`เทียบกับเดือนก่อนหน้า`} />
+        <SectionHead
+          eyebrow="อันดับการพัฒนา"
+          title="IMPROVEMENT LEADERBOARD"
+          sub={`เทียบกับเดือนก่อนหน้า`}
+        />
         <div className="border-t border-border">
           {board.map((b, i) => (
             <div
@@ -100,10 +114,16 @@ function Competition() {
               </span>
               <span className="flex min-w-0 items-center gap-4">
                 <span className="h-8 w-1.5 shrink-0 bg-[var(--house)]" />
-                <img src={b.house.emblem} alt="" className="hidden h-10 w-10 object-contain sm:block" />
+                <img
+                  src={b.house.emblem}
+                  alt=""
+                  className="hidden h-10 w-10 object-contain sm:block"
+                />
                 <span className="num truncate text-base md:text-xl">{b.house.name}</span>
               </span>
-              <span className={`num text-right text-xl md:text-2xl ${b.g >= 0 ? "text-primary" : "text-muted-foreground"}`}>
+              <span
+                className={`num text-right text-xl md:text-2xl ${b.g >= 0 ? "text-primary" : "text-muted-foreground"}`}
+              >
                 {b.g >= 0 ? "+" : ""}
                 {b.g.toFixed(2)}
               </span>
@@ -129,10 +149,15 @@ function Competition() {
                     <p className="text-xs text-muted-foreground">ยังไม่มีบ้านในระดับนี้</p>
                   ) : (
                     inTier.map((r) => (
-                      <p key={r.house.slug} className={`${r.house.cls} flex items-center gap-2 text-xs`}>
+                      <p
+                        key={r.house.slug}
+                        className={`${r.house.cls} flex items-center gap-2 text-xs`}
+                      >
                         <span className="h-3 w-1 shrink-0 bg-[var(--house)]" />
                         <span className="num truncate">{r.house.name}</span>
-                        <span className="num ml-auto text-muted-foreground">{r.score.toFixed(2)}</span>
+                        <span className="num ml-auto text-muted-foreground">
+                          {r.score.toFixed(2)}
+                        </span>
                       </p>
                     ))
                   )}
@@ -142,7 +167,6 @@ function Competition() {
           })}
         </div>
       </Section>
-
 
       <Section className="bg-secondary">
         <SectionHead
@@ -160,7 +184,6 @@ function Competition() {
               </div>
             ) : undefined
           }
-
         />
         <HouseCompare />
         <div className="mt-12 grid grid-cols-2 gap-px bg-border sm:grid-cols-4 lg:grid-cols-7">
