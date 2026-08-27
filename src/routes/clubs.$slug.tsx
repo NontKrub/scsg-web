@@ -2,12 +2,14 @@ import { useContent, ranking, rankOf, growth, honorsOf, membersOf, display } fro
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Section, SectionHead, Tag } from "@/components/site/primitives";
 
-
 export const Route = createFileRoute("/clubs/$slug")({
   head: ({ params }) => ({
     meta: [
       { title: `${params.slug} — ชุมนุม | SGSC` },
-      { name: "description", content: "กิจกรรม สมาชิก และผลงานของชุมนุมตามความสนใจ สภานักเรียนโรงเรียนเซนต์คาเบรียล" },
+      {
+        name: "description",
+        content: "กิจกรรม สมาชิก และผลงานของชุมนุมตามความสนใจ สภานักเรียนโรงเรียนเซนต์คาเบรียล",
+      },
       { property: "og:title", content: "Clubs of Interest — SGSC" },
       { property: "og:description", content: "กิจกรรมและผลงานของชุมนุม" },
     ],
@@ -36,11 +38,15 @@ function ClubPage() {
             </div>
             <div>
               <div className="num text-lg">{club.head}</div>
-              <p className="mt-2 text-[0.62rem] uppercase tracking-[0.2em] text-white/60">หัวหน้าชุมนุม</p>
+              <p className="mt-2 text-[0.62rem] uppercase tracking-[0.2em] text-white/60">
+                หัวหน้าชุมนุม
+              </p>
             </div>
             <div>
               <div className="num text-3xl">{club.activities.length}</div>
-              <p className="mt-2 text-[0.62rem] uppercase tracking-[0.2em] text-white/60">กิจกรรมหลัก</p>
+              <p className="mt-2 text-[0.62rem] uppercase tracking-[0.2em] text-white/60">
+                กิจกรรมหลัก
+              </p>
             </div>
           </div>
         </div>
@@ -54,7 +60,10 @@ function ClubPage() {
             <p className="mt-6 leading-relaxed">{club.about}</p>
             <ul className="mt-8">
               {club.activities.map((a) => (
-                <li key={a} className="flex items-center gap-4 border-t border-border py-4 last:border-b">
+                <li
+                  key={a}
+                  className="flex items-center gap-4 border-t border-border py-4 last:border-b"
+                >
                   <span className="h-2 w-2 bg-[var(--house)]" />
                   <span className="text-sm">{a}</span>
                 </li>

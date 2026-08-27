@@ -2,14 +2,20 @@ import { useContent, ranking, rankOf, growth, honorsOf, membersOf, display } fro
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Section, SectionHead, Tag } from "@/components/site/primitives";
 
-
 export const Route = createFileRoute("/clubs/")({
   head: () => ({
     meta: [
       { title: "Clubs of Interest — ชุมนุมตามความสนใจ | SGSC" },
-      { name: "description", content: "6 ชุมนุมของ Student Congress of Saint Gabriel's College: ASA Saint, Interact, Innovation, MC, Board Game และ Public Relation" },
+      {
+        name: "description",
+        content:
+          "6 ชุมนุมของ Student Congress of Saint Gabriel's College: ASA Saint, Interact, Innovation, MC, Board Game และ Public Relation",
+      },
       { property: "og:title", content: "CLUBS OF INTEREST — SGSC" },
-      { property: "og:description", content: "6 ชุมนุมที่เปิดพื้นที่ให้นักเรียนได้ลงมือทำในสิ่งที่รัก" },
+      {
+        property: "og:description",
+        content: "6 ชุมนุมที่เปิดพื้นที่ให้นักเรียนได้ลงมือทำในสิ่งที่รัก",
+      },
     ],
   }),
   component: ClubsIndex,
@@ -53,8 +59,16 @@ function ClubsIndex() {
         <SectionHead eyebrow="เข้าร่วมชุมนุม" title="HOW TO JOIN" />
         <div className="grid gap-px bg-border sm:grid-cols-3">
           {[
-            { n: "01", t: "เลือกชุมนุม", d: "ดูรายละเอียดกิจกรรมของแต่ละชุมนุมและเลือกที่ตรงกับความสนใจ" },
-            { n: "02", t: "ติดต่อหัวหน้าชุมนุม", d: "แจ้งความประสงค์กับหัวหน้าชุมนุมหรือครูที่ปรึกษา" },
+            {
+              n: "01",
+              t: "เลือกชุมนุม",
+              d: "ดูรายละเอียดกิจกรรมของแต่ละชุมนุมและเลือกที่ตรงกับความสนใจ",
+            },
+            {
+              n: "02",
+              t: "ติดต่อหัวหน้าชุมนุม",
+              d: "แจ้งความประสงค์กับหัวหน้าชุมนุมหรือครูที่ปรึกษา",
+            },
             { n: "03", t: "เริ่มกิจกรรม", d: "เข้าร่วมกิจกรรมประจำสัปดาห์ตามตารางของชุมนุม" },
           ].map((s) => (
             <div key={s.n} className="bg-background p-7">

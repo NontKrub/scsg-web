@@ -10,7 +10,7 @@ function safeNext(next: unknown): string {
 
 export const Route = createFileRoute("/login")({
   ssr: false,
-  validateSearch: (s: Record<string, unknown>) => ({ next: safeNext(s['next']) }),
+  validateSearch: (s: Record<string, unknown>) => ({ next: safeNext(s["next"]) }),
   head: () => ({
     meta: [
       { title: "เข้าสู่ระบบ | SGSC สภานักเรียนเซนต์คาเบรียล" },
@@ -76,7 +76,9 @@ function LoginPage() {
         <p className="mt-3 text-xs text-muted-foreground">
           บัญชีนี้ใช้สำหรับเชื่อมต่อผู้ช่วย AI (MCP) กับข้อมูลสภานักเรียน
         </p>
-        <label className="mt-8 block text-xs font-semibold uppercase tracking-[0.16em]">อีเมล</label>
+        <label className="mt-8 block text-xs font-semibold uppercase tracking-[0.16em]">
+          อีเมล
+        </label>
         <input
           type="email"
           required
@@ -84,7 +86,9 @@ function LoginPage() {
           onChange={(e) => setEmail(e.target.value)}
           className="mt-2 w-full border border-input bg-background px-3 py-3 text-sm"
         />
-        <label className="mt-5 block text-xs font-semibold uppercase tracking-[0.16em]">รหัสผ่าน</label>
+        <label className="mt-5 block text-xs font-semibold uppercase tracking-[0.16em]">
+          รหัสผ่าน
+        </label>
         <input
           type="password"
           required

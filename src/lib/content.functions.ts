@@ -27,7 +27,10 @@ export function normalizeComplaintInput(data: unknown) {
   if (typeof honeypot === "string" && honeypot.trim()) {
     throw new Error("ส่งข้อมูลไม่สำเร็จ");
   }
-  const trim = (value: unknown, max: number) => String(value ?? "").trim().slice(0, max);
+  const trim = (value: unknown, max: number) =>
+    String(value ?? "")
+      .trim()
+      .slice(0, max);
   const anonymous = source["anonymous"] === true;
   const out = {
     subject: trim(source["subject"], 160),

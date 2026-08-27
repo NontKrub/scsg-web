@@ -11,20 +11,34 @@ export default defineTool({
     org: z
       .enum(["SG", "HOUSE", "CLUB", "CLASS"])
       .optional()
-      .describe("Branch: SG = สโมสรนักเรียน (18), HOUSE = ประธานบ้านสายกีฬา (9), CLUB = ผู้แทนชุมนุม (18), CLASS = ผู้แทนห้องเรียน (23)"),
-    search: z.string().trim().min(1).optional().describe("Free-text match on name, role, or classroom."),
-    limit: z.number().int().min(1).max(68).optional().describe("Maximum number of members to return."),
+      .describe(
+        "Branch: SG = สโมสรนักเรียน (18), HOUSE = ประธานบ้านสายกีฬา (9), CLUB = ผู้แทนชุมนุม (18), CLASS = ผู้แทนห้องเรียน (23)",
+      ),
+    search: z
+      .string()
+      .trim()
+      .min(1)
+      .optional()
+      .describe("Free-text match on name, role, or classroom."),
+    limit: z
+      .number()
+      .int()
+      .min(1)
+      .max(68)
+      .optional()
+      .describe("Maximum number of members to return."),
   },
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
   handler: async ({ org, search, limit }) => {
     const c = await loadContent();
     const q = search?.toLowerCase();
-    const rows = c.members.filter(
-      (m) =>
-        (!org || m.org === org) &&
-        (!q ||
-          `${m.name} ${m.role} ${m.klass} ${m.orgLabel}`.toLowerCase().includes(q)),
-    ).slice(0, limit ?? 68);
+    const rows = c.members
+      .filter(
+        (m) =>
+          (!org || m.org === org) &&
+          (!q || `${m.name} ${m.role} ${m.klass} ${m.orgLabel}`.toLowerCase().includes(q)),
+      )
+      .slice(0, limit ?? 68);
 
     return {
       content: [

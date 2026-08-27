@@ -132,15 +132,14 @@ function About() {
           <div>
             <h2 className="display-xl text-[clamp(1.9rem,5vw,3.4rem)]">CONGRESS MEMBERS</h2>
             <p className="mt-5 max-w-md text-primary-foreground/70">
-              สมาชิกสภาทั้งหมด {c.members.length} คน มาจากสโมสรนักเรียน บ้านสายกีฬา ชุมนุม และผู้แทนห้องเรียน
+              สมาชิกสภาทั้งหมด {c.members.length} คน มาจากสโมสรนักเรียน บ้านสายกีฬา ชุมนุม
+              และผู้แทนห้องเรียน
             </p>
           </div>
           <div className="grid grid-cols-2 gap-px bg-primary-foreground/15">
             {ORGS.map((o) => (
               <div key={o.slug} className="bg-navy-deep p-6">
-                <div className="num text-4xl">
-                  {membersOf(c, ORG_MEMBER_TYPES[o.slug]).length}
-                </div>
+                <div className="num text-4xl">{membersOf(c, ORG_MEMBER_TYPES[o.slug]).length}</div>
                 <p className="num mt-3 text-sm">{o.name}</p>
                 <p className="mt-1 text-xs text-primary-foreground/60">{o.nameTh}</p>
               </div>
@@ -152,10 +151,22 @@ function About() {
       <Section>
         <SectionHead eyebrow="ตัวเลข" title="ONE CONGRESS, MANY VOICES." />
         <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
-          <Stat value={String(c.members.filter((m) => m.org === "SG").length)} label="สโมสรนักเรียน" />
-          <Stat value={String(c.members.filter((m) => m.org === "HOUSE").length)} label="คณะกรรมการบ้าน" />
-          <Stat value={String(c.members.filter((m) => m.org === "CLUB").length)} label="ผู้แทนชุมนุม" />
-          <Stat value={String(c.members.filter((m) => m.org === "CLASS").length)} label="ผู้แทนห้องเรียน" />
+          <Stat
+            value={String(c.members.filter((m) => m.org === "SG").length)}
+            label="สโมสรนักเรียน"
+          />
+          <Stat
+            value={String(c.members.filter((m) => m.org === "HOUSE").length)}
+            label="คณะกรรมการบ้าน"
+          />
+          <Stat
+            value={String(c.members.filter((m) => m.org === "CLUB").length)}
+            label="ผู้แทนชุมนุม"
+          />
+          <Stat
+            value={String(c.members.filter((m) => m.org === "CLASS").length)}
+            label="ผู้แทนห้องเรียน"
+          />
         </div>
       </Section>
     </>

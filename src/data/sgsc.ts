@@ -79,7 +79,6 @@ export type Member = {
   photoUrl: string;
 };
 
-
 export type BoardSeat = {
   id: string;
   role: string;
@@ -109,7 +108,6 @@ export type Club = {
   activities: string[];
 };
 
-
 export type News = {
   slug: string;
   title: string;
@@ -122,7 +120,6 @@ export type News = {
   coverUrl?: string | undefined;
 };
 
-
 export type SiteContent = {
   settings: Record<string, string>;
   currentMonth: Month;
@@ -134,7 +131,6 @@ export type SiteContent = {
   clubs: Club[];
   news: News[];
 };
-
 
 /* ---------------- Static structure ---------------- */
 

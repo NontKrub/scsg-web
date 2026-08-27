@@ -59,7 +59,10 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
           >
             ลองอีกครั้ง
           </button>
-          <a href="/" className="border border-input px-5 py-3 text-xs font-semibold uppercase tracking-[0.16em]">
+          <a
+            href="/"
+            className="border border-input px-5 py-3 text-xs font-semibold uppercase tracking-[0.16em]"
+          >
             กลับหน้าแรก
           </a>
         </div>
@@ -126,11 +129,7 @@ function RootComponent() {
     path.startsWith("/.well-known/") ||
     path.startsWith("/.lovable.");
   const usesContent =
-    !isAdmin &&
-    !isServerRoute &&
-    path !== "/radio" &&
-    path !== "/complaints" &&
-    path !== "/login";
+    !isAdmin && !isServerRoute && path !== "/radio" && path !== "/complaints" && path !== "/login";
   const site = (
     <div className="flex min-h-screen flex-col">
       <SiteHeader />
@@ -145,7 +144,11 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       {isAdmin || isServerRoute ? (
         <Outlet />
-      ) : usesContent ? <ContentProvider>{site}</ContentProvider> : site}
+      ) : usesContent ? (
+        <ContentProvider>{site}</ContentProvider>
+      ) : (
+        site
+      )}
       <Toaster />
     </QueryClientProvider>
   );

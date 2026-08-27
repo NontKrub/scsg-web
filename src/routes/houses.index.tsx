@@ -8,7 +8,10 @@ export const Route = createFileRoute("/houses/")({
   head: () => ({
     meta: [
       { title: "House of Saints — 9 บ้านสายกีฬา SGSC" },
-      { name: "description", content: "9 บ้านสายกีฬาของโรงเรียนเซนต์คาเบรียล คะแนน อันดับ และระดับของแต่ละบ้าน" },
+      {
+        name: "description",
+        content: "9 บ้านสายกีฬาของโรงเรียนเซนต์คาเบรียล คะแนน อันดับ และระดับของแต่ละบ้าน",
+      },
       { property: "og:title", content: "House of Saints — 9 Houses. One Saint Gabriel's." },
       { property: "og:description", content: "ตราบ้าน คะแนน อันดับ และระดับของทั้ง 9 บ้าน" },
     ],
@@ -25,7 +28,9 @@ function HousesLanding() {
         <Tag>House of Saints</Tag>
         <h1 className="display-xl mt-6 text-[clamp(2.6rem,9vw,7rem)]">HOUSE OF SAINTS</h1>
         <p className="mt-6 text-lg text-muted-foreground">9 บ้าน หนึ่งเซนต์คาเบรียล</p>
-        <p className="eyebrow mt-10">คะแนนประจำเดือน{MONTH_TH[c.currentMonth]} {currentYear}</p>
+        <p className="eyebrow mt-10">
+          คะแนนประจำเดือน{MONTH_TH[c.currentMonth]} {currentYear}
+        </p>
       </Section>
 
       <Section className="pt-0">

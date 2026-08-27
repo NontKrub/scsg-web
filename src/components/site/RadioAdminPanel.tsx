@@ -62,8 +62,7 @@ export function RadioAdminPanel() {
   );
   const bookings = [...(query.data?.bookings ?? [])].sort((a, b) => {
     const activeOrder =
-      Number(ACTIVE_BOOKING_STATUSES.has(b.status)) -
-      Number(ACTIVE_BOOKING_STATUSES.has(a.status));
+      Number(ACTIVE_BOOKING_STATUSES.has(b.status)) - Number(ACTIVE_BOOKING_STATUSES.has(a.status));
     return activeOrder || b.createdAt.localeCompare(a.createdAt);
   });
   const busy = saveMutation.isPending || actionMutation.isPending;

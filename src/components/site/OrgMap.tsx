@@ -37,7 +37,9 @@ export function OrgMap() {
                 )}
               >
                 <span className="num block text-[0.8rem] leading-tight">{o.name}</span>
-                <span className="mt-1 block text-[0.7rem] text-primary-foreground/60">{o.nameTh}</span>
+                <span className="mt-1 block text-[0.7rem] text-primary-foreground/60">
+                  {o.nameTh}
+                </span>
               </button>
             ))}
           </div>

@@ -22,7 +22,12 @@ export function ImgBlock({
       aria-hidden={!label && !src}
     >
       {src ? (
-        <img src={src} alt={alt ?? ""} loading="lazy" className={cn("h-full w-full object-cover", imgClassName)} />
+        <img
+          src={src}
+          alt={alt ?? ""}
+          loading="lazy"
+          className={cn("h-full w-full object-cover", imgClassName)}
+        />
       ) : (
         children
       )}

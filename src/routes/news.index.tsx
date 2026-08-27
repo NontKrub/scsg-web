@@ -3,7 +3,6 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { FilterBar, Section, Tag } from "@/components/site/primitives";
 
-
 const CATS = [
   { key: "ALL", label: "ทั้งหมด" },
   { key: "SGSC", label: "SGSC" },
@@ -12,15 +11,20 @@ const CATS = [
   { key: "CLUB", label: "ชุมนุม" },
 ] as const;
 
-
 export const Route = createFileRoute("/news/")({
   head: () => ({
     meta: [
       { title: "ข่าวและประกาศ — SGSC News" },
-      { name: "description", content: "ข่าวสาร ประกาศ และกิจกรรมล่าสุดจากสโมสรนักเรียน บ้านสายกีฬา และชุมนุมของ SGSC" },
+      {
+        name: "description",
+        content: "ข่าวสาร ประกาศ และกิจกรรมล่าสุดจากสโมสรนักเรียน บ้านสายกีฬา และชุมนุมของ SGSC",
+      },
 
       { property: "og:title", content: "SGSC NEWS — ข่าวและประกาศ" },
-      { property: "og:description", content: "ติดตามข่าวสารและกิจกรรมล่าสุดของ Student Congress of Saint Gabriel's College" },
+      {
+        property: "og:description",
+        content: "ติดตามข่าวสารและกิจกรรมล่าสุดของ Student Congress of Saint Gabriel's College",
+      },
     ],
   }),
   component: NewsIndex,

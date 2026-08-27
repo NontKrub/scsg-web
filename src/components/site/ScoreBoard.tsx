@@ -36,7 +36,11 @@ export function ScoreTable({ month, limit }: { month: Month; limit?: number }) {
             </span>
             <span className="flex min-w-0 items-center gap-4">
               <span className="h-9 w-1.5 shrink-0 bg-[var(--house)]" />
-              <img src={r.house.emblem} alt="" className="hidden h-12 w-12 object-contain sm:block" />
+              <img
+                src={r.house.emblem}
+                alt=""
+                className="hidden h-12 w-12 object-contain sm:block"
+              />
               <span className="min-w-0">
                 <span className="num block truncate text-lg md:text-2xl">{r.house.name}</span>
                 <span className="block text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-muted-foreground">

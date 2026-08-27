@@ -11,7 +11,13 @@ export const Route = createFileRoute("/api/public/img/$")({
         if (
           !path ||
           path.includes("\\") ||
-          segments.some((segment) => !segment || segment === "." || segment === ".." || /[\u0000-\u001f]/.test(segment))
+          segments.some(
+            (segment) =>
+              !segment ||
+              segment === "." ||
+              segment === ".." ||
+              segment.split("").some((character) => character.charCodeAt(0) < 32),
+          )
         ) {
           return new Response("Not found", { status: 404 });
         }

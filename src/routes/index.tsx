@@ -124,7 +124,6 @@ function Home() {
         <ScoreTable month={c.currentMonth} limit={3} />
       </Section>
 
-
       {/* c.houses */}
       <Section className="bg-navy-deep text-primary-foreground">
         <div className="mb-10 flex flex-col gap-6 border-t border-primary-foreground/20 pt-6 md:flex-row md:items-end md:justify-between">
@@ -195,19 +194,22 @@ function Home() {
               ONE CONGRESS.
             </>
           }
-          sub={memberGroups.map((group) => `${membersOf(c, group.org).length} ${group.th}`).join(" · ")}
+          sub={memberGroups
+            .map((group) => `${membersOf(c, group.org).length} ${group.th}`)
+            .join(" · ")}
         />
         <div className="mb-12 grid grid-cols-2 gap-px bg-border md:grid-cols-4">
           {memberGroups.map((x) => (
             <div key={x.t} className="bg-background p-6">
-              <div className="num text-4xl">{String(membersOf(c, x.org).length).padStart(2, "0")}</div>
+              <div className="num text-4xl">
+                {String(membersOf(c, x.org).length).padStart(2, "0")}
+              </div>
               <p className="num mt-4 text-xs">{x.t}</p>
               <p className="mt-1 text-xs text-muted-foreground">{x.th}</p>
             </div>
           ))}
         </div>
         <MemberGrid />
-
       </Section>
 
       {/* c.clubs */}
@@ -227,7 +229,9 @@ function Home() {
                 </span>
                 <span className="h-8 w-8 bg-[var(--house)] transition-colors group-hover:bg-white/80" />
               </div>
-              <h3 className="display-xl mt-10 text-2xl transition-colors group-hover:text-white">{club.name}</h3>
+              <h3 className="display-xl mt-10 text-2xl transition-colors group-hover:text-white">
+                {club.name}
+              </h3>
               <p className="mt-2 text-sm text-muted-foreground transition-colors group-hover:text-white/80">
                 {club.nameTh} · {club.tagline}
               </p>

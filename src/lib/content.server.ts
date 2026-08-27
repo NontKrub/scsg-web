@@ -1,11 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import type { Database } from "@/integrations/supabase/types";
-import {
-  EMBLEMS,
-  MONTHS,
-  type Month,
-  type SiteContent,
-} from "@/data/sgsc";
+import { EMBLEMS, MONTHS, type Month, type SiteContent } from "@/data/sgsc";
 import { getRadioService } from "./radio/server";
 
 function publicClient() {
@@ -15,7 +10,8 @@ function publicClient() {
     global: {
       fetch: (input, init) => {
         const h = new Headers(init?.headers);
-        if (key.startsWith("sb_") && h.get("Authorization") === `Bearer ${key}`) h.delete("Authorization");
+        if (key.startsWith("sb_") && h.get("Authorization") === `Bearer ${key}`)
+          h.delete("Authorization");
         h.set("apikey", key);
         return fetch(input, { ...init, headers: h });
       },
@@ -23,8 +19,7 @@ function publicClient() {
   });
 }
 
-const zeroScores = () =>
-  Object.fromEntries(MONTHS.map((m) => [m, 0])) as Record<Month, number>;
+const zeroScores = () => Object.fromEntries(MONTHS.map((m) => [m, 0])) as Record<Month, number>;
 
 function dataOrThrow<T>(result: { data: T; error: { message: string } | null }): T {
   if (result.error) throw result.error;
@@ -35,27 +30,18 @@ function dataOrThrow<T>(result: { data: T; error: { message: string } | null }):
 export async function loadContent(): Promise<SiteContent> {
   const db = publicClient();
 
-  const [
-    settings,
-    houses,
-    scores,
-    honors,
-    members,
-    board,
-    advisors,
-    clubs,
-    news,
-  ] = await Promise.all([
-    db.from("site_settings").select("key,value"),
-    db.from("houses").select("*").order("sort"),
-    db.from("house_scores").select("house_slug,month,score"),
-    db.from("honors").select("*"),
-    db.from("members").select("*").order("sort"),
-    db.from("congress_board").select("*").order("sort"),
-    db.from("advisory_board").select("*").order("sort"),
-    db.from("clubs").select("*").order("sort"),
-    db.from("news").select("*").eq("published", true).order("created_at", { ascending: false }),
-  ]);
+  const [settings, houses, scores, honors, members, board, advisors, clubs, news] =
+    await Promise.all([
+      db.from("site_settings").select("key,value"),
+      db.from("houses").select("*").order("sort"),
+      db.from("house_scores").select("house_slug,month,score"),
+      db.from("honors").select("*"),
+      db.from("members").select("*").order("sort"),
+      db.from("congress_board").select("*").order("sort"),
+      db.from("advisory_board").select("*").order("sort"),
+      db.from("clubs").select("*").order("sort"),
+      db.from("news").select("*").eq("published", true).order("created_at", { ascending: false }),
+    ]);
 
   const settingsData = dataOrThrow(settings);
   const housesData = dataOrThrow(houses);
@@ -73,7 +59,8 @@ export async function loadContent(): Promise<SiteContent> {
   for (const h of housesData ?? []) scoreMap.set(h.slug, zeroScores());
   for (const s of scoresData ?? []) {
     const rec = scoreMap.get(s.house_slug);
-    if (rec && (MONTHS as readonly string[]).includes(s.month)) rec[s.month as Month] = Number(s.score);
+    if (rec && (MONTHS as readonly string[]).includes(s.month))
+      rec[s.month as Month] = Number(s.score);
   }
 
   return {
@@ -149,7 +136,6 @@ export async function loadContent(): Promise<SiteContent> {
       houseSlug: n.house_slug || undefined,
       coverUrl: n.cover_url || undefined,
     })),
-
   };
 }
 

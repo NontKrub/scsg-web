@@ -10,7 +10,11 @@ export function MemberGrid({
   initial = "ALL" as Key,
   showClass = true,
   lock = false,
-}: { initial?: Key; showClass?: boolean; lock?: boolean }) {
+}: {
+  initial?: Key;
+  showClass?: boolean;
+  lock?: boolean;
+}) {
   const c = useContent();
   const [filter, setFilter] = useState<Key>(initial);
   const list = c.members.filter((m) => filter === "ALL" || m.org === filter);
@@ -24,9 +28,10 @@ export function MemberGrid({
         ) : (
           <FilterBar options={ORG_FILTERS} value={filter} onChange={setFilter} />
         )}
-        <p className="num text-sm text-muted-foreground">{String(list.length).padStart(2, "0")} คน</p>
+        <p className="num text-sm text-muted-foreground">
+          {String(list.length).padStart(2, "0")} คน
+        </p>
       </div>
-
 
       <div className="mt-8 grid gap-px bg-border sm:grid-cols-2 lg:grid-cols-3">
         {list.map((m) => (
@@ -36,7 +41,9 @@ export function MemberGrid({
             className="flex items-baseline justify-between gap-4 bg-background px-5 py-4 text-left transition-colors hover:bg-secondary"
           >
             <span className="text-sm font-semibold leading-tight">{m.name || "—"}</span>
-            <span className="num shrink-0 text-xs text-muted-foreground">{showClass ? m.klass : m.orgLabel}</span>
+            <span className="num shrink-0 text-xs text-muted-foreground">
+              {showClass ? m.klass : m.orgLabel}
+            </span>
           </button>
         ))}
       </div>
@@ -59,7 +66,9 @@ export function MemberGrid({
                 {open.role} · {open.klass}
               </p>
               {open.duties && (
-                <p className="mt-5 border-t border-border pt-5 text-sm leading-relaxed">{open.duties}</p>
+                <p className="mt-5 border-t border-border pt-5 text-sm leading-relaxed">
+                  {open.duties}
+                </p>
               )}
             </div>
           )}

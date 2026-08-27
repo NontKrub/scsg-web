@@ -4,7 +4,8 @@ import { loadContent } from "@/lib/content.server";
 export default defineTool({
   name: "list_houses",
   title: "List sports houses",
-  description: "List the 9 sports houses (บ้านสายกีฬา) with colour, personality, president, and intro.",
+  description:
+    "List the 9 sports houses (บ้านสายกีฬา) with colour, personality, president, and intro.",
   inputSchema: {},
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
   handler: async () => {
@@ -23,7 +24,9 @@ export default defineTool({
       content: [
         {
           type: "text" as const,
-          text: houses.map((h) => `${h.no} ${h.name} (${h.nameTh}) — ${h.colorLabel} · ประธาน ${h.captain}`).join("\n"),
+          text: houses
+            .map((h) => `${h.no} ${h.name} (${h.nameTh}) — ${h.colorLabel} · ประธาน ${h.captain}`)
+            .join("\n"),
         },
       ],
       structuredContent: { count: houses.length, houses },
