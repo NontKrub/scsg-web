@@ -18,6 +18,13 @@ afterEach(() => {
 });
 
 describe("Radio test mode authorization isolation", () => {
+  test("memory mode is ignored outside a test process", () => {
+    process.env["NODE_ENV"] = "production";
+    process.env["RADIO_BACKEND"] = "memory";
+
+    expect(isRadioMemoryBackend()).toBe(false);
+  });
+
   test("memory Radio mode does not imply generic admin", async () => {
     process.env["NODE_ENV"] = "test";
     process.env["RADIO_BACKEND"] = "memory";
