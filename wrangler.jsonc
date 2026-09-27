@@ -1,0 +1,21 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+
+  "name": "scsg-web",
+
+  "main": ".output/server/index.mjs",
+
+  "compatibility_date": "2026-09-27",
+
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+
+  "assets": {
+    "directory": ".output/public"
+  },
+
+  "observability": {
+    "enabled": true
+  }
+}
