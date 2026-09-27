@@ -34,3 +34,4 @@ dist-ssr
 # Cloudflare generated files
 .wrangler/
 .wrangler-dist/
+backups/

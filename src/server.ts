@@ -1,3 +1,4 @@
+import { env as cloudflareEnv } from "cloudflare:workers";
 import "./lib/error-capture";
 import { installSupabaseNetworkGuard } from "./lib/radio/network-guard";
 
@@ -47,8 +48,56 @@ function isH3SwallowedErrorBody(body: string): boolean {
   }
 }
 
+async function cloudflareHealth(): Promise<Response> {
+  try {
+    const d1 = await cloudflareEnv.DB
+      .prepare("SELECT 1 AS ok")
+      .first<{ ok: number }>();
+
+    const r2 = await cloudflareEnv.MEDIA.list({
+      limit: 1,
+    });
+
+    return Response.json({
+      ok: d1?.ok === 1,
+      worker: true,
+      d1: {
+        ok: d1?.ok === 1,
+      },
+      r2: {
+        ok: true,
+        objectsChecked: r2.objects.length,
+      },
+    });
+  } catch (error) {
+    console.error("[cloudflare-health]", error);
+
+    return Response.json(
+      {
+        ok: false,
+        worker: true,
+        d1: {
+          ok: false,
+        },
+        r2: {
+          ok: false,
+        },
+      },
+      {
+        status: 503,
+      },
+    );
+  }
+}
+
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
+    const url = new URL(request.url);
+
+    if (url.pathname === "/api/health/cloudflare") {
+      return cloudflareHealth();
+    }
+
     try {
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
@@ -57,7 +106,9 @@ export default {
       console.error(error);
       return new Response(renderErrorPage(), {
         status: 500,
-        headers: { "content-type": "text/html; charset=utf-8" },
+        headers: {
+          "content-type": "text/html; charset=utf-8",
+        },
       });
     }
   },
