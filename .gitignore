@@ -35,3 +35,9 @@ dist-ssr
 .wrangler/
 .wrangler-dist/
 backups/
+
+# Temporary database migration exports
+migration/supabase-to-d1/*.json
+migration/supabase-to-d1/*.csv
+migration/supabase-to-d1/*.sql
+migration/supabase-to-d1/*.dump
