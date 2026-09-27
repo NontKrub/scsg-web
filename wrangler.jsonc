@@ -1,21 +1,28 @@
 {
-  "$schema": "./node_modules/wrangler/config-schema.json",
-
-  "name": "scsg-web",
-
-  "main": ".output/server/index.mjs",
-
-  "compatibility_date": "2026-09-27",
-
-  "compatibility_flags": [
-    "nodejs_compat"
-  ],
-
-  "assets": {
-    "directory": ".output/public"
-  },
-
-  "observability": {
-    "enabled": true
-  }
+	"$schema": "./node_modules/wrangler/config-schema.json",
+	"name": "scsg-web",
+	"main": ".output/server/index.mjs",
+	"compatibility_date": "2026-09-27",
+	"compatibility_flags": [
+		"nodejs_compat"
+	],
+	"assets": {
+		"directory": ".output/public"
+	},
+	"observability": {
+		"enabled": true
+	},
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "scsg-prod",
+			"database_id": "f88b6863-8600-45e3-8b0d-cb0101a620d7"
+		}
+	],
+	"r2_buckets": [
+		{
+			"bucket_name": "scsg-media-prod",
+			"binding": "MEDIA"
+		}
+	]
 }
