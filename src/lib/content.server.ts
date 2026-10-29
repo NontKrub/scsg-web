@@ -1,34 +1,127 @@
-import { createClient } from "@supabase/supabase-js";
-import type { Database } from "@/integrations/supabase/types";
+
 import {
   EMBLEMS,
   MONTHS,
   type Month,
   type SiteContent,
 } from "@/data/sgsc";
+
+import { getDB } from "./db.server";
 import { isRadioMemoryBackend } from "./radio/config";
 import { getRadioService } from "./radio/server";
 
-function publicClient() {
-  const key = process.env["SUPABASE_PUBLISHABLE_KEY"]!;
-  return createClient<Database>(process.env["SUPABASE_URL"]!, key, {
-    auth: { persistSession: false, autoRefreshToken: false },
-    global: {
-      fetch: (input, init) => {
-        const h = new Headers(init?.headers);
-        if (key.startsWith("sb_") && h.get("Authorization") === `Bearer ${key}`) h.delete("Authorization");
-        h.set("apikey", key);
-        return fetch(input, { ...init, headers: h });
-      },
-    },
-  });
+type SettingsRow = {
+  key: string;
+  value: string;
+};
+
+type HouseRow = {
+  slug: string;
+  no: string;
+  name: string;
+  name_th: string;
+  color_label: string;
+  cls: string;
+  personality: string;
+  intro: string;
+  captain: string;
+  captain_role: string;
+};
+
+type ScoreRow = {
+  house_slug: string;
+  month: string;
+  score: number;
+};
+
+type HonorRow = {
+  month: string;
+  house_of_month: string;
+  character_house: string;
+};
+
+type MemberRow = {
+  id: string;
+  name: string;
+  role: string;
+  org: string;
+  org_label: string;
+  klass: string;
+  duties: string;
+  photo_url: string;
+};
+
+type BoardRow = {
+  id: string;
+  role: string;
+  from_org: string;
+  person_name: string;
+  klass: string;
+  photo_url: string;
+};
+
+type AdvisorRow = {
+  id: string;
+  person_name: string;
+  role: string;
+  description: string;
+  photo_url: string;
+};
+
+type ClubRow = {
+  slug: string;
+  name: string;
+  name_th: string;
+  tagline: string;
+  about: string;
+  cls: string;
+  head: string;
+  member_count: number;
+  activities: string;
+};
+
+type NewsRow = {
+  slug: string;
+  title: string;
+  cat: string;
+  date_label: string;
+  intro: string;
+  body: string;
+  related: string;
+  house_slug: string;
+  cover_url: string;
+};
+
+// Converts SQLite JSON TEXT into string arrays.
+function parseTextArray(
+  value: string,
+  field: string,
+): string[] {
+  let parsed: unknown;
+
+  try {
+    parsed = JSON.parse(value);
+  } catch {
+    throw new Error(`Invalid JSON in ${field}`);
+  }
+
+  if (
+    !Array.isArray(parsed) ||
+    !parsed.every((item) => typeof item === "string")
+  ) {
+    throw new Error(`Invalid string array in ${field}`);
+  }
+
+  return parsed as string[];
 }
 
-const zeroScores = () =>
-  Object.fromEntries(MONTHS.map((m) => [m, 0])) as Record<Month, number>;
+const zeroScores = (): Record<Month, number> =>
+  Object.fromEntries(
+    MONTHS.map((month) => [month, 0]),
+  ) as Record<Month, number>;
 
-/** Loads the entire public site content from the database. */
 export async function loadContent(): Promise<SiteContent> {
+  // Preserve the existing isolated test backend.
   if (isRadioMemoryBackend()) {
     return {
       settings: {},
@@ -43,118 +136,186 @@ export async function loadContent(): Promise<SiteContent> {
     };
   }
 
-  const db = publicClient();
+  const db = getDB();
 
+  // Read all public content from D1.
   const [
-    settings,
-    houses,
-    scores,
-    honors,
-    members,
-    board,
-    advisors,
-    clubs,
-    news,
+    { results: settings },
+    { results: houses },
+    { results: scores },
+    { results: honors },
+    { results: members },
+    { results: board },
+    { results: advisors },
+    { results: clubs },
+    { results: news },
   ] = await Promise.all([
-    db.from("site_settings").select("key,value"),
-    db.from("houses").select("*").order("sort"),
-    db.from("house_scores").select("house_slug,month,score"),
-    db.from("honors").select("*"),
-    db.from("members").select("*").order("sort"),
-    db.from("congress_board").select("*").order("sort"),
-    db.from("advisory_board").select("*").order("sort"),
-    db.from("clubs").select("*").order("sort"),
-    db.from("news").select("*").eq("published", true).order("sort").order("created_at", { ascending: false }),
+    db.prepare(
+      "SELECT key, value FROM site_settings",
+    ).all<SettingsRow>(),
+
+    db.prepare(
+      "SELECT * FROM houses ORDER BY sort ASC",
+    ).all<HouseRow>(),
+
+    db.prepare(
+      "SELECT house_slug, month, score FROM house_scores",
+    ).all<ScoreRow>(),
+
+    db.prepare(
+      "SELECT * FROM honors",
+    ).all<HonorRow>(),
+
+    db.prepare(
+      "SELECT * FROM members ORDER BY sort ASC",
+    ).all<MemberRow>(),
+
+    db.prepare(
+      "SELECT * FROM congress_board ORDER BY sort ASC",
+    ).all<BoardRow>(),
+
+    db.prepare(
+      "SELECT * FROM advisory_board ORDER BY sort ASC",
+    ).all<AdvisorRow>(),
+
+    db.prepare(
+      "SELECT * FROM clubs ORDER BY sort ASC",
+    ).all<ClubRow>(),
+
+    db.prepare(`
+      SELECT *
+      FROM news
+      WHERE published = 1
+      ORDER BY created_at DESC
+    `).all<NewsRow>(),
   ]);
 
-
+  // Website settings.
   const settingsMap: Record<string, string> = {};
-  for (const s of settings.data ?? []) settingsMap[s.key] = s.value;
 
-  const scoreMap = new Map<string, Record<Month, number>>();
-  for (const h of houses.data ?? []) scoreMap.set(h.slug, zeroScores());
-  for (const s of scores.data ?? []) {
-    const rec = scoreMap.get(s.house_slug);
-    if (rec && (MONTHS as readonly string[]).includes(s.month)) rec[s.month as Month] = Number(s.score);
+  for (const row of settings) {
+    settingsMap[row.key] = row.value;
   }
+
+  // House scores grouped by house slug.
+  const scoreMap = new Map<
+    string,
+    Record<Month, number>
+  >();
+
+  for (const house of houses) {
+    scoreMap.set(house.slug, zeroScores());
+  }
+
+  for (const row of scores) {
+    const record = scoreMap.get(row.house_slug);
+
+    if (
+      record &&
+      (MONTHS as readonly string[]).includes(row.month)
+    ) {
+      record[row.month as Month] = Number(row.score);
+    }
+  }
+
+  const configuredMonth = settingsMap["current_month"];
+
+  const currentMonth: Month =
+    configuredMonth &&
+    (MONTHS as readonly string[]).includes(configuredMonth)
+      ? (configuredMonth as Month)
+      : "AUG";
 
   return {
     settings: settingsMap,
-    currentMonth: ((MONTHS as readonly string[]).includes(settingsMap["current_month"] ?? "")
-      ? settingsMap["current_month"]
-      : "AUG") as Month,
-    houses: (houses.data ?? []).map((h) => ({
-      slug: h.slug,
-      no: h.no,
-      name: h.name,
-      nameTh: h.name_th,
-      colorLabel: h.color_label,
-      cls: h.cls,
-      emblem: EMBLEMS[h.slug] ?? "",
-      personality: h.personality,
-      intro: h.intro,
-      captain: h.captain,
-      captainRole: h.captain_role,
-      scores: scoreMap.get(h.slug) ?? zeroScores(),
+    currentMonth,
+
+    houses: houses.map((house) => ({
+      slug: house.slug,
+      no: house.no,
+      name: house.name,
+      nameTh: house.name_th,
+      colorLabel: house.color_label,
+      cls: house.cls,
+      emblem: EMBLEMS[house.slug] ?? "",
+      personality: house.personality,
+      intro: house.intro,
+      captain: house.captain,
+      captainRole: house.captain_role,
+      scores: scoreMap.get(house.slug) ?? zeroScores(),
     })),
+
     honors: Object.fromEntries(
-      (honors.data ?? []).map((h) => [
-        h.month,
-        { houseOfMonth: h.house_of_month, character: h.character_house },
+      honors.map((row) => [
+        row.month,
+        {
+          houseOfMonth: row.house_of_month,
+          character: row.character_house,
+        },
       ]),
     ),
-    members: (members.data ?? []).map((m) => ({
-      id: m.id,
-      name: m.name,
-      role: m.role,
-      org: m.org as "SG" | "HOUSE" | "CLUB" | "CLASS",
-      orgLabel: m.org_label,
-      klass: m.klass,
-      duties: m.duties,
-      photoUrl: m.photo_url,
+
+    members: members.map((member) => ({
+      id: member.id,
+      name: member.name,
+      role: member.role,
+      org: member.org as SiteContent["members"][number]["org"],
+      orgLabel: member.org_label,
+      klass: member.klass,
+      duties: member.duties,
+      photoUrl: member.photo_url,
     })),
 
-    congressBoard: (board.data ?? []).map((b) => ({
-      id: b.id,
-      role: b.role,
-      fromOrg: b.from_org,
-      name: b.person_name,
-      klass: b.klass,
-      photoUrl: b.photo_url,
-    })),
-    advisoryBoard: (advisors.data ?? []).map((a) => ({
-      id: a.id,
-      name: a.person_name,
-      role: a.role,
-      desc: a.description,
-      photoUrl: a.photo_url,
-    })),
-    clubs: (clubs.data ?? []).map((c) => ({
-      slug: c.slug,
-      name: c.name,
-      nameTh: c.name_th,
-      tagline: c.tagline,
-      about: c.about,
-      cls: c.cls,
-      head: c.head,
-      members: c.member_count,
-      activities: c.activities ?? [],
-    })),
-    news: (news.data ?? []).map((n) => ({
-      slug: n.slug,
-      title: n.title,
-      cat: n.cat as "SGSC" | "STUDENT GOVERNMENT" | "HOUSE" | "CLUB",
-      date: n.date_label,
-      intro: n.intro,
-      body: n.body ?? [],
-      related: n.related,
-      houseSlug: n.house_slug || undefined,
-      coverUrl: n.cover_url || undefined,
+    congressBoard: board.map((row) => ({
+      id: row.id,
+      role: row.role,
+      fromOrg: row.from_org,
+      name: row.person_name,
+      klass: row.klass,
+      photoUrl: row.photo_url,
     })),
 
+    advisoryBoard: advisors.map((row) => ({
+      id: row.id,
+      name: row.person_name,
+      role: row.role,
+      desc: row.description,
+      photoUrl: row.photo_url,
+    })),
+
+    clubs: clubs.map((club) => ({
+      slug: club.slug,
+      name: club.name,
+      nameTh: club.name_th,
+      tagline: club.tagline,
+      about: club.about,
+      cls: club.cls,
+      head: club.head,
+      members: club.member_count,
+      activities: parseTextArray(
+        club.activities,
+        `clubs.activities (${club.slug})`,
+      ),
+    })),
+
+    news: news.map((article) => ({
+      slug: article.slug,
+      title: article.title,
+      cat: article.cat as SiteContent["news"][number]["cat"],
+      date: article.date_label,
+      intro: article.intro,
+      body: parseTextArray(
+        article.body,
+        `news.body (${article.slug})`,
+      ),
+      related: article.related,
+      houseSlug: article.house_slug || undefined,
+      coverUrl: article.cover_url || undefined,
+    })),
   };
 }
 
+// SG Radio will use the D1 repository in Step 66.
 export async function loadRadioPage() {
   return getRadioService().getPageData();
 }
